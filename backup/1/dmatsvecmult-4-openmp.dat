@@ -1,0 +1,40 @@
+
+ Dense Matrix/Sparse Vector Multiplication:
+   Blaze (10% filled) [MFlop/s]:
+     50          1892.4
+     100         1708.24
+     500         3413.48
+     1000        3999.24
+     5000        875.258
+     10000       867.173
+   Blaze (40% filled) [MFlop/s]:
+     50          2291
+     100         2042.79
+     500         5982.05
+     1000        6417.82
+     5000        2773.49
+     10000       2166.1
+   N=50, fill level=10%, steps=8400368
+     Blaze       = 1        (1.99755)
+   N=100, fill level=10%, steps=1793007
+     Blaze       = 1        (1.99429)
+   N=500, fill level=10%, steps=138962
+     Blaze       = 1        (2.01513)
+   N=1000, fill level=10%, steps=40411
+     Blaze       = 1        (2.01083)
+   N=5000, fill level=10%, steps=258
+     Blaze       = 1        (1.47238)
+   N=10000, fill level=10%, steps=64
+     Blaze       = 1        (1.47532)
+   N=50, fill level=40%, steps=2324774
+     Blaze       = 1        (1.97874)
+   N=100, fill level=40%, steps=517049
+     Blaze       = 1        (1.99956)
+   N=500, fill level=40%, steps=60235
+     Blaze       = 1        (2.00882)
+   N=1000, fill level=40%, steps=15333
+     Blaze       = 1        (1.90892)
+   N=5000, fill level=40%, steps=215
+     Blaze       = 1        (1.55001)
+   N=10000, fill level=40%, steps=54
+     Blaze       = 1        (1.99412)
