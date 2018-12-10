@@ -2,7 +2,7 @@
 
 saved_path=$LD_LIBRARY_PATH
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
-results_dir="${blaze_dir}/blazemark/results"
+results_dir="/home/sshirzad/repos/Blazemark/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
 thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)

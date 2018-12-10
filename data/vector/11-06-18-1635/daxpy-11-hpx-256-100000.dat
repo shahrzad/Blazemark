@@ -1,0 +1,66 @@
+
+ Daxpy product:
+   Blaze [MFlop/s]:
+     100000      1525.41
+   N=100000, steps=15770
+     Blaze       = 1        (2.06764)
+/threads{locality#0/total}/idle-rate,1,6.846314,[s],7851,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,6.846198,[s],7189,[0.01%]
+/threads{locality#0/pool#default/worker-thread#1}/idle-rate,1,6.846259,[s],8030,[0.01%]
+/threads{locality#0/pool#default/worker-thread#2}/idle-rate,1,6.846460,[s],8041,[0.01%]
+/threads{locality#0/pool#default/worker-thread#3}/idle-rate,1,6.847363,[s],8088,[0.01%]
+/threads{locality#0/pool#default/worker-thread#4}/idle-rate,1,6.847229,[s],8064,[0.01%]
+/threads{locality#0/pool#default/worker-thread#5}/idle-rate,1,6.847381,[s],8060,[0.01%]
+/threads{locality#0/pool#default/worker-thread#6}/idle-rate,1,6.847540,[s],8044,[0.01%]
+/threads{locality#0/pool#default/worker-thread#7}/idle-rate,1,6.847256,[s],8001,[0.01%]
+/threads{locality#0/pool#default/worker-thread#8}/idle-rate,1,6.847399,[s],6748,[0.01%]
+/threads{locality#0/pool#default/worker-thread#9}/idle-rate,1,6.846437,[s],8044,[0.01%]
+/threads{locality#0/pool#default/worker-thread#10}/idle-rate,1,6.846313,[s],8057,[0.01%]
+/threads{locality#0/total}/time/average,1,6.847567,[s],7069,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,6.846269,[s],7295,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average,1,6.846611,[s],7310,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average,1,6.847429,[s],6545,[ns]
+/threads{locality#0/pool#default/worker-thread#3}/time/average,1,6.846536,[s],6535,[ns]
+/threads{locality#0/pool#default/worker-thread#4}/time/average,1,6.846408,[s],6493,[ns]
+/threads{locality#0/pool#default/worker-thread#5}/time/average,1,6.847554,[s],6386,[ns]
+/threads{locality#0/pool#default/worker-thread#6}/time/average,1,6.847601,[s],6373,[ns]
+/threads{locality#0/pool#default/worker-thread#7}/time/average,1,6.846555,[s],6243,[ns]
+/threads{locality#0/pool#default/worker-thread#8}/time/average,1,6.846433,[s],8793,[ns]
+/threads{locality#0/pool#default/worker-thread#9}/time/average,1,6.846377,[s],7502,[ns]
+/threads{locality#0/pool#default/worker-thread#10}/time/average,1,6.846442,[s],8208,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,6.846453,[s],5.84593e+10,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,6.847350,[s],4.86613e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/cumulative-overhead,1,6.846682,[s],5.43514e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/cumulative-overhead,1,6.847498,[s],5.44326e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#3}/time/cumulative-overhead,1,6.847504,[s],5.47461e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#4}/time/cumulative-overhead,1,6.847512,[s],5.45831e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#5}/time/cumulative-overhead,1,6.846552,[s],5.4559e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#6}/time/cumulative-overhead,1,6.846711,[s],5.44453e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#7}/time/cumulative-overhead,1,6.847530,[s],5.41537e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#8}/time/cumulative-overhead,1,6.846440,[s],4.56763e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#9}/time/cumulative-overhead,1,6.846387,[s],5.4452e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#10}/time/cumulative-overhead,1,6.846393,[s],5.45351e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,6.847415,[s],2.26204e+06
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,6.847712,[s],260782
+/threads{locality#0/pool#default/worker-thread#1}/count/cumulative,1,6.847717,[s],182290
+/threads{locality#0/pool#default/worker-thread#2}/count/cumulative,1,6.847435,[s],202477
+/threads{locality#0/pool#default/worker-thread#3}/count/cumulative,1,6.846545,[s],197977
+/threads{locality#0/pool#default/worker-thread#4}/count/cumulative,1,6.847733,[s],201767
+/threads{locality#0/pool#default/worker-thread#5}/count/cumulative,1,6.846565,[s],205481
+/threads{locality#0/pool#default/worker-thread#6}/count/cumulative,1,6.846574,[s],207732
+/threads{locality#0/pool#default/worker-thread#7}/count/cumulative,1,6.846523,[s],216689
+/threads{locality#0/pool#default/worker-thread#8}/count/cumulative,1,6.847773,[s],250264
+/threads{locality#0/pool#default/worker-thread#9}/count/cumulative,1,6.847780,[s],176404
+/threads{locality#0/pool#default/worker-thread#10}/count/cumulative,1,6.847501,[s],160185
+/threads{locality#0/total}/time/average-overhead,1,6.847653,[s],25843,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,6.846624,[s],18660,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average-overhead,1,6.847525,[s],29815,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average-overhead,1,6.846858,[s],26883,[ns]
+/threads{locality#0/pool#default/worker-thread#3}/time/average-overhead,1,6.847677,[s],27653,[ns]
+/threads{locality#0/pool#default/worker-thread#4}/time/average-overhead,1,6.846716,[s],27053,[ns]
+/threads{locality#0/pool#default/worker-thread#5}/time/average-overhead,1,6.846876,[s],26553,[ns]
+/threads{locality#0/pool#default/worker-thread#6}/time/average-overhead,1,6.846604,[s],26210,[ns]
+/threads{locality#0/pool#default/worker-thread#7}/time/average-overhead,1,6.846557,[s],24991,[ns]
+/threads{locality#0/pool#default/worker-thread#8}/time/average-overhead,1,6.846618,[s],18251,[ns]
+/threads{locality#0/pool#default/worker-thread#9}/time/average-overhead,1,6.847719,[s],30869,[ns]
+/threads{locality#0/pool#default/worker-thread#10}/time/average-overhead,1,6.846916,[s],34045,[ns]

@@ -1,0 +1,21 @@
+
+ Daxpy product:
+   Blaze [MFlop/s]:
+     10000000    2140.38
+   N=10000000, steps=214
+     Blaze       = 1        (1.99964)
+/threads{locality#0/total}/idle-rate,1,7.259054,[s],508,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,7.259080,[s],116,[0.01%]
+/threads{locality#0/pool#default/worker-thread#1}/idle-rate,1,7.259100,[s],900,[0.01%]
+/threads{locality#0/total}/time/average,1,7.259086,[s],1.59663e+06,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,7.259103,[s],1.65155e+06,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average,1,7.259088,[s],1.53916e+06,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,7.259105,[s],7.28853e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,7.259092,[s],8.37411e+07,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/cumulative-overhead,1,7.259110,[s],6.4511e+08,[ns]
+/threads{locality#0/total}/count/cumulative,1,7.259096,[s],8516
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,7.259112,[s],4289
+/threads{locality#0/pool#default/worker-thread#1}/count/cumulative,1,7.259107,[s],4233
+/threads{locality#0/total}/time/average-overhead,1,7.259115,[s],85516,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,7.259125,[s],19516,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average-overhead,1,7.259128,[s],152400,[ns]

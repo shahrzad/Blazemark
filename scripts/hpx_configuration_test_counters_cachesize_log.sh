@@ -1,9 +1,10 @@
 #!/bin/bash
 saved_path=$LD_LIBRARY_PATH
+blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib"
 hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt"
-results_dir="${blaze_dir}/blazemark/results"
+results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.67.0-clang6.0.0/release/lib:$LD_LIBRARY_PATH
@@ -14,7 +15,7 @@ cache_sizes=(256)
 
 rm -rf ${results_dir}/*.dat
 #benchmarks=('daxpy' 'dvecdvecadd')
-benchmarks=('dvecdvecadd')
+benchmarks=('dmatdmatmult')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseVector.h
 size=$((10**vec_size))
@@ -22,8 +23,7 @@ size=$((10**vec_size))
 rm -rf ${results_dir}/info
 mkdir ${results_dir}/info
 
-cp ${blaze_dir}/blaze/math/smp/hpx/DenseVector.h ${results_dir}/info
-cp ${blaze_dir}/blaze/math/smp/hpx/Functions.h ${results_dir}/info
+cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info
 date>> ${results_dir}/info/date.txt
 cp ${hpx_log_file} ${results_dir}/info/
 cp ${blaze_dir}/blazemark/configurations/Configfile_hpx ${results_dir}/info/
@@ -32,6 +32,12 @@ cp ${blaze_dir}/blazemark/scripts/hpx_configuration_test_counters_cachesize_log.
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
 do
+if [ b == 'dvecdvecadd' ] || [ b == 'daxpy' ]
+then 
+end_line=219
+else
+end_line=119
+fi
 param_filename=${blaze_dir}/blazemark/params/$b.prm
 for cache_size in ${cache_sizes[@]}
 do
@@ -44,7 +50,7 @@ do
 		sed -i "${line_number}s/(/${s}/" $param_filename
 	done
         sed -i "58s/*/\//" $param_filename 
-        sed -i "219s/*/\//" $param_filename
+        sed -i "${end_line}s/*/\//" $param_filename
 
 	for c in "${chunk_sizes[@]}"
 	do
@@ -64,8 +70,12 @@ do
                 echo "cache size:" $cache_size_value
 		for th in "${thr[@]}"
 		do 
-		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${b}-${th}-${r}-${chunk_size}-${cache_size}.dat
-		    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, cache_size ${cache_size}"
+		for i in $(seq 11)
+		do
+
+		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}-${chunk_size}-${cache_size}.dat
+		    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size ${cache_size} ${i}th time"
+		done
 		done    
 	done
 done

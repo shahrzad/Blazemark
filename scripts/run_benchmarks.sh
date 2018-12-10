@@ -1,7 +1,7 @@
 #!/bin/bash
 saved_path=$LD_LIBRARY_PATH
 hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib"
-results_dir="/home/sshirzad/src/blaze_shahrzad/blazemark/results"
+results_dir="/home/sshirzad/repos/Blazemark/results"
 benchmarks_dir="/home/sshirzad/src/blaze_shahrzad/blazemark/benchmarks"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.67.0-clang6.0.0/release/lib:$LD_LIBRARY_PATH
 thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
