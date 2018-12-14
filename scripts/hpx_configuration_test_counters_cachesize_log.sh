@@ -41,16 +41,16 @@ fi
 param_filename=${blaze_dir}/blazemark/params/$b.prm
 for cache_size in ${cache_sizes[@]}
 do
-        git checkout $param_filename
-
-	for p in $(seq 6)
-	do
-		line_number=$((49+p))
-		s='\/\/('
-		sed -i "${line_number}s/(/${s}/" $param_filename
-	done
-        sed -i "58s/*/\//" $param_filename 
-        sed -i "${end_line}s/*/\//" $param_filename
+#        git checkout $param_filename
+#
+#	for p in $(seq 6)
+#	do
+#		line_number=$((49+p))
+#		s='\/\/('
+#		sed -i "${line_number}s/(/${s}/" $param_filename
+#	done
+#        sed -i "58s/*/\//" $param_filename 
+#        sed -i "${end_line}s/*/\//" $param_filename
 
 	for c in "${chunk_sizes[@]}"
 	do
