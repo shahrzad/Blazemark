@@ -9,15 +9,15 @@ if [ $# -eq 2 ]
 then
     benchmarks=$1
     runtimes=$2
-    if [ ${runtimes} == 'hpx' ]
-    then
-#        rm -rf ${results_dir}/hpx
-#        mkdir ${results_dir}/hpx
-        #date>>${results_dir}/hpx/date.txt
-        #git --git-dir ~/src/hpx/.git log>>${results_dir}/hpx/hpx_git_log.txt
-
-#        cp ~/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt ${results_dir}/hpx/hpx_cmake_log.txt
-    fi
+#    if [ ${runtimes} == 'hpx' ]
+#    then
+##        rm -rf ${results_dir}/hpx
+##        mkdir ${results_dir}/hpx
+#        #date>>${results_dir}/hpx/date.txt
+#        #git --git-dir ~/src/hpx/.git log>>${results_dir}/hpx/hpx_git_log.txt
+#
+##        cp ~/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt ${results_dir}/hpx/hpx_cmake_log.txt
+#    fi
 else
     if [ $# -eq 0 ] 
     then 

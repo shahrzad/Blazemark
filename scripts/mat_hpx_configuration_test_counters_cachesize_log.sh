@@ -11,7 +11,7 @@ export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.67.0-clang6.0.0/release/lib:$LD_L
 thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
 #vec_sizes_log=(2 3 4 5 6 7)
 chunk_sizes=(5)
-block_sizes=(1 2 4 8 16 32)
+block_sizes=(4 8 16 32)
 
 rm -rf ${results_dir}/*.dat
 #benchmarks=('daxpy' 'dvecdvecadd')
@@ -54,7 +54,7 @@ do
 
 	for c in "${chunk_sizes[@]}"
 	do
-		./change_hpx_parameters.sh reset HPX.h
+		#./change_hpx_parameters.sh reset HPX.h
 	        ./change_hpx_parameters.sh BLAZE_HPX_VECTOR_CHUNK_SIZE "${c}"
                 ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_BLOCK_SIZE "${block_size}"
 		./generate_benchmarks.sh $b hpx
