@@ -14,15 +14,111 @@ now = datetime.datetime.now()
 date_str=now.strftime("%Y-%m-%d-%H%M")
 
 
-openmp_date_str='11-19-18-0936'
-hpx_date_str='11-22-18-1027'
-hpx_dir='/home/shahrzad/repos/Blazemark/data/dynamic/log/'+hpx_date_str
-openmp_dir='/home/shahrzad/repos/Blazemark/data/openmp/log/'+openmp_date_str
+openmp_date_str='12-14-2018-1512'
+hpx_date_str='12-18-2018-0946'
+hpx_before_date_str='12-10-18-0935'
+hpx_dir='/home/shahrzad/repos/Blazemark/data/matrix/'+hpx_date_str
+openmp_dir='/home/shahrzad/repos/Blazemark/data/openmp/dmatdmatmult/'+openmp_date_str
 perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots'
 
 from matplotlib.backends.backend_pdf import PdfPages
 
     
+#####################################################
+                        #hpx refernce
+#####################################################
+hpx_before_dir='/home/shahrzad/repos/Blazemark/data/matrix/'+hpx_before_date_str                    
+thr=[]
+sizes=[]
+repeats=[]
+block_sizes=[]
+chunk_sizes=[]
+
+data_files=glob.glob(hpx_before_dir+'/*.dat')
+
+hpx_before_benchmarks=[]
+for filename in data_files:
+    if 'hpx' in filename:
+        (repeat, benchmark, th, runtime, chunk_size, block_size) = filename.split('/')[-1].replace('.dat','').split('-')
+        if benchmark not in hpx_before_benchmarks:
+            hpx_before_benchmarks.append(benchmark)
+            
+        if int(th) not in thr:
+            thr.append(int(th))
+        if int(repeat) not in repeats:
+            repeats.append(int(repeat))
+        if int(block_size) not in block_sizes:
+            block_sizes.append(int(block_size))
+        if int(chunk_size) not in chunk_sizes:
+            chunk_sizes.append(int(chunk_size))
+        
+thr.sort()
+hpx_before_benchmarks.sort()      
+repeats.sort()      
+block_sizes.sort()
+chunk_sizes.sort()
+
+d_hpx_before_all={}   
+d_hpx_before={}
+for benchmark in hpx_before_benchmarks:  
+    d_hpx_before_all[benchmark]={}
+    d_hpx_before[benchmark]={}
+    for c in chunk_sizes:
+        d_hpx_before_all[benchmark][c]={}
+        d_hpx_before[benchmark][c]={}
+        for b in block_sizes:
+            d_hpx_before_all[benchmark][c][b]={}
+            d_hpx_before[benchmark][c][b]={}
+            for th in thr:
+                d_hpx_before_all[benchmark][c][b][th]={}
+                d_hpx_before[benchmark][c][b][th]={}
+                for r in repeats:
+                    d_hpx_before_all[benchmark][c][b][th][r]={}
+                
+data_files.sort()        
+for filename in data_files:    
+    if 'hpx' in filename:
+        size=[]
+        mflops=[]    
+        stop=False
+        f=open(filename, 'r')
+                 
+        result=f.readlines()[3:]
+        benchmark=filename.split('/')[-1].split('-')[1]
+        th=int(filename.split('/')[-1].split('-')[2])       
+        repeat=int(filename.split('/')[-1].split('-')[0])       
+        chunk=int(filename.split('/')[-1].split('-')[4])       
+        block=int(filename.split('/')[-1].split('-')[5][0:-4])       
+
+            
+        for r in result:        
+            if "N=" in r:
+                stop=True
+            if not stop:
+                size.append(int(r.strip().split(' ')[0]))
+                mflops.append(float(r.strip().split(' ')[-1]))
+        
+        d_hpx_before_all[benchmark][chunk][block][th][repeat]['size']=size
+        d_hpx_before_all[benchmark][chunk][block][th][repeat]['mflops']=mflops
+ 
+    
+for benchmark in hpx_before_benchmarks:
+    for c in chunk_sizes:
+        for b in block_sizes:
+            for th in thr:
+                mflops=[0]*len(size)
+                d_hpx_before[benchmark][c][b][th]['size']=size
+
+                if max(repeats)==1:
+                    mflops=d_hpx_before_all[benchmark][c][b][th][repeats[0]]['mflops']
+                    d_hpx_before[benchmark][c][b][th]['mflops']=mflops
+                else:
+                    for r in repeats[1:]:
+                        mflops=[mflops[i]+d_hpx_before_all[benchmark][c][b][th][r]['mflops'][i] for i in range(len(mflops))]                        
+                        d_hpx_before[benchmark][c][b][th]['mflops']=[x/float(max(repeats)-1) for x in mflops] 
+########################################################################
+#hpx
+##########################################################################                        
 thr=[]
 sizes=[]
 repeats=[]
@@ -33,72 +129,87 @@ data_files=glob.glob(hpx_dir+'/*.dat')
 
 hpx_benchmarks=[]
 for filename in data_files:
-    (repeat, benchmark, th, runtime, chunk_size, block_size) = filename.split('/')[-1].replace('.dat','').split('-')
-    if benchmark not in hpx_benchmarks:
-        hpx_benchmarks.append(benchmark)
-        
-    if int(th) not in thr:
-        thr.append(int(th))
-    if int(repeat) not in repeats:
-        repeats.append(int(repeat))
-    if int(block_size) not in block_sizes:
-        block_sizes.append(int(block_size))
-    if int(chunk_size) not in chunk_sizes:
-        chunk_sizes.append(int(chunk_size))
+    if 'hpx' in filename:
+        (repeat, benchmark, th, runtime, chunk_size, block_size) = filename.split('/')[-1].replace('.dat','').split('-')
+        if benchmark not in hpx_benchmarks:
+            hpx_benchmarks.append(benchmark)
+            
+        if int(th) not in thr:
+            thr.append(int(th))
+        if int(repeat) not in repeats:
+            repeats.append(int(repeat))
+        if int(block_size) not in block_sizes:
+            block_sizes.append(int(block_size))
+        if int(chunk_size) not in chunk_sizes:
+            chunk_sizes.append(int(chunk_size))
         
 thr.sort()
 hpx_benchmarks.sort()      
 repeats.sort()      
 block_sizes.sort()
-chunk_sizes=[]
+chunk_sizes.sort()
 
+thr=[16]
 d_hpx_all={}   
-
-for repeat in repeats:
-    d_hpx_all[repeat]={}
-    for benchmark in hpx_benchmarks:   
-        d_hpx_all[repeat][benchmark]={}
-        for th in thr:
-            d_hpx_all[repeat][benchmark][th]={}
-
-     
-
+d_hpx={}
+for benchmark in hpx_benchmarks:  
+    d_hpx_all[benchmark]={}
+    d_hpx[benchmark]={}
+    for c in chunk_sizes:
+        d_hpx_all[benchmark][c]={}
+        d_hpx[benchmark][c]={}
+        for b in block_sizes:
+            d_hpx_all[benchmark][c][b]={}
+            d_hpx[benchmark][c][b]={}
+            for th in thr:
+                d_hpx_all[benchmark][c][b][th]={}
+                d_hpx[benchmark][c][b][th]={}
+                for r in repeats:
+                    d_hpx_all[benchmark][c][b][th][r]={}
+                
 data_files.sort()        
-for filename in data_files:
-    size=[]
-    mflops=[]    
-
-    f=open(filename, 'r')
-             
-    result=f.readlines()[3:163]
-    benchmark=filename.split('/')[-1].split('-')[1]
-    th=int(filename.split('/')[-1].split('-')[2])       
-    repeat=int(filename.split('/')[-1].split('-')[0])       
-
+for filename in data_files:    
+    if 'hpx' in filename:
         
-    for r in result:
-        size.append(int(r.strip().split(' ')[0]))
-        mflops.append(float(r.strip().split(' ')[-1]))
-    
-    d_hpx_all[repeat][benchmark][th]['size']=size
-    d_hpx_all[repeat][benchmark][th]['mflops']=mflops
+        stop=False
+        f=open(filename, 'r')
+                 
+        result=f.readlines()[3:]
+        benchmark=filename.split('/')[-1].split('-')[1]
+        th=int(filename.split('/')[-1].split('-')[2])       
+        repeat=int(filename.split('/')[-1].split('-')[0])       
+        chunk=int(filename.split('/')[-1].split('-')[4])       
+        block=int(filename.split('/')[-1].split('-')[5][0:-4])       
+
+        if block in block_sizes:  
+            size=[]
+            mflops=[]    
+            for r in result:        
+                if "N=" in r:
+                    stop=True
+                if not stop:
+                    size.append(int(r.strip().split(' ')[0]))
+                    mflops.append(float(r.strip().split(' ')[-1]))
+            
+            d_hpx_all[benchmark][chunk][block][th][repeat]['size']=size
+            d_hpx_all[benchmark][chunk][block][th][repeat]['mflops']=mflops
  
     
-d_hpx={}
 for benchmark in hpx_benchmarks:
-    d_hpx[benchmark]={}
-    for th in thr:
-        d_hpx[benchmark][th]={}
-        size_0=d_hpx_all[1][benchmark][th]['size']
-        mflops=[0]*len(size_0)
-        for r in repeats[1:]:
-            size=d_hpx_all[r][benchmark][th]['size']
-            if size!=size_0:
-                print("errorrrrrrrrrrrrrrrrrrrrr")
-            mflops=[mflops[i]+d_hpx_all[r][benchmark][th]['mflops'][i] for i in range(len(mflops))]
-        d_hpx[benchmark][th]['size']=size_0
-        d_hpx[benchmark][th]['mflops']=[x/float(max(repeats)-1) for x in mflops]
+    for c in chunk_sizes:
+        for b in block_sizes:
+            for th in thr:
+                mflops=[0]*len(size)
+                d_hpx[benchmark][c][b][th]['size']=size
 
+                if max(repeats)==1:
+                    mflops=d_hpx_all[benchmark][c][b][th][repeats[0]]['mflops']
+                    d_hpx[benchmark][c][b][th]['mflops']=mflops
+                else:
+                    for r in repeats[1:]:
+                        mflops=[mflops[i]+d_hpx_all[benchmark][c][b][th][r]['mflops'][i] for i in range(len(mflops))]                        
+                        d_hpx[benchmark][c][b][th]['mflops']=[x/float(max(repeats)-1) for x in mflops]
+       
 ####################################################
 #opemp
 ####################################################        
@@ -107,7 +218,7 @@ d_openmp={}
 
 openmp_benchmarks=[]
 for filename in data_files:
-    if 'openmp' in filename:
+    if 'openmp' in filename:        
         (repeat,benchmark, th, runtime) = filename.split('/')[-1].replace('.dat','').split('-')
         if benchmark not in openmp_benchmarks:
             openmp_benchmarks.append(benchmark)
@@ -133,24 +244,29 @@ for repeat in repeats:
      
 
 data_files.sort()        
-for filename in data_files:
+for filename in data_files:    
     size=[]
     mflops=[]    
 
-    f=open(filename, 'r')
-             
-    result=f.readlines()[3:163]
-    benchmark=filename.split('/')[-1].split('-')[1]
-    th=int(filename.split('/')[-1].split('-')[2])       
-    repeat=int(filename.split('/')[-1].split('-')[0])       
-
-        
-    for r in result:
-        size.append(int(r.strip().split(' ')[0]))
-        mflops.append(float(r.strip().split(' ')[-1]))
+    if 'openmp' in filename:
+        f=open(filename, 'r')
+                 
+        result=f.readlines()[3:]
+        stop=False
+        benchmark=filename.split('/')[-1].split('-')[1]
+        th=int(filename.split('/')[-1].split('-')[2])       
+        repeat=int(filename.split('/')[-1].split('-')[0])       
     
-    d_openmp_all[repeat][benchmark][th]['size']=size
-    d_openmp_all[repeat][benchmark][th]['mflops']=mflops
+            
+        for r in result:
+            if "N=" in r:
+                stop=True
+            if not stop:
+                size.append(int(r.strip().split(' ')[0]))
+                mflops.append(float(r.strip().split(' ')[-1]))
+        
+        d_openmp_all[repeat][benchmark][th]['size']=size
+        d_openmp_all[repeat][benchmark][th]['mflops']=mflops
  
 d_openmp={}
 for benchmark in openmp_benchmarks:
@@ -166,15 +282,19 @@ for benchmark in openmp_benchmarks:
             mflops=[mflops[i]+d_openmp_all[r][benchmark][th]['mflops'][i] for i in range(len(mflops))]
         d_openmp[benchmark][th]['size']=size_0
         d_openmp[benchmark][th]['mflops']=[x/float(max(repeats)-1) for x in mflops]
-
-pp = PdfPages(perf_directory+'/perf_log_openmp_'+date_str+'.pdf')
+        
+        
+##############################################################################
+        #plots
+##############################################################################
+pp = PdfPages(perf_directory+'/perf_log_hpx_'+date_str+'.pdf')
 
 i=1
 for benchmark in openmp_benchmarks:       
     plt.figure(i)
     for th in thr:
         plt.plot(d_openmp[benchmark][th]['size'], d_openmp[benchmark][th]['mflops'],label=str(th)+' threads')
-        plt.xlabel("# vector size")           
+        plt.xlabel("# matrix size")           
         plt.ylabel('MFlops')
         plt.xscale('log')
         plt.grid(True, 'both')
@@ -184,20 +304,36 @@ for benchmark in openmp_benchmarks:
     plt.savefig(pp, format='pdf',bbox_inches='tight')
     print('')
     i=i+1
+    
+    for c in chunk_sizes:
+        for b in block_sizes:     
+            plt.figure(i)
+            for th in thr:
+                plt.plot(d_hpx[benchmark][c][b][th]['size'], d_hpx[benchmark][c][b][th]['mflops'],label='chunk_size: '+str(c)+' block_size: '+str(b)+ '  '+str(th)+' threads')
+                plt.xlabel("# matrix size")           
+                plt.ylabel('MFlops')
+                plt.xscale('log')
+                plt.grid(True, 'both')
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.title('hpx   '+benchmark+'  '+date_str)
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            i=i+1    
+            plt.savefig(pp, format='pdf',bbox_inches='tight')
+    print('')
+    
     plt.figure(i)
     for th in thr:
-        plt.plot(d_hpx[benchmark][th]['size'], d_hpx[benchmark][th]['mflops'],label=str(th)+' threads')
-        plt.xlabel("# vector size")           
+        plt.plot(d_hpx_before[benchmark][10][256][th]['size'], d_hpx_before[benchmark][10][256][th]['mflops'],label=str(th)+' threads')
+        plt.xlabel("# matrix size")           
         plt.ylabel('MFlops')
         plt.xscale('log')
         plt.grid(True, 'both')
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        plt.title('hpx   '+benchmark+'  '+date_str)
+        plt.title('hpx   before changes '+benchmark+'  '+date_str)
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-    i=i+1
-    
     plt.savefig(pp, format='pdf',bbox_inches='tight')
     print('')
+    i=i+1
         
 plt.show()
 pp.close() 
