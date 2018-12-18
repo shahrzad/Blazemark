@@ -15,8 +15,8 @@ elif [ $# -eq 2 ]
 then 
     if [ $1 == 'BLAZE_HPX_VECTOR_BLOCK_SIZE' ]
             then
-            line_number=49
-    elif [ $1 == 'BLAZE_HPX_MATRIX_BLOCK_SIZE' ]
+            line_number=45
+    elif [ $1 == 'BLAZE_HPX_MATRIX_BLOCK_SIZE_ROW' ]
             then
             line_number=53
     elif [ $1 == 'BLAZE_HPX_VECTOR_THRESHOLD' ]
@@ -26,9 +26,14 @@ then
 	    then 
 	        line_number=41
 	
-    elif [ $1 == 'BLAZE_HPX_VECTOR_THREADS_MULTIPLYER' ]
+    elif [ $1 == 'BLAZE_HPX_MATRIX_CHUNK_SIZE' ]
 	    then
-	        line_number=45
+	        line_number=49
+
+    elif [ $1 == 'BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN' ]
+            then
+            line_number=57
+
     fi
         filename=${blaze_dir}/blaze/config/HPX.h
 	param=$(sed -n ${line_number}' p' ${filename} |cut -d' ' -f3)
