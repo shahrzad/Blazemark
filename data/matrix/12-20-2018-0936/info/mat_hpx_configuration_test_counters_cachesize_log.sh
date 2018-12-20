@@ -11,9 +11,9 @@ export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.67.0-clang6.0.0/release/lib:$LD_L
 #thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
 thr=(16)
 #vec_sizes_log=(2 3 4 5 6 7)
-chunk_sizes=(5)
+chunk_sizes=(5 20 50)
 #block_sizes=(4 8 16 32)
-block_sizes_row=(512)
+block_sizes_row=(8 16 32 64 128 256 512 1024)
 block_size_col=4
 
 rm -rf ${results_dir}/*.dat
@@ -73,7 +73,7 @@ do
 
 		for th in "${thr[@]}"
 		do 
-		for i in $(seq 11)
+		for i in $(seq 1)
 		do
 
 		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}.dat

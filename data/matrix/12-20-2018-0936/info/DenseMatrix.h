@@ -119,29 +119,30 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
    const size_t threads    ( getNumThreads() );
 //   const ThreadMapping threadmap( createThreadMapping( threads, ~rhs ) );
 
-   const size_t block_size_row (BLAZE_HPX_MATRIX_BLOCK_SIZE_ROW);
-   const size_t block_size_col (BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN);
+   const size_t block_size_row ( BLAZE_HPX_MATRIX_BLOCK_SIZE_ROW > (~rhs).rows() ? (~rhs).rows() : BLAZE_HPX_MATRIX_BLOCK_SIZE_ROW );
+   const size_t block_size_col ( BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN > (~rhs).columns() ? (~rhs).columns() : BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN );
    const size_t addon1     ( ( ( (~rhs).rows() % block_size_row ) != 0UL )? 1UL : 0UL );
    const size_t equalShare1( (~rhs).rows() / block_size_row + addon1 );
-   const size_t rest1      ( equalShare1 & ( SIMDSIZE - 1UL ) );
-   const size_t rowsPerThread( ( simdEnabled && rest1 )?( equalShare1 - rest1 + SIMDSIZE ):( equalShare1 ) );
+   const size_t rest1      ( block_size_row & ( SIMDSIZE - 1UL ) );
+   const size_t rowsPerIter( ( simdEnabled && rest1 )?( block_size_row - rest1 + SIMDSIZE ):( block_size_row ) );
 
    const size_t addon2     ( ( ( (~rhs).columns() % block_size_col ) != 0UL )? 1UL : 0UL );
    const size_t equalShare2( (~rhs).columns() / block_size_col + addon2 );
-   const size_t rest2      ( equalShare2 & ( SIMDSIZE - 1UL ) );
-   const size_t colsPerThread( ( simdEnabled && rest2 )?( equalShare2 - rest2 + SIMDSIZE ):( equalShare2 ) );
+   const size_t rest2      ( block_size_col & ( SIMDSIZE - 1UL ) );
+   const size_t colsPerIter( ( simdEnabled && rest2 )?( block_size_col - rest2 + SIMDSIZE ):( block_size_col ) );
+
 
    hpx::parallel::execution::dynamic_chunk_size ds(BLAZE_HPX_MATRIX_CHUNK_SIZE);
    for_loop( par.with(ds), size_t(0), equalShare1 * equalShare2, [&](int i)
    {
-      const size_t row   ( ( i / equalShare1) * block_size_row );
-      const size_t column( ( i % equalShare2 ) * block_size_col);
+      const size_t row   ( ( i / equalShare2 ) * rowsPerIter );
+      const size_t column( ( i % equalShare2 ) * colsPerIter );
 
       if( row >= (~rhs).rows() || column >= (~rhs).columns() )
          return;
 
-      const size_t m( min( block_size_row, (~rhs).rows()    - row    ) );
-      const size_t n( min( block_size_col, (~rhs).columns() - column ) );
+      const size_t m( min( rowsPerIter, (~rhs).rows()    - row    ) );
+      const size_t n( min( colsPerIter, (~rhs).columns() - column ) );
 
       if( simdEnabled && lhsAligned && rhsAligned ) {
          auto       target( submatrix<aligned>( ~lhs, row, column, m, n ) );
