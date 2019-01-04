@@ -15,7 +15,7 @@ cache_sizes=(256)
 
 rm -rf ${results_dir}/*.dat
 #benchmarks=('daxpy' 'dvecdvecadd')
-benchmarks=('dmatdmatmult')
+benchmarks=('dmatdmatadd')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseVector.h
 size=$((10**vec_size))
