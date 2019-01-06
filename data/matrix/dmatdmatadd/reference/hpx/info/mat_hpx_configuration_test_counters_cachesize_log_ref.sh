@@ -8,8 +8,8 @@ results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.67.0-clang6.0.0/release/lib:$LD_LIBRARY_PATH
-#thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
-thr=(16)
+thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+#thr=(16)
 
 rm -rf ${results_dir}/*.dat
 #benchmarks=('daxpy' 'dvecdvecadd')
@@ -53,7 +53,7 @@ param_filename=${blaze_dir}/blazemark/params/$b.prm
 
 for th in "${thr[@]}"
 do 
-for i in $(seq 1)
+for i in $(seq 11)
 do
 
     ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}.dat

@@ -6,13 +6,14 @@ repo_dir="/home/sshirzad/repos/Blazemark"
 results_dir="$repo_dir/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
-thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+#thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+thr=(16)
 vec_sizes_log=(2 3 4 5 6 7)
 
 #rm -rf ${results_dir}/*
 
 #benchmarks=('daxpy' 'dvecdvecadd')
-benchmarks=('dmatdmatmult')
+benchmarks=('dmatdmatadd')
 r='openmp'
 for b in ${benchmarks[@]}
 do
@@ -36,7 +37,7 @@ do
 #sed -i "58s/*/\//" $param_filename 
 #sed -i "${end_line}s/*/\//" $param_filename
 #
-#$repo_dir/scripts/generate_benchmarks.sh ${b} ${r}
+$repo_dir/scripts/generate_benchmarks.sh ${b} ${r}
 for th in ${thr[@]}
 do
 for i in $(seq 11)
