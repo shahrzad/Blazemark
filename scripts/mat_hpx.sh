@@ -2,19 +2,19 @@
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
-hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib"
+hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
 hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.67.0-clang6.0.0/release/lib:$LD_LIBRARY_PATH
 #thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
-thr=(16)
+thr=(7 16)
 #vec_sizes_log=(2 3 4 5 6 7)
-chunk_sizes=(10)
+chunk_sizes=(4 10 15 20)
 #block_sizes=(4 8 16 32)
-block_sizes_row=(1 4 8 16 32 64 128 256 512)
-block_sizes_col=(1 4 8 16 32 64 128 256 512)
+block_sizes_row=(8)
+block_sizes_col=(512)
 
 rm -rf ${results_dir}/*.dat
 #benchmarks=('daxpy' 'dvecdvecadd')
@@ -30,7 +30,7 @@ date>> ${results_dir}/info/date.txt
 cp ${hpx_log_file} ${results_dir}/info/
 cp ${blaze_dir}/blazemark/configurations/Configfile_hpx ${results_dir}/info/
 cp ${blazemark_dir}/scripts/mat_hpx_configuration_test_counters_cachesize_log.sh ${results_dir}/info/
-git --git-dir $blaze_dir/.git log>>${results_dir}/info/
+git --git-dir $blaze_dir/.git log>>${results_dir}/info/hpx_git.txt
 
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
