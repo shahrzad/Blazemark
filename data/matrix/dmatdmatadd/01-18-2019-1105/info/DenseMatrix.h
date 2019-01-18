@@ -143,9 +143,9 @@ size_t acs (BLAZE_HPX_MATRIX_CHUNK_SIZE);
    else 
     acs=15;
 */
-//   hpx::parallel::execution::dynamic_chunk_size ds(BLAZE_HPX_MATRIX_CHUNK_SIZE);
+   hpx::parallel::execution::dynamic_chunk_size ds(BLAZE_HPX_MATRIX_CHUNK_SIZE);
 
-   hpx::parallel::execution::dynamic_chunk_size ds(acs);
+//   hpx::parallel::execution::dynamic_chunk_size ds(acs);
 
 // for_loop( par.with(ds).on(exec), size_t(0), equalShare1 * equalShare2, [&](int i)
      for_loop( par.with(ds), size_t(0), equalShare1 * equalShare2, [&](int i)
