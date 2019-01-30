@@ -7,9 +7,9 @@ benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
 #thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
 thr=(16)
-chunk_sizes=(10)
-block_sizes_row=(8)
-block_sizes_col=(512)
+chunk_sizes=(4 10 15 20)
+block_sizes_row=(8 16 32)
+block_sizes_col=(128 256 512)
 rm -rf ${results_dir}/*
 
 #benchmarks=('daxpy')
