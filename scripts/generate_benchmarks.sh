@@ -1,6 +1,8 @@
 #!/bin/bash
 
 blazemark_dir="/home/sshirzad/src/blaze_shahrzad/blazemark"
+#blazemark_dir="/home/sshirzad/src/blaze/blazemark"
+
 benchmarks_dir=${blazemark_dir}"/benchmarks"
 config_dir=${blazemark_dir}"/configurations"
 results_dir="/home/sshirzad/src/blaze_shahrzad/blazemark/results"
