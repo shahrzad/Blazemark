@@ -5,15 +5,15 @@ blaze_dir="/home/sshirzad/src/blaze"
 repo_dir="/home/sshirzad/repos/Blazemark"
 results_dir="$repo_dir/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
-config_dir="${blaze_dir}/blaze/config"
-thr=(6 7 8)
+config_dir="${repo_dir}/configurations"
+#thr=(6 7 8)
 #thr=(16)
 #th=$1
 rm -rf ${results_dir}/*
 #benchmarks=('dmatdvecmult')
 #benchmarks=('dmatdmatmult')
-benchmarks=('dvecdvecadd')
-#benchmarks=('dmatdmatadd')
+#benchmarks=('dvecdvecadd')
+benchmarks=('dmatdmatadd')
 r='openmp'
 for b in ${benchmarks[@]}
 do
@@ -45,6 +45,7 @@ git --git-dir ~/src/blaze/.git log>>${results_dir}/info/blaze_git_log.txt
 git --git-dir ~/src/hpx/.git log>>${results_dir}/info/hpx_git_log.txt
 cp $repo_dir/scripts/hpxmp_log.sh ${results_dir}/info/
 cp $blaze_dir/blaze/math/smp/openmp/* ${results_dir}/info/
+cp $repo_dir/configurations/Configfile_openmp ${results_dir}/info/
 $repo_dir/scripts/generate_benchmarks.sh ${b} ${r} "${blaze_dir}/blazemark/"
 for th in $(seq 16)
 do
