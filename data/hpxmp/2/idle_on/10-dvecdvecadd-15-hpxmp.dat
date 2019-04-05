@@ -1,0 +1,563 @@
+
+ Dense Vector/Dense Vector Addition:
+   Blaze [MFlop/s]:
+     1           111.156
+     2           222.409
+     3           261.777
+     4           440.887
+     5           508.484
+     6           610.925
+     7           688.235
+     8           783.445
+     9           824.154
+     10          920.145
+     11          938.349
+     12          1056.66
+     13          1208.99
+     14          1297.48
+     15          1396.54
+     16          1482.64
+     17          1180.26
+     18          1475.55
+     19          1456.03
+     20          1624.37
+     22          1670.82
+     24          1798.54
+     26          1807.92
+     28          1936.97
+     30          2099.55
+     33          1859.56
+     36          2102.27
+     39          2423.57
+     42          2351.37
+     46          2553
+     50          2478.05
+     55          2459.36
+     60          2902.02
+     66          2980.99
+     72          2923.77
+     79          3372.89
+     86          3250.83
+     94          3459.92
+     103         3683.52
+     113         3654.84
+     124         3826.07
+     136         3679.58
+     149         3707.85
+     163         4011
+     179         3803.34
+     196         4123.15
+     215         4193.48
+     236         4149.31
+     259         3185.47
+     284         4472.85
+     312         4356
+     343         4558.96
+     377         4366.87
+     414         4635.55
+     455         4548.99
+     500         4539.46
+     550         4569.64
+     605         4551.07
+     665         4718.92
+     731         4678.8
+     804         4823.09
+     884         4881.57
+     972         4802.71
+     1069        4610.88
+     1175        4931.65
+     1292        3998.15
+     1421        2520.46
+     1563        2006.4
+     1719        1701.11
+     1890        1673.54
+     2079        1699.81
+     2286        1674.02
+     2514        1720.65
+     2765        1727.64
+     3041        1704.34
+     3345        1716.92
+     3679        1747.96
+     4046        1697.75
+     4450        1745.69
+     4895        1718.63
+     5384        1666.94
+     5922        1697.17
+     6514        1732.07
+     7165        1300.72
+     7881        1567.35
+     8669        1598.47
+     9535        1632.48
+     10488       1451.05
+     11536       1487.39
+     12689       1495.11
+     13957       1466.85
+     15352       1233.87
+     16887       1054.32
+     18575       1017.13
+     20432       1058.29
+     22475       1013.64
+     24722       1007.05
+     27194       1079.31
+     29913       1082.76
+     32904       1043.31
+     36194       1058.53
+     39813       332.593
+     43794       371.853
+     48173       413.702
+     52990       462.802
+     58289       519.327
+     64117       596.905
+     70528       671.352
+     77580       759.386
+     85338       856.803
+     93871       970.494
+     103258      1096.67
+     113583      1230.92
+     124941      1408.54
+     137435      1566.89
+     151178      1761.03
+     166295      1928.06
+     182924      2086.07
+     201216      2216.07
+     221337      2352.05
+     243470      2493.53
+     267817      2627.87
+     294598      2759.43
+     324057      2891.31
+     356462      3100.82
+     392108      3306.15
+     431318      3584.7
+     474449      3952.76
+     521893      4323.08
+     574082      4648.85
+     631490      4859.76
+     694639      5123.05
+     764102      5255.08
+     840512      5410.14
+     924563      5383.11
+     1017019     4924.9
+     1118720     4389.8
+     1230592     4134.21
+     1353651     3501.39
+     1489016     2771.75
+     1637917     2028.46
+     1801708     1541.72
+     1981878     1508
+     2180065     1439.94
+     2398071     1304.87
+     2637878     1194.96
+     2901665     1050.24
+     3191831     986.036
+     3511014     954.549
+     3862115     955.087
+     4248326     978.518
+     4673158     972.985
+     5140474     968.892
+     5654521     975.624
+     6219973     969.733
+     6841970     970.48
+     7526167     1007.55
+     8278784     1005.69
+     9106663     1007.74
+     10000000    1008
+   N=1, steps=222267740
+     Blaze       = 1        (1.99959)
+   N=2, steps=222238257
+     Blaze       = 1        (1.99846)
+   N=3, steps=222407010
+     Blaze       = 1        (2.54882)
+   N=4, steps=222513908
+     Blaze       = 1        (2.01878)
+   N=5, steps=199566640
+     Blaze       = 1        (1.96237)
+   N=6, steps=199561264
+     Blaze       = 1        (1.95993)
+   N=7, steps=199694207
+     Blaze       = 1        (2.03108)
+   N=8, steps=194299831
+     Blaze       = 1        (1.98406)
+   N=9, steps=184662756
+     Blaze       = 1        (2.01657)
+   N=10, steps=186125000
+     Blaze       = 1        (2.02278)
+   N=11, steps=186116139
+     Blaze       = 1        (2.18179)
+   N=12, steps=186230904
+     Blaze       = 1        (2.11494)
+   N=13, steps=184770156
+     Blaze       = 1        (1.9868)
+   N=14, steps=184459329
+     Blaze       = 1        (1.99035)
+   N=15, steps=148325838
+     Blaze       = 1        (1.59315)
+   N=16, steps=184379220
+     Blaze       = 1        (1.98974)
+   N=17, steps=162932287
+     Blaze       = 1        (2.3468)
+   N=18, steps=163135881
+     Blaze       = 1        (1.99007)
+   N=19, steps=163166710
+     Blaze       = 1        (2.1292)
+   N=20, steps=157207839
+     Blaze       = 1        (1.93561)
+   N=22, steps=158257726
+     Blaze       = 1        (2.08381)
+   N=24, steps=158251676
+     Blaze       = 1        (2.11173)
+   N=26, steps=141118932
+     Blaze       = 1        (2.02946)
+   N=28, steps=141210543
+     Blaze       = 1        (2.04128)
+   N=30, steps=138595222
+     Blaze       = 1        (1.98036)
+   N=33, steps=128860187
+     Blaze       = 1        (2.28677)
+   N=36, steps=128855703
+     Blaze       = 1        (2.20657)
+   N=39, steps=119635568
+     Blaze       = 1        (1.92517)
+   N=42, steps=111215632
+     Blaze       = 1        (1.98653)
+   N=46, steps=117190808
+     Blaze       = 1        (2.11154)
+   N=50, steps=103666693
+     Blaze       = 1        (2.0917)
+   N=55, steps=103606480
+     Blaze       = 1        (2.31701)
+   N=60, steps=95646548
+     Blaze       = 1        (1.97752)
+   N=66, steps=84650869
+     Blaze       = 1        (1.8742)
+   N=72, steps=87711391
+     Blaze       = 1        (2.15996)
+   N=79, steps=79020811
+     Blaze       = 1        (1.85083)
+   N=86, steps=80372188
+     Blaze       = 1        (2.12623)
+   N=94, steps=70162326
+     Blaze       = 1        (1.90619)
+   N=103, steps=69715440
+     Blaze       = 1        (1.94941)
+   N=113, steps=61887985
+     Blaze       = 1        (1.91345)
+   N=124, steps=59189105
+     Blaze       = 1        (1.91827)
+   N=136, steps=53295523
+     Blaze       = 1        (1.96984)
+   N=149, steps=47804333
+     Blaze       = 1        (1.92102)
+   N=163, steps=47676108
+     Blaze       = 1        (1.93747)
+   N=179, steps=42891137
+     Blaze       = 1        (2.01863)
+   N=196, steps=40567800
+     Blaze       = 1        (1.92845)
+   N=215, steps=36906619
+     Blaze       = 1        (1.8922)
+   N=236, steps=34897445
+     Blaze       = 1        (1.98486)
+   N=259, steps=24226272
+     Blaze       = 1        (1.96975)
+   N=284, steps=29855570
+     Blaze       = 1        (1.89566)
+   N=312, steps=28111110
+     Blaze       = 1        (2.01347)
+   N=343, steps=25743921
+     Blaze       = 1        (1.93688)
+   N=377, steps=23484539
+     Blaze       = 1        (2.02746)
+   N=414, steps=22807215
+     Blaze       = 1        (2.03691)
+   N=455, steps=21083623
+     Blaze       = 1        (2.10883)
+   N=500, steps=18443056
+     Blaze       = 1        (2.03141)
+   N=550, steps=16952369
+     Blaze       = 1        (2.04038)
+   N=605, steps=15891422
+     Blaze       = 1        (2.11254)
+   N=665, steps=13557385
+     Blaze       = 1        (1.91053)
+   N=731, steps=12599704
+     Blaze       = 1        (1.96854)
+   N=804, steps=12303690
+     Blaze       = 1        (2.051)
+   N=884, steps=11353877
+     Blaze       = 1        (2.05607)
+   N=972, steps=9788750
+     Blaze       = 1        (1.9811)
+   N=1069, steps=9540406
+     Blaze       = 1        (2.21188)
+   N=1175, steps=8953996
+     Blaze       = 1        (2.13335)
+   N=1292, steps=4677593
+     Blaze       = 1        (1.51156)
+   N=1421, steps=3467960
+     Blaze       = 1        (1.95519)
+   N=1563, steps=2206078
+     Blaze       = 1        (1.71855)
+   N=1719, steps=1956663
+     Blaze       = 1        (1.97724)
+   N=1890, steps=1815401
+     Blaze       = 1        (2.05021)
+   N=2079, steps=1643973
+     Blaze       = 1        (2.01071)
+   N=2286, steps=1449915
+     Blaze       = 1        (1.97997)
+   N=2514, steps=1353720
+     Blaze       = 1        (1.97789)
+   N=2765, steps=1122398
+     Blaze       = 1        (1.79634)
+   N=3041, steps=1081955
+     Blaze       = 1        (1.9305)
+   N=3345, steps=994702
+     Blaze       = 1        (1.93793)
+   N=3679, steps=940349
+     Blaze       = 1        (1.97919)
+   N=4046, steps=851210
+     Blaze       = 1        (2.02856)
+   N=4450, steps=788305
+     Blaze       = 1        (2.00949)
+   N=4895, steps=715413
+     Blaze       = 1        (2.03764)
+   N=5384, steps=634421
+     Blaze       = 1        (2.04909)
+   N=5922, steps=596364
+     Blaze       = 1        (2.08091)
+   N=6514, steps=534729
+     Blaze       = 1        (2.01102)
+   N=7165, steps=414555
+     Blaze       = 1        (2.28357)
+   N=7881, steps=435459
+     Blaze       = 1        (2.18959)
+   N=8669, steps=386874
+     Blaze       = 1        (2.09814)
+   N=9535, steps=354916
+     Blaze       = 1        (2.073)
+   N=10488, steps=280719
+     Blaze       = 1        (2.029)
+   N=11536, steps=268253
+     Blaze       = 1        (2.08054)
+   N=12689, steps=237164
+     Blaze       = 1        (2.01281)
+   N=13957, steps=207292
+     Blaze       = 1        (1.97237)
+   N=15352, steps=151738
+     Blaze       = 1        (1.88795)
+   N=16887, steps=147856
+     Blaze       = 1        (2.36821)
+   N=18575, steps=123507
+     Blaze       = 1        (2.2555)
+   N=20432, steps=109603
+     Blaze       = 1        (2.11606)
+   N=22475, steps=98634
+     Blaze       = 1        (2.18697)
+   N=24722, steps=88059
+     Blaze       = 1        (2.16175)
+   N=27194, steps=79315
+     Blaze       = 1        (1.9984)
+   N=29913, steps=72029
+     Blaze       = 1        (1.98991)
+   N=32904, steps=65512
+     Blaze       = 1        (2.06612)
+   N=36194, steps=59540
+     Blaze       = 1        (2.03584)
+   N=39813, steps=16785
+     Blaze       = 1        (2.00925)
+   N=43794, steps=16951
+     Blaze       = 1        (1.99636)
+   N=48173, steps=16665
+     Blaze       = 1        (1.94053)
+   N=52990, steps=16781
+     Blaze       = 1        (1.92139)
+   N=58289, steps=16984
+     Blaze       = 1        (1.90628)
+   N=64117, steps=17157
+     Blaze       = 1        (1.84293)
+   N=70528, steps=17401
+     Blaze       = 1        (1.82804)
+   N=77580, steps=17842
+     Blaze       = 1        (1.82277)
+   N=85338, steps=18108
+     Blaze       = 1        (1.80357)
+   N=93871, steps=18694
+     Blaze       = 1        (1.80818)
+   N=103258, steps=18776
+     Blaze       = 1        (1.76787)
+   N=113583, steps=19575
+     Blaze       = 1        (1.80629)
+   N=124941, steps=20157
+     Blaze       = 1        (1.78798)
+   N=137435, steps=19553
+     Blaze       = 1        (1.71503)
+   N=151178, steps=20392
+     Blaze       = 1        (1.75058)
+   N=166295, steps=21230
+     Blaze       = 1        (1.83109)
+   N=182924, steps=22505
+     Blaze       = 1        (1.97342)
+   N=201216, steps=21593
+     Blaze       = 1        (1.96061)
+   N=221337, steps=21097
+     Blaze       = 1        (1.98531)
+   N=243470, steps=20167
+     Blaze       = 1        (1.96912)
+   N=267817, steps=19211
+     Blaze       = 1        (1.95787)
+   N=294598, steps=18350
+     Blaze       = 1        (1.95906)
+   N=324057, steps=17307
+     Blaze       = 1        (1.93976)
+   N=356462, steps=16899
+     Blaze       = 1        (1.94266)
+   N=392108, steps=16471
+     Blaze       = 1        (1.95345)
+   N=431318, steps=15925
+     Blaze       = 1        (1.91613)
+   N=474449, steps=16013
+     Blaze       = 1        (1.92204)
+   N=521893, steps=15043
+     Blaze       = 1        (1.81603)
+   N=574082, steps=14864
+     Blaze       = 1        (1.83554)
+   N=631490, steps=14180
+     Blaze       = 1        (1.84259)
+   N=694639, steps=12924
+     Blaze       = 1        (1.75238)
+   N=764102, steps=11293
+     Blaze       = 1        (1.64203)
+   N=840512, steps=11094
+     Blaze       = 1        (1.72355)
+   N=924563, steps=10505
+     Blaze       = 1        (1.80426)
+   N=1017019, steps=8168
+     Blaze       = 1        (1.68674)
+   N=1118720, steps=6928
+     Blaze       = 1        (1.76557)
+   N=1230592, steps=5406
+     Blaze       = 1        (1.60915)
+   N=1353651, steps=3773
+     Blaze       = 1        (1.45866)
+   N=1489016, steps=2852
+     Blaze       = 1        (1.53213)
+   N=1637917, steps=2013
+     Blaze       = 1        (1.62544)
+   N=1801708, steps=1511
+     Blaze       = 1        (1.7658)
+   N=1981878, steps=1591
+     Blaze       = 1        (2.09095)
+   N=2180065, steps=1366
+     Blaze       = 1        (2.06812)
+   N=2398071, steps=994
+     Blaze       = 1        (1.82676)
+   N=2637878, steps=872
+     Blaze       = 1        (1.92494)
+   N=2901665, steps=721
+     Blaze       = 1        (1.99202)
+   N=3191831, steps=617
+     Blaze       = 1        (1.99725)
+   N=3511014, steps=554
+     Blaze       = 1        (2.03772)
+   N=3862115, steps=489
+     Blaze       = 1        (1.97739)
+   N=4248326, steps=444
+     Blaze       = 1        (1.92767)
+   N=4673158, steps=417
+     Blaze       = 1        (2.00281)
+   N=5140474, steps=376
+     Blaze       = 1        (1.99488)
+   N=5654521, steps=492
+     Blaze       = 1        (2.85153)
+   N=6219973, steps=317
+     Blaze       = 1        (2.03327)
+   N=6841970, steps=292
+     Blaze       = 1        (2.05863)
+   N=7526167, steps=266
+     Blaze       = 1        (1.98697)
+   N=8278784, steps=242
+     Blaze       = 1        (1.99213)
+   N=9106663, steps=143
+     Blaze       = 1        (1.29225)
+   N=10000000, steps=212
+     Blaze       = 1        (2.10317)
+/threads{locality#0/total}/idle-rate,1,1008.902620,[s],8117,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,1008.903057,[s],8180,[0.01%]
+/threads{locality#0/pool#default/worker-thread#1}/idle-rate,1,1008.901857,[s],8201,[0.01%]
+/threads{locality#0/pool#default/worker-thread#2}/idle-rate,1,1008.902074,[s],8209,[0.01%]
+/threads{locality#0/pool#default/worker-thread#3}/idle-rate,1,1008.903923,[s],8221,[0.01%]
+/threads{locality#0/pool#default/worker-thread#4}/idle-rate,1,1008.904964,[s],8210,[0.01%]
+/threads{locality#0/pool#default/worker-thread#5}/idle-rate,1,1008.905289,[s],8204,[0.01%]
+/threads{locality#0/pool#default/worker-thread#6}/idle-rate,1,1008.903934,[s],8191,[0.01%]
+/threads{locality#0/pool#default/worker-thread#7}/idle-rate,1,1008.905243,[s],8200,[0.01%]
+/threads{locality#0/pool#default/worker-thread#8}/idle-rate,1,1008.904077,[s],7790,[0.01%]
+/threads{locality#0/pool#default/worker-thread#9}/idle-rate,1,1008.904992,[s],8050,[0.01%]
+/threads{locality#0/pool#default/worker-thread#10}/idle-rate,1,1008.903960,[s],8064,[0.01%]
+/threads{locality#0/pool#default/worker-thread#11}/idle-rate,1,1008.901907,[s],8062,[0.01%]
+/threads{locality#0/pool#default/worker-thread#12}/idle-rate,1,1008.903969,[s],8066,[0.01%]
+/threads{locality#0/pool#default/worker-thread#13}/idle-rate,1,1008.901915,[s],8061,[0.01%]
+/threads{locality#0/pool#default/worker-thread#14}/idle-rate,1,1008.905275,[s],8048,[0.01%]
+/threads{locality#0/total}/time/average,1,1008.902137,[s],86043,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,1008.901930,[s],118297,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average,1,1008.903991,[s],106404,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average,1,1008.903996,[s],105399,[ns]
+/threads{locality#0/pool#default/worker-thread#3}/time/average,1,1008.904001,[s],105715,[ns]
+/threads{locality#0/pool#default/worker-thread#4}/time/average,1,1008.904005,[s],105066,[ns]
+/threads{locality#0/pool#default/worker-thread#5}/time/average,1,1008.904009,[s],105031,[ns]
+/threads{locality#0/pool#default/worker-thread#6}/time/average,1,1008.904014,[s],105722,[ns]
+/threads{locality#0/pool#default/worker-thread#7}/time/average,1,1008.904148,[s],105445,[ns]
+/threads{locality#0/pool#default/worker-thread#8}/time/average,1,1008.904025,[s],97325,[ns]
+/threads{locality#0/pool#default/worker-thread#9}/time/average,1,1008.904029,[s],68478,[ns]
+/threads{locality#0/pool#default/worker-thread#10}/time/average,1,1008.902567,[s],67974,[ns]
+/threads{locality#0/pool#default/worker-thread#11}/time/average,1,1008.902751,[s],67981,[ns]
+/threads{locality#0/pool#default/worker-thread#12}/time/average,1,1008.902574,[s],68264,[ns]
+/threads{locality#0/pool#default/worker-thread#13}/time/average,1,1008.904044,[s],67591,[ns]
+/threads{locality#0/pool#default/worker-thread#14}/time/average,1,1008.905346,[s],68201,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,1008.902588,[s],1.22359e+13,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,1008.903205,[s],8.2203e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/cumulative-overhead,1,1008.904063,[s],8.24157e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/cumulative-overhead,1,1008.904073,[s],8.24956e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#3}/time/cumulative-overhead,1,1008.904079,[s],8.26145e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#4}/time/cumulative-overhead,1,1008.904084,[s],8.25033e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#5}/time/cumulative-overhead,1,1008.904215,[s],8.24438e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#6}/time/cumulative-overhead,1,1008.905479,[s],8.23164e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#7}/time/cumulative-overhead,1,1008.905332,[s],8.24113e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#8}/time/cumulative-overhead,1,1008.905221,[s],7.82849e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#9}/time/cumulative-overhead,1,1008.905411,[s],8.09005e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#10}/time/cumulative-overhead,1,1008.904125,[s],8.10379e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#11}/time/cumulative-overhead,1,1008.903279,[s],8.10179e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#12}/time/cumulative-overhead,1,1008.902668,[s],8.10622e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#13}/time/cumulative-overhead,1,1008.905435,[s],8.10069e+11,[ns]
+/threads{locality#0/pool#default/worker-thread#14}/time/cumulative-overhead,1,1008.902676,[s],8.08779e+11,[ns]
+/threads{locality#0/total}/count/cumulative,1,1008.903294,[s],3.29778e+07
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,1008.904153,[s],1.54582e+06
+/threads{locality#0/pool#default/worker-thread#1}/count/cumulative,1,1008.905388,[s],1.6986e+06
+/threads{locality#0/pool#default/worker-thread#2}/count/cumulative,1,1008.905393,[s],1.70722e+06
+/threads{locality#0/pool#default/worker-thread#3}/count/cumulative,1,1008.904169,[s],1.69086e+06
+/threads{locality#0/pool#default/worker-thread#4}/count/cumulative,1,1008.904174,[s],1.7119e+06
+/threads{locality#0/pool#default/worker-thread#5}/count/cumulative,1,1008.904178,[s],1.71814e+06
+/threads{locality#0/pool#default/worker-thread#6}/count/cumulative,1,1008.904183,[s],1.71895e+06
+/threads{locality#0/pool#default/worker-thread#7}/count/cumulative,1,1008.905418,[s],1.71446e+06
+/threads{locality#0/pool#default/worker-thread#8}/count/cumulative,1,1008.902134,[s],2.28149e+06
+/threads{locality#0/pool#default/worker-thread#9}/count/cumulative,1,1008.902734,[s],2.8606e+06
+/threads{locality#0/pool#default/worker-thread#10}/count/cumulative,1,1008.905505,[s],2.86163e+06
+/threads{locality#0/pool#default/worker-thread#11}/count/cumulative,1,1008.902365,[s],2.86425e+06
+/threads{locality#0/pool#default/worker-thread#12}/count/cumulative,1,1008.902158,[s],2.84591e+06
+/threads{locality#0/pool#default/worker-thread#13}/count/cumulative,1,1008.902755,[s],2.88243e+06
+/threads{locality#0/pool#default/worker-thread#14}/count/cumulative,1,1008.904225,[s],2.87554e+06
+/threads{locality#0/total}/time/average-overhead,1,1008.904232,[s],371035,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,1008.903459,[s],531774,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average-overhead,1,1008.904244,[s],485199,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average-overhead,1,1008.905547,[s],483215,[ns]
+/threads{locality#0/pool#default/worker-thread#3}/time/average-overhead,1,1008.905293,[s],488593,[ns]
+/threads{locality#0/pool#default/worker-thread#4}/time/average-overhead,1,1008.904265,[s],481940,[ns]
+/threads{locality#0/pool#default/worker-thread#5}/time/average-overhead,1,1008.904272,[s],479844,[ns]
+/threads{locality#0/pool#default/worker-thread#6}/time/average-overhead,1,1008.904276,[s],478877,[ns]
+/threads{locality#0/pool#default/worker-thread#7}/time/average-overhead,1,1008.902815,[s],480685,[ns]
+/threads{locality#0/pool#default/worker-thread#8}/time/average-overhead,1,1008.903438,[s],343130,[ns]
+/threads{locality#0/pool#default/worker-thread#9}/time/average-overhead,1,1008.905593,[s],282809,[ns]
+/threads{locality#0/pool#default/worker-thread#10}/time/average-overhead,1,1008.902834,[s],283187,[ns]
+/threads{locality#0/pool#default/worker-thread#11}/time/average-overhead,1,1008.903021,[s],282859,[ns]
+/threads{locality#0/pool#default/worker-thread#12}/time/average-overhead,1,1008.903457,[s],284837,[ns]
+/threads{locality#0/pool#default/worker-thread#13}/time/average-overhead,1,1008.902472,[s],281037,[ns]
+/threads{locality#0/pool#default/worker-thread#14}/time/average-overhead,1,1008.903543,[s],281261,[ns]
