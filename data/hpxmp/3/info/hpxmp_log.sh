@@ -11,8 +11,8 @@ config_dir="${repo_dir}/configurations"
 #th=$1
 rm -rf ${results_dir}/*
 #benchmarks=('dmatdvecmult')
-#benchmarks=('dmatdmatmult')
-benchmarks=('dvecdvecadd')
+benchmarks=('dmatdmatmult')
+#benchmarks=('dvecdvecadd')
 #benchmarks=('dmatdmatadd')
 r='openmp'
 for b in ${benchmarks[@]}
