@@ -7,7 +7,7 @@ hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.
 results_dir="${repo_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${repo_dir}/configurations"
-#export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
 #thr=(16)
 
@@ -57,7 +57,8 @@ for th in $(seq 16)
 do
 for i in $(seq 6)
 do
-    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}.dat
+export HPX_CIMMANDLINE_OPTIONS="--hpx::threads=${th} --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead"
+    ${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${i}-${b}-${th}-${r}.dat
     echo ${b} "benchmark for" ${r} "finished for "${th} "threads ${i}th time"
 done
 done    
