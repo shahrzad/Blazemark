@@ -1,6 +1,21 @@
 
  Dense Vector/Dense Vector Addition:
    Blaze [MFlop/s]:
-     201216      1038.28
-   N=201216, steps=10584
-     Blaze       = 1        (2.05115)
+     201216      1038.88
+   N=201216, steps=10594
+     Blaze       = 1        (2.0519)
+/threads{locality#0/total}/idle-rate,1,7.011721,[s],4999,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,7.011738,[s],7,[0.01%]
+/threads{locality#0/pool#default/worker-thread#1}/idle-rate,1,7.011752,[s],9992,[0.01%]
+/threads{locality#0/total}/time/average,1,7.011740,[s],1.2957e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,7.011754,[s],2.0182e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average,1,7.011742,[s],205045,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,7.011755,[s],6.86636e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,7.011745,[s],5.0123e+06,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/cumulative-overhead,1,7.011757,[s],6.86135e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,7.011747,[s],56
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,7.011737,[s],37
+/threads{locality#0/pool#default/worker-thread#1}/count/cumulative,1,7.011748,[s],26
+/threads{locality#0/total}/time/average-overhead,1,7.011763,[s],1.07288e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,7.011750,[s],156678,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average-overhead,1,7.011741,[s],2.54126e+08,[ns]

@@ -1,6 +1,26 @@
 
  Dense Vector/Dense Vector Addition:
    Blaze [MFlop/s]:
-     201216      1047.54
-   N=201216, steps=10594
-     Blaze       = 1        (2.03494)
+     201216      1036.25
+   N=201216, steps=10527
+     Blaze       = 1        (2.04411)
+/threads{locality#0/total}/idle-rate,1,6.997278,[s],6666,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,6.997295,[s],9997,[0.01%]
+/threads{locality#0/pool#default/worker-thread#1}/idle-rate,1,6.997299,[s],5,[0.01%]
+/threads{locality#0/pool#default/worker-thread#2}/idle-rate,1,6.997313,[s],9996,[0.01%]
+/threads{locality#0/total}/time/average,1,6.997336,[s],9.11872e+07,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,6.997301,[s],52030,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average,1,6.997316,[s],4.07432e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average,1,6.997322,[s],83355,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,6.997304,[s],1.38606e+10,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,6.997319,[s],6.92883e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/cumulative-overhead,1,6.997324,[s],3.82092e+06,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/cumulative-overhead,1,6.997306,[s],6.92792e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,6.997321,[s],74
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,6.997327,[s],33
+/threads{locality#0/pool#default/worker-thread#1}/count/cumulative,1,6.997319,[s],17
+/threads{locality#0/pool#default/worker-thread#2}/count/cumulative,1,6.997338,[s],29
+/threads{locality#0/total}/time/average-overhead,1,6.997344,[s],1.66995e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,6.997341,[s],2.09965e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average-overhead,1,6.997330,[s],224759,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average-overhead,1,6.997333,[s],2.09938e+08,[ns]

@@ -1,6 +1,26 @@
 
  Dense Vector/Dense Vector Addition:
    Blaze [MFlop/s]:
-     201216      1048.14
-   N=201216, steps=10587
-     Blaze       = 1        (2.03243)
+     201216      1034.68
+   N=201216, steps=10624
+     Blaze       = 1        (2.06607)
+/threads{locality#0/total}/idle-rate,1,7.005691,[s],6666,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,7.005678,[s],9997,[0.01%]
+/threads{locality#0/pool#default/worker-thread#1}/idle-rate,1,7.005708,[s],7,[0.01%]
+/threads{locality#0/pool#default/worker-thread#2}/idle-rate,1,7.005693,[s],9995,[0.01%]
+/threads{locality#0/total}/time/average,1,7.005704,[s],9.30929e+07,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,7.005712,[s],86342,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average,1,7.005696,[s],4.30228e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average,1,7.005721,[s],107882,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,7.005716,[s],1.37765e+10,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,7.005700,[s],6.8865e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/cumulative-overhead,1,7.005724,[s],4.83164e+06,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/cumulative-overhead,1,7.005719,[s],6.88514e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,7.005706,[s],76
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,7.005708,[s],28
+/threads{locality#0/pool#default/worker-thread#1}/count/cumulative,1,7.005726,[s],21
+/threads{locality#0/pool#default/worker-thread#2}/count/cumulative,1,7.005713,[s],30
+/threads{locality#0/total}/time/average-overhead,1,7.005731,[s],1.68006e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,7.005717,[s],2.22145e+08,[ns]
+/threads{locality#0/pool#default/worker-thread#1}/time/average-overhead,1,7.005736,[s],210340,[ns]
+/threads{locality#0/pool#default/worker-thread#2}/time/average-overhead,1,7.005758,[s],2.29508e+08,[ns]
