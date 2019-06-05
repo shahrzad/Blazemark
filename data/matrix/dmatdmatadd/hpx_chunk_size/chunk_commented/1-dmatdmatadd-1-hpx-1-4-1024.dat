@@ -1,0 +1,25 @@
+
+ Dense Matrix/Dense Matrix Addition:
+   Blaze [MFlop/s]:
+     500         334.932
+     1000        358.078
+     5000        301.661
+     10000       322.954
+   N=500, steps=2732
+     Blaze       = 1        (2.03922)
+   N=1000, steps=756
+     Blaze       = 1        (2.11127)
+   N=5000, steps=19
+     Blaze       = 1        (1.57462)
+   N=10000, steps=2
+     Blaze       = 1        (0.619283)
+/threads{locality#0/total}/idle-rate,1,85.632997,[s],2163,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,85.633017,[s],2163,[0.01%]
+/threads{locality#0/total}/time/average,1,85.633020,[s],4501,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,85.633022,[s],4501,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,85.633024,[s],1.83756e+10,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,85.633026,[s],1.83756e+10,[ns]
+/threads{locality#0/total}/count/cumulative,1,85.633028,[s],1.47911e+07
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,85.633030,[s],1.47911e+07
+/threads{locality#0/total}/time/average-overhead,1,85.633032,[s],1242,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,85.633034,[s],1242,[ns]
