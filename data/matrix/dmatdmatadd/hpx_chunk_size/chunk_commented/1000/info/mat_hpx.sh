@@ -9,19 +9,19 @@ benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 #thr=(1 4 8 16)
-thr=(16 1 4 8)
+thr=(16)
 #thr=(1 2 4 7 8 7 16)
 #vec_sizes_log=(2 3 4 5 6 7)
 chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 250)
 #chunk_sizes=(2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 25000)
 
 #block_sizes=(4 8 16 32)
-block_sizes_row=(4)
-block_sizes_col=(1024)
+block_sizes_row=(64)
+block_sizes_col=(64)
 
 rm -rf ${results_dir}/*.dat
 #benchmarks=('daxpy' 'dvecdvecadd')
-benchmarks=('dmatdmatadd')
+benchmarks=('dmatdmatmult')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseVector.h
 
