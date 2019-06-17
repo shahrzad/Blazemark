@@ -1,16 +1,14 @@
 #!/bin/bash
 
-blazemark_dir="/home/sshirzad/src/blaze_shahrzad/blazemark"
-#blazemark_dir="/home/sshirzad/src/blaze/blazemark"
+#blazemark_dir="/home/sshirzad/src/blaze_shahrzad/blazemark"
+blazemark_dir="/home/sshirzad/src/blaze/blazemark"
+config_dir="/home/sshirzad/repos/Blazemark/configurations"
 
-benchmarks_dir=${blazemark_dir}"/benchmarks"
-config_dir=${blazemark_dir}"/configurations"
-results_dir="/home/sshirzad/src/blaze_shahrzad/blazemark/results"
-
-if [ $# -eq 2 ]
+if [ $# -eq 3 ]
 then
     benchmarks=$1
     runtimes=$2
+    blazemark_dir=$3
 #    if [ ${runtimes} == 'hpx' ]
 #    then
 ##        rm -rf ${results_dir}/hpx
@@ -39,6 +37,7 @@ else
 #    cp ~/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt ${results_dir}/hpx/hpx_cmake_log.txt
 fi
 
+benchmarks_dir=${blazemark_dir}"/benchmarks"
 
 rm -rf ${benchmarks_dir}/build_log.txt
 rm -rf ${benchmarks_dir}/compile_log.txt
@@ -47,11 +46,12 @@ touch ${benchmarks_dir}/compile_log.txt
 
 
 cd ${blazemark_dir}
-
 for b in ${benchmarks[@]}
-    do 
+    do
     for r in ${runtimes[@]}
         do
+echo $b
+echo $r
         rm -rf ${benchmarks_dir}/${b}_${r}
         echo ${b} ${r}>>${benchmarks_dir}/build_log.txt
         echo ${b} ${r}>>${benchmarks_dir}/compile_log.txt
