@@ -1,9 +1,89 @@
+commit aa70111a4ccab6793dde19beb04ead7af2f77801
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Mon Jul 22 12:30:35 2019 -0500
+
+    Changing number of reps to 5
+
+commit 5846db30fd57629efe0bf3db4e2f69e2e255390e
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Jun 7 14:53:01 2019 -0500
+
+    Updating the way hpx backend selects number of columns in the blocks
+
+commit d8c5cef3eb1887868de07a031a9ec73ac3049b9b
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Jun 7 14:45:43 2019 -0500
+
+    Updating the way hpx backend selects number of columns in the blocks
+
+commit 4155d6ac3e42b5fc86ded3938354e1ee456be8e8
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Feb 8 10:28:16 2019 -0600
+
+    changing the name of cache_size variable to block_size
+
+commit 93c9eb9a0026ebdc608f6b42f9766dbb2658b004
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Tue Jan 8 11:27:31 2019 -0600
+
+    Updating the code
+
+commit 249960daf37bf5f4b59b74cf9b5535e9b69c2bdd
+Merge: 4e78059 7852d9e
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Dec 19 14:32:59 2018 -0600
+
+    Merge branch 'master' into hpx_backend
+
 commit 7852d9e22aeb89b907cb878c28d6ca75e5528431
 Merge: d6bf1d4 6378010
 Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
 Date:   Wed Dec 19 14:29:42 2018 -0600
 
     Merge remote-tracking branch 'upstream/master'
+
+commit 4e780598feeebbf1f73b3e2ecf2a927ae6a4722c
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Dec 19 13:17:57 2018 -0600
+
+    Updating the code
+
+commit f495b4e71cbf5b016f5be7440e5e05438ccb0632
+Merge: 7b7f9f5 806b1ef
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Tue Dec 18 10:09:25 2018 -0600
+
+    Merge branch 'hpx_backend' of https://bitbucket.org/shahirzad/blaze_shahrzad into hpx_backend
+
+commit 7b7f9f51da2c23c7d94791bfd3d371e91abe6ea4
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Tue Dec 18 10:09:05 2018 -0600
+
+    Changing params files, adding configuration files
+
+commit 806b1ef18d9b2c589109b2c1e83a6d08c2b640e3
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Tue Dec 18 10:03:59 2018 -0600
+
+    Adding row and column block size parameters
+
+commit c0212fe9b12d4ae04c0bee73289eb26cf647b343
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Thu Dec 13 15:37:43 2018 -0600
+
+    Adding the block_size parameter
+
+commit 76c145f5d19874fe6f056b5c425ae192e3f334fc
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Dec 12 18:01:11 2018 -0600
+
+    updating the code
+
+commit 86c07c063b82c71bfaeb44d9812a6284f090518c
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Mon Dec 10 17:24:24 2018 -0600
+
+    Changing implementation of matrix operations with HPX backend
 
 commit 63780104980c47c2e166a2b0bcb51655820f2308
 Merge: f48b7ab 331e6e8
@@ -23,6 +103,12 @@ Author: Klaus Iglberger <klaus.iglberger@gmail.com>
 Date:   Sun Nov 25 11:53:55 2018 +0100
 
     Add 'blaze_tensor' to the Blaze projects section in the 'README.md'
+
+commit c58e26e3fda2a1d2369209ddc48e7360af8155d9
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Nov 2 10:08:25 2018 -0500
+
+    Adding new configurations for hpx backend
 
 commit 71581c4ad8d7ef34e397d37a69614c2b1eb9023c
 Author: Klaus Iglberger <klaus.iglberger@gmail.com>
@@ -113,6 +199,12 @@ Author: Klaus Iglberger <klaus.iglberger@gmail.com>
 Date:   Mon Oct 15 19:27:52 2018 +0200
 
     Resolve compilation issues with compilers that don't support the C++17 raw memory algorithms
+
+commit 89b58f6b5d2e2b3534991e3faf4c30dd3cd88958
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Oct 10 18:20:39 2018 -0500
+
+    adding the option to change hpx parameters
 
 commit 5d35d2d2dc6f5db14ff9dbe2845926b9ae50d002
 Merge: 739df75 a8ee523

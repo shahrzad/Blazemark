@@ -39,8 +39,9 @@
 //*************************************************************************************************
 // Includes
 //*************************************************************************************************
-
 #include <hpx/include/parallel_for_loop.hpp>
+#include <hpx/include/parallel_executor_parameters.hpp>
+#include <blaze/config/HPX.h>
 #include <blaze/math/Aliases.h>
 #include <blaze/math/AlignmentFlag.h>
 #include <blaze/math/constraints/SMPAssignable.h>
@@ -116,28 +117,30 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
    const bool rhsAligned( (~rhs).isAligned() );
 
    const size_t threads    ( getNumThreads() );
-   const ThreadMapping threadmap( createThreadMapping( threads, ~rhs ) );
+   const size_t numRows ( min( static_cast<std::size_t>( BLAZE_HPX_MATRIX_BLOCK_SIZE_ROW ), (~rhs).rows() ) );
+   const size_t numCols ( min( static_cast<std::size_t>( BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN ), (~rhs).columns() ) );
 
-   const size_t addon1     ( ( ( (~rhs).rows() % threadmap.first ) != 0UL )? 1UL : 0UL );
-   const size_t equalShare1( (~rhs).rows() / threadmap.first + addon1 );
-   const size_t rest1      ( equalShare1 & ( SIMDSIZE - 1UL ) );
-   const size_t rowsPerThread( ( simdEnabled && rest1 )?( equalShare1 - rest1 + SIMDSIZE ):( equalShare1 ) );
+   const size_t rowsPerIter( numRows );
+   const size_t addon1     ( ( ( (~rhs).rows() % rowsPerIter ) != 0UL )? 1UL : 0UL );
+   const size_t equalShare1( (~rhs).rows() / rowsPerIter + addon1 );
 
-   const size_t addon2     ( ( ( (~rhs).columns() % threadmap.second ) != 0UL )? 1UL : 0UL );
-   const size_t equalShare2( (~rhs).columns() / threadmap.second + addon2 );
-   const size_t rest2      ( equalShare2 & ( SIMDSIZE - 1UL ) );
-   const size_t colsPerThread( ( simdEnabled && rest2 )?( equalShare2 - rest2 + SIMDSIZE ):( equalShare2 ) );
+   const size_t rest2      ( numCols & ( SIMDSIZE - 1UL ) );
+   const size_t colsPerIter( ( simdEnabled && rest2 )?( numCols - rest2 + SIMDSIZE ):( numCols ) );
+   const size_t addon2     ( ( ( (~rhs).columns() % colsPerIter ) != 0UL )? 1UL : 0UL );
+   const size_t equalShare2( (~rhs).columns() / colsPerIter + addon2 );
 
-   for_loop( par, size_t(0), threads, [&](int i)
+   hpx::parallel::execution::dynamic_chunk_size chunkSize ( BLAZE_HPX_MATRIX_CHUNK_SIZE );
+
+    for_loop( par.with( chunkSize ), size_t(0), equalShare1 * equalShare2, [&](int i)
    {
-      const size_t row   ( ( i / threadmap.second ) * rowsPerThread );
-      const size_t column( ( i % threadmap.second ) * colsPerThread );
+      const size_t row   ( ( i / equalShare2 ) * rowsPerIter );
+      const size_t column( ( i % equalShare2 ) * colsPerIter );
 
       if( row >= (~rhs).rows() || column >= (~rhs).columns() )
          return;
 
-      const size_t m( min( rowsPerThread, (~rhs).rows()    - row    ) );
-      const size_t n( min( colsPerThread, (~rhs).columns() - column ) );
+      const size_t m( min( rowsPerIter, (~rhs).rows()    - row    ) );
+      const size_t n( min( colsPerIter, (~rhs).columns() - column ) );
 
       if( simdEnabled && lhsAligned && rhsAligned ) {
          auto       target( submatrix<aligned>( ~lhs, row, column, m, n ) );

@@ -70,7 +70,7 @@ namespace blaze {
 */
 BLAZE_ALWAYS_INLINE size_t getNumThreads()
 {
-   return 4 * hpx::get_os_thread_count();
+   return hpx::get_os_thread_count();
 }
 /*! \endcond */
 //*************************************************************************************************
