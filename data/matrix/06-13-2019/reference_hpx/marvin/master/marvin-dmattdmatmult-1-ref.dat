@@ -1,0 +1,124 @@
+
+ Dense Matrix/Transpose Dense Matrix Multiplication:
+   Blaze [MFlop/s]:
+     52          14887.1
+     60          8594.37
+     69          8662.77
+     79          8856.65
+     90          9647.03
+     103         9372.22
+     118         10386.8
+     135         10636
+     155         10420.1
+     176         12474.8
+     200         13013
+     230         11556.1
+     264         13123.1
+     300         13500.4
+     345         13328.1
+     396         14164.5
+     455         13170.8
+     523         13563.7
+     600         14501.4
+     690         13940.6
+     793         14320.1
+     912         14296.8
+     1048        14552.1
+     1200        14319.6
+     1380        14256.2
+     1587        14010.9
+     1825        14319.4
+     2100        14590.7
+     2415        14267.5
+     2777        14403.9
+     3193        14352.9
+     3672        14402
+     4222        14641.4
+     4855        14578.5
+     5583        14469.1
+     6420        14625.6
+     7000        14533.6
+   N=52, steps=106595
+     Blaze       = 1        (1.99421)
+   N=60, steps=39891
+     Blaze       = 1        (1.98843)
+   N=69, steps=26489
+     Blaze       = 1        (1.99447)
+   N=79, steps=18104
+     Blaze       = 1        (2.0029)
+   N=90, steps=13320
+     Blaze       = 1        (2.00193)
+   N=103, steps=8638
+     Blaze       = 1        (2.00447)
+   N=118, steps=6343
+     Blaze       = 1        (1.99822)
+   N=135, steps=4332
+     Blaze       = 1        (1.99678)
+   N=155, steps=2806
+     Blaze       = 1        (1.99912)
+   N=176, steps=2294
+     Blaze       = 1        (1.99937)
+   N=200, steps=1633
+     Blaze       = 1        (2.00282)
+   N=230, steps=958
+     Blaze       = 1        (2.0129)
+   N=264, steps=717
+     Blaze       = 1        (2.00679)
+   N=300, steps=501
+     Blaze       = 1        (2.00061)
+   N=345, steps=325
+     Blaze       = 1        (1.99974)
+   N=396, steps=228
+     Blaze       = 1        (1.99665)
+   N=455, steps=139
+     Blaze       = 1        (1.98604)
+   N=523, steps=94
+     Blaze       = 1        (1.98093)
+   N=600, steps=66
+     Blaze       = 1        (1.96451)
+   N=690, steps=42
+     Blaze       = 1        (1.97802)
+   N=793, steps=28
+     Blaze       = 1        (1.94889)
+   N=912, steps=19
+     Blaze       = 1        (2.01508)
+   N=1048, steps=12
+     Blaze       = 1        (1.89742)
+   N=1200, steps=8
+     Blaze       = 1        (1.92997)
+   N=1380, steps=5
+     Blaze       = 1        (1.84279)
+   N=1587, steps=3
+     Blaze       = 1        (1.71112)
+   N=1825, steps=1
+     Blaze       = 1        (0.848738)
+   N=2100, steps=1
+     Blaze       = 1        (1.26913)
+   N=2415, steps=1
+     Blaze       = 1        (1.97398)
+   N=2777, steps=1
+     Blaze       = 1        (2.97303)
+   N=3193, steps=1
+     Blaze       = 1        (4.53543)
+   N=3672, steps=1
+     Blaze       = 1        (6.87476)
+   N=4222, steps=1
+     Blaze       = 1        (10.279)
+   N=4855, steps=1
+     Blaze       = 1        (15.6979)
+   N=5583, steps=1
+     Blaze       = 1        (24.0521)
+   N=6420, steps=1
+     Blaze       = 1        (36.1815)
+   N=7000, steps=1
+     Blaze       = 1        (47.1975)
+/threads{locality#0/total}/idle-rate,1,789.490026,[s],46,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,789.490045,[s],46,[0.01%]
+/threads{locality#0/total}/time/average,1,789.490048,[s],267711,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,789.490049,[s],267711,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,789.490052,[s],3.64359e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,789.490053,[s],3.64359e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,789.490055,[s],2.8961e+06
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,789.490057,[s],2.8961e+06
+/threads{locality#0/total}/time/average-overhead,1,789.490059,[s],1258,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,789.490060,[s],1258,[ns]
