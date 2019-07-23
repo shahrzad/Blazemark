@@ -1,14 +1,24 @@
 #!/bin/bash
 #bc -l
-NUMBER=501
-p=$(python -c "from math import ceil; print (ceil($NUMBER/500.0))")
-echo "p: $p"
-NUMBER=1501
-python -c "from math import ceil; print (ceil($NUMBER/500.0))"
-l=$(sed -n '92 p' "/home/sshirzad/src/blaze_shahrzad/blazemark/params/dmatdmatadd.prm")
-l=${l:1:-1}
-E="$(echo -e "${l}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-echo $E
+cd ../data/matrix/06-13-2019
+for filename in *
+do
+echo $filename
+mv "$filename" "${filename/1-/marvin-}"
+
+echo $filename
+done
+
+
+#NUMBER=501
+#p=$(python -c "from math import ceil; print (ceil($NUMBER/500.0))")
+#echo "p: $p"
+#NUMBER=1501
+#python -c "from math import ceil; print (ceil($NUMBER/500.0))"
+#l=$(sed -n '92 p' "/home/sshirzad/src/blaze_shahrzad/blazemark/params/dmatdmatadd.prm")
+#l=${l:1:-1}
+#E="$(echo -e "${l}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+#echo $E
 #for (( k = 0; k < 50; ++k )); do
 #  a=$(( 2*k + 1 ))
 #  echo "$a"

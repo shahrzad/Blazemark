@@ -8,12 +8,12 @@ results_dir="${repo_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${repo_dir}/configurations"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
-thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+thr=(1 4 8 16)
 #thr=(16)
 
 rm -rf ${results_dir}/*
 #benchmarks=('daxpy' 'dvecdvecadd')
-benchmarks=('dvecdvecadd')
+benchmarks=('dmatdmatadd')
 r='hpx'
 
 rm -rf ${results_dir}/info

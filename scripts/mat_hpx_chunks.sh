@@ -1,4 +1,11 @@
 #!/bin/bash
+if [ $# -ne 1 ]
+then
+echo "node not specified, marvin by default"
+node="marvin"
+else
+node=$1
+fi
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
@@ -9,20 +16,20 @@ benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 #thr=(1 4 8 16)
-thr=(1 4 8 16)
+thr=(1 4 8 10 16 20)
 #thr=(1 2 4 7 8 7 16)
 #vec_sizes_log=(2 3 4 5 6 7)
-chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1200 1380 1587)
+chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1200 1380 1587 1800 2000 3000 4000 5000 6000 7000)
+#chunk_sizes=(3)
 #chunk_sizes=(2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 25000)
-
 #block_sizes=(4 8 16 32)
-block_sizes_row=(64)
-block_sizes_col=(64)
+block_sizes_row=(4 8 12 16)
+block_sizes_col=(512)
 
 rm -rf ${results_dir}/*.dat
 benchmarks=('dmatdmatadd')
 r='hpx'
-cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseVector.h
+cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
 rm -rf ${results_dir}/info
 mkdir ${results_dir}/info
@@ -39,14 +46,21 @@ i=1
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
 	do
-	if [ b == 'dvecdvecadd' ] || [ b == 'daxpy' ]
+	if [ $b == 'dvecdvecadd' ] || [ $b == 'daxpy' ]
 	then 
 		end_line=219
 	else
 		end_line=119
 	fi
+	if [ $b == 'dmatdmatmult' ]
+	then 
+		start_line=81
+		length=37
+	else
+		start_line=91
+		length=16
+	fi
 	param_filename=${blaze_dir}/blazemark/params/$b.prm
-	
 	
 	for block_size_row in ${block_sizes_row[@]}
 	do
@@ -56,7 +70,7 @@ for b in ${benchmarks[@]}
 		do
 			./change_hpx_parameters.sh BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN "${block_size_col}"
 	
-			for p in $(seq 16)
+			for p in $(seq $length)
 		    	do
 		                cd ${blaze_dir}
 	                        git checkout $param_filename
@@ -71,11 +85,16 @@ for b in ${benchmarks[@]}
 			        sed -i "58s/*/\//" $param_filename
 	        		sed -i "${end_line}s/*/\//" $param_filename
 	
-		        	line_number=$((91+p))	        
+				line_number=$((start_line+p))	        
 		        	s='\/\/('
 		        	sed -i "${line_number}s/${s}/(/" $param_filename
 		        	l=$(sed -n "${line_number} p" "$param_filename")
-		        	mat_size=${l:1:-1}
+				if [ $line_number -gt 107 ]
+				then
+	                                mat_size=${l:1:-3}
+				else
+			        	mat_size=${l:1:-1}
+				fi
 	        		mat_size=$(echo -e "${mat_size}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 	        		num_chunks_1=$(python -c "from math import ceil;print (ceil($mat_size/$block_size_row))")
 	        		num_chunks_2=$(python -c "from math import ceil;print (ceil($mat_size/$block_size_col))")
@@ -100,7 +119,7 @@ for b in ${benchmarks[@]}
 	
 							for th in "${thr[@]}"
 								do 	
-								    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+								    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
 								    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: $mat_size"
 							done
 					      fi
@@ -117,7 +136,7 @@ for b in ${benchmarks[@]}
 	
 		                for th in "${thr[@]}"
 	        	        do
-					${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+					${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
 					echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: ${mat_size}"
 				done	    
 			done
