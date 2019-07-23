@@ -1,94 +1,61 @@
 
  Dense Matrix/Transpose Dense Matrix Addition:
    Blaze [MFlop/s]:
-     200         547.659
-     230         590.195
-     264         602.722
-     300         640.417
-     345         653.93
-     396         629.425
-     455         605.162
-     523         619.707
-     600         598.862
-     690         545.775
-     793         428.382
-     912         311.684
-     1048        223.512
-     1200        205.806
-     1380        201.364
-     1587        203.656
-     1825        198.63
-     2100        200.948
-     2415        201.913
-     2777        200.273
-     3193        198.093
-     3672        201.47
-     4222        183.707
-     4855        172.151
-     5583        174.466
-     6420        153.802
-     7000        167.173
+     200         541.474
+     230         586.577
+     264         600.641
+     300         637.192
+     345         652.566
+     396         628.897
+     455         602.347
+     523         607.157
+     600         588.458
+     690         589.897
+     793         451.455
+     912         304.547
+     1048        222.084
+     1200        204.715
+     1380        201.425
+     1587        203.98
    N=200, steps=27651
-     Blaze       = 1        (2.01958)
-   N=230, steps=22637
-     Blaze       = 1        (2.02899)
-   N=264, steps=17471
-     Blaze       = 1        (2.02027)
-   N=300, steps=14175
-     Blaze       = 1        (1.99206)
-   N=345, steps=10862
-     Blaze       = 1        (1.97705)
-   N=396, steps=7988
-     Blaze       = 1        (1.99014)
-   N=455, steps=5875
-     Blaze       = 1        (2.00983)
-   N=523, steps=4484
-     Blaze       = 1        (1.97917)
-   N=600, steps=3334
-     Blaze       = 1        (2.0042)
-   N=690, steps=2505
-     Blaze       = 1        (2.1852)
-   N=793, steps=1408
-     Blaze       = 1        (2.06689)
-   N=912, steps=746
-     Blaze       = 1        (1.99074)
-   N=1048, steps=417
-     Blaze       = 1        (2.04907)
-   N=1200, steps=294
-     Blaze       = 1        (2.05708)
-   N=1380, steps=212
-     Blaze       = 1        (2.00499)
+     Blaze       = 1        (2.04264)
+   N=230, steps=22607
+     Blaze       = 1        (2.03879)
+   N=264, steps=17407
+     Blaze       = 1        (2.01984)
+   N=300, steps=14123
+     Blaze       = 1        (1.9948)
+   N=345, steps=10826
+     Blaze       = 1        (1.97461)
+   N=396, steps=7949
+     Blaze       = 1        (1.98209)
+   N=455, steps=5868
+     Blaze       = 1        (2.01682)
+   N=523, steps=4479
+     Blaze       = 1        (2.01782)
+   N=600, steps=3331
+     Blaze       = 1        (2.0378)
+   N=690, steps=2482
+     Blaze       = 1        (2.0032)
+   N=793, steps=1365
+     Blaze       = 1        (1.90136)
+   N=912, steps=736
+     Blaze       = 1        (2.01008)
+   N=1048, steps=420
+     Blaze       = 1        (2.07709)
+   N=1200, steps=292
+     Blaze       = 1        (2.05398)
+   N=1380, steps=211
+     Blaze       = 1        (1.99493)
    N=1587, steps=159
-     Blaze       = 1        (1.96632)
-   N=1825, steps=1
-     Blaze       = 1        (0.016768)
-   N=2100, steps=1
-     Blaze       = 1        (0.021946)
-   N=2415, steps=1
-     Blaze       = 1        (0.0288849)
-   N=2777, steps=1
-     Blaze       = 1        (0.038506)
-   N=3193, steps=1
-     Blaze       = 1        (0.0514669)
-   N=3672, steps=1
-     Blaze       = 1        (0.066926)
-   N=4222, steps=1
-     Blaze       = 1        (0.0970309)
-   N=4855, steps=1
-     Blaze       = 1        (0.136921)
-   N=5583, steps=1
-     Blaze       = 1        (0.178659)
-   N=6420, steps=1
-     Blaze       = 1        (0.267983)
-   N=7000, steps=1
-     Blaze       = 1        (0.29311)
-/threads{locality#0/total}/idle-rate,1,190.366806,[s],464,[0.01%]
-/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,190.366826,[s],464,[0.01%]
-/threads{locality#0/total}/time/average,1,190.366828,[s],33672,[ns]
-/threads{locality#0/pool#default/worker-thread#0}/time/average,1,190.366830,[s],33672,[ns]
-/threads{locality#0/total}/time/cumulative-overhead,1,190.366832,[s],1.00653e+10,[ns]
-/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,190.366834,[s],1.00653e+10,[ns]
-/threads{locality#0/total}/count/cumulative,1,190.366836,[s],6.12953e+06
-/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,190.366837,[s],6.12953e+06
-/threads{locality#0/total}/time/average-overhead,1,190.366839,[s],1642,[ns]
-/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,190.366841,[s],1642,[ns]
+     Blaze       = 1        (1.96319)
+/threads{locality#0/total}/idle-rate,1,171.101098,[s],476,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,171.101117,[s],476,[0.01%]
+/threads{locality#0/total}/time/average,1,171.101120,[s],28152,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,171.101122,[s],28152,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,171.101124,[s],8.09631e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,171.101126,[s],8.09631e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,171.101127,[s],5.74195e+06
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,171.101129,[s],5.74195e+06
+/threads{locality#0/total}/time/average-overhead,1,171.101132,[s],1410,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,171.101133,[s],1410,[ns]
