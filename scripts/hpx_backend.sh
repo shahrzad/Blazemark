@@ -1,11 +1,18 @@
 #!/bin/bash
-if [ $# -ne 1 ]
-then
-echo "node not specified, marvin by default"
+if [ $# == 0 ]
+then 
+branch="hpx_backend"
 node="marvin"
-else
+elif [ $# == 1 ]
+then
+branch=$1
+node="marvin"
+elif [ $# == 2 ]
+then
+branch=$1
 node=$1
 fi
+
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
@@ -17,10 +24,10 @@ config_dir="${blazemark_dir}/configurations"
 hpx_source_dir="/home/sshirzad/src/hpx"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 #thr=(1 4 8 16)
-thr=(1 4 8 16)
+thr=(1 4 8 12 16)
 
-#benchmarks=('dmatdmatmult' 'dmattdmatmult' 'dmatdmatadd' 'dmattdmatadd' 'dmatdvecmult' )
-benchmarks=('dmatdvecmult')
+benchmarks=('dmatdmatmult' 'dmattdmatmult' 'dmatdmatadd' 'dmattdmatadd' 'dmatdvecmult' )
+#benchmarks=('dmatdvecmult')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
@@ -36,12 +43,12 @@ cp ${blazemark_dir}/scripts/mat_hpx.sh ${results_dir}/info/
 cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info/
 git --git-dir $hpx_source_dir/.git log>>${results_dir}/info/hpx_git.txt
 cd ${blaze_dir}
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [[ "$BRANCH" != "master" ]]; then
-        git checkout master
+BR=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$BR" != $branch ]]; then
+        git checkout $branch
 fi
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-echo "$BRANCH branch">>${results_dir}/info/blaze_git.txt
+echo "$BR branch">>${results_dir}/info/blaze_git.txt
 git --git-dir $blaze_dir/.git log>>${results_dir}/info/blaze_git.txt
 
 i=1
@@ -89,9 +96,10 @@ for b in ${benchmarks[@]}
 	
 	for th in "${thr[@]}"
 		do 	
-		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${node}-${b}-${th}-ref.dat
-		    echo ${b} "benchmark for" ${r} "finished for "${th} "threads"
+		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${node}-${b}-${th}-${branch}.dat
+		    echo ${b} "benchmark for" ${r} "finished for "${th} "threads on $branch branch"
 	done
+        cd ${blaze_dir}
 	git checkout $param_filename
 done
 export LD_LIBRARY_PATH=${saved_path}

@@ -10,6 +10,7 @@ saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
+hpx_source_dir="/home/sshirzad/src/hpx"
 hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
@@ -38,9 +39,18 @@ cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info
 date>> ${results_dir}/info/date.txt
 cp ${hpx_log_file} ${results_dir}/info/
 cp ${config_dir}/Configfile_hpx ${results_dir}/info/
-cp ${blazemark_dir}/scripts/mat_hpx.sh ${results_dir}/info/
+cp ${blazemark_dir}/scripts/mat_hpx_chunks.sh ${results_dir}/info/
 cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info/
-git --git-dir $blaze_dir/.git log>>${results_dir}/info/hpx_git.txt
+git --git-dir $blaze_dir/.git log>>${results_dir}/info/blaze_git.txt
+cd ${blaze_dir}
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+#if [[ "$BRANCH" != "master" ]]; then
+#        git checkout master
+#fi
+#BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "$BRANCH branch">>${results_dir}/info/blaze_git.txt
+git --git-dir $blaze_dir/.git log>>${results_dir}/info/blaze_git.txt
+
 i=1
 
 export OMP_NUM_THREADS=1
