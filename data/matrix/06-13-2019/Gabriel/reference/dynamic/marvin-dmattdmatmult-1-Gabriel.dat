@@ -1,0 +1,124 @@
+
+ Dense Matrix/Transpose Dense Matrix Multiplication:
+   Blaze [MFlop/s]:
+     52          14914
+     60          8484.36
+     69          8609.98
+     79          8806.12
+     90          9609.2
+     103         9363.78
+     118         10360.9
+     135         10609.6
+     155         10404.5
+     176         12452.7
+     200         12959.7
+     230         11571.3
+     264         13080.9
+     300         13429.9
+     345         13308.8
+     396         14160.4
+     455         13129.3
+     523         13550.7
+     600         14449.6
+     690         13808.5
+     793         14294.7
+     912         14515.8
+     1048        14557.5
+     1200        14289.6
+     1380        14409
+     1587        14144.4
+     1825        14480.7
+     2100        14590.5
+     2415        14456.9
+     2777        14593.8
+     3193        14519.2
+     3672        14695.8
+     4222        14728.6
+     4855        14586.5
+     5583        14634.7
+     6420        14661.1
+     7000        14616.9
+   N=52, steps=107719
+     Blaze       = 1        (2.0116)
+   N=60, steps=39351
+     Blaze       = 1        (1.98695)
+   N=69, steps=26294
+     Blaze       = 1        (1.99193)
+   N=79, steps=17985
+     Blaze       = 1        (2.00115)
+   N=90, steps=13228
+     Blaze       = 1        (1.99593)
+   N=103, steps=8622
+     Blaze       = 1        (2.00256)
+   N=118, steps=6325
+     Blaze       = 1        (1.99754)
+   N=135, steps=4325
+     Blaze       = 1        (1.99852)
+   N=155, steps=2793
+     Blaze       = 1        (1.99284)
+   N=176, steps=2289
+     Blaze       = 1        (1.99854)
+   N=200, steps=1621
+     Blaze       = 1        (1.99627)
+   N=230, steps=953
+     Blaze       = 1        (1.99976)
+   N=264, steps=713
+     Blaze       = 1        (2.00203)
+   N=300, steps=500
+     Blaze       = 1        (2.00708)
+   N=345, steps=324
+     Blaze       = 1        (1.99647)
+   N=396, steps=227
+     Blaze       = 1        (1.98846)
+   N=455, steps=139
+     Blaze       = 1        (1.99232)
+   N=523, steps=94
+     Blaze       = 1        (1.98284)
+   N=600, steps=66
+     Blaze       = 1        (1.97156)
+   N=690, steps=42
+     Blaze       = 1        (1.99694)
+   N=793, steps=28
+     Blaze       = 1        (1.95236)
+   N=912, steps=19
+     Blaze       = 1        (1.98468)
+   N=1048, steps=12
+     Blaze       = 1        (1.89672)
+   N=1200, steps=8
+     Blaze       = 1        (1.93402)
+   N=1380, steps=5
+     Blaze       = 1        (1.82326)
+   N=1587, steps=3
+     Blaze       = 1        (1.69497)
+   N=1825, steps=1
+     Blaze       = 1        (0.839285)
+   N=2100, steps=1
+     Blaze       = 1        (1.26916)
+   N=2415, steps=1
+     Blaze       = 1        (1.94812)
+   N=2777, steps=1
+     Blaze       = 1        (2.93435)
+   N=3193, steps=1
+     Blaze       = 1        (4.48349)
+   N=3672, steps=1
+     Blaze       = 1        (6.7373)
+   N=4222, steps=1
+     Blaze       = 1        (10.2181)
+   N=4855, steps=1
+     Blaze       = 1        (15.6892)
+   N=5583, steps=1
+     Blaze       = 1        (23.7799)
+   N=6420, steps=1
+     Blaze       = 1        (36.0939)
+   N=7000, steps=1
+     Blaze       = 1        (46.9285)
+/threads{locality#0/total}/idle-rate,1,1189.022230,[s],50,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,1189.022245,[s],50,[0.01%]
+/threads{locality#0/total}/time/average,1,1189.022247,[s],251130,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,1189.022249,[s],251130,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,1189.022251,[s],5.87833e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,1189.022252,[s],5.87833e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,1189.022254,[s],4.63817e+06
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,1189.022256,[s],4.63817e+06
+/threads{locality#0/total}/time/average-overhead,1,1189.022258,[s],1267,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,1189.022259,[s],1267,[ns]
