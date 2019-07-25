@@ -1,0 +1,61 @@
+
+ Dense Matrix/Dense Matrix Addition:
+   Blaze [MFlop/s]:
+     200         631.317
+     230         687.421
+     264         737.436
+     300         788.74
+     345         826.82
+     396         861.797
+     455         894.221
+     523         924.87
+     600         945.518
+     690         927.587
+     793         407.892
+     912         386.315
+     1048        386.588
+     1200        358.202
+     1380        346.256
+     1587        353.01
+   N=200, steps=30840
+     Blaze       = 1        (1.95401)
+   N=230, steps=25813
+     Blaze       = 1        (1.98642)
+   N=264, steps=21253
+     Blaze       = 1        (2.00865)
+   N=300, steps=17474
+     Blaze       = 1        (1.99389)
+   N=345, steps=13735
+     Blaze       = 1        (1.97722)
+   N=396, steps=10953
+     Blaze       = 1        (1.99305)
+   N=455, steps=8554
+     Blaze       = 1        (1.98037)
+   N=523, steps=6680
+     Blaze       = 1        (1.9756)
+   N=600, steps=5214
+     Blaze       = 1        (1.9852)
+   N=690, steps=3954
+     Blaze       = 1        (2.02946)
+   N=793, steps=1312
+     Blaze       = 1        (2.02271)
+   N=912, steps=1007
+     Blaze       = 1        (2.16809)
+   N=1048, steps=754
+     Blaze       = 1        (2.14213)
+   N=1200, steps=531
+     Blaze       = 1        (2.13466)
+   N=1380, steps=386
+     Blaze       = 1        (2.12299)
+   N=1587, steps=279
+     Blaze       = 1        (1.99054)
+/threads{locality#0/total}/idle-rate,1,173.044099,[s],466,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,173.044118,[s],466,[0.01%]
+/threads{locality#0/total}/time/average,1,173.044120,[s],29392,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,173.044122,[s],29392,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,173.044124,[s],7.94131e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,173.044126,[s],7.94131e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,173.044127,[s],5.52354e+06
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,173.044129,[s],5.52354e+06
+/threads{locality#0/total}/time/average-overhead,1,173.044131,[s],1437,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,173.044133,[s],1437,[ns]

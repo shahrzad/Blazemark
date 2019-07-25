@@ -1,0 +1,124 @@
+
+ Dense Matrix/Transpose Dense Matrix Multiplication:
+   Blaze [MFlop/s]:
+     52          14894.9
+     60          8628.68
+     69          8711.75
+     79          8876.11
+     90          9633.23
+     103         9398.71
+     118         10367.1
+     135         10548.2
+     155         10431
+     176         12323.4
+     200         12940.5
+     230         11619.7
+     264         13111.8
+     300         13513.8
+     345         13321.2
+     396         14108.3
+     455         13161
+     523         13516.6
+     600         14437.2
+     690         13976.1
+     793         14293.9
+     912         14511.4
+     1048        14544
+     1200        14276.5
+     1380        14387
+     1587        14174.7
+     1825        14453.2
+     2100        14564.7
+     2415        14398.1
+     2777        14440.9
+     3193        14615.4
+     3672        14613.4
+     4222        14593.3
+     4855        14606.3
+     5583        14663.4
+     6420        14721.2
+     7000        14608
+   N=52, steps=107528
+     Blaze       = 1        (2.01061)
+   N=60, steps=39999
+     Blaze       = 1        (1.98589)
+   N=69, steps=26661
+     Blaze       = 1        (1.99614)
+   N=79, steps=18146
+     Blaze       = 1        (2.00314)
+   N=90, steps=13324
+     Blaze       = 1        (2.0054)
+   N=103, steps=8665
+     Blaze       = 1        (2.00507)
+   N=118, steps=6352
+     Blaze       = 1        (2.00486)
+   N=135, steps=4312
+     Blaze       = 1        (2.0041)
+   N=155, steps=2810
+     Blaze       = 1        (1.99987)
+   N=176, steps=2292
+     Blaze       = 1        (2.02216)
+   N=200, steps=1624
+     Blaze       = 1        (2.00294)
+   N=230, steps=953
+     Blaze       = 1        (1.99144)
+   N=264, steps=711
+     Blaze       = 1        (1.99171)
+   N=300, steps=498
+     Blaze       = 1        (1.98665)
+   N=345, steps=324
+     Blaze       = 1        (1.99462)
+   N=396, steps=228
+     Blaze       = 1        (2.0046)
+   N=455, steps=139
+     Blaze       = 1        (1.98752)
+   N=523, steps=94
+     Blaze       = 1        (1.98783)
+   N=600, steps=66
+     Blaze       = 1        (1.97325)
+   N=690, steps=42
+     Blaze       = 1        (1.97299)
+   N=793, steps=28
+     Blaze       = 1        (1.95247)
+   N=912, steps=19
+     Blaze       = 1        (1.98527)
+   N=1048, steps=12
+     Blaze       = 1        (1.89848)
+   N=1200, steps=8
+     Blaze       = 1        (1.9358)
+   N=1380, steps=5
+     Blaze       = 1        (1.82604)
+   N=1587, steps=3
+     Blaze       = 1        (1.69134)
+   N=1825, steps=1
+     Blaze       = 1        (0.840882)
+   N=2100, steps=1
+     Blaze       = 1        (1.2714)
+   N=2415, steps=1
+     Blaze       = 1        (1.95607)
+   N=2777, steps=1
+     Blaze       = 1        (2.96542)
+   N=3193, steps=1
+     Blaze       = 1        (4.45397)
+   N=3672, steps=1
+     Blaze       = 1        (6.77529)
+   N=4222, steps=1
+     Blaze       = 1        (10.3129)
+   N=4855, steps=1
+     Blaze       = 1        (15.668)
+   N=5583, steps=1
+     Blaze       = 1        (23.7334)
+   N=6420, steps=1
+     Blaze       = 1        (35.9466)
+   N=7000, steps=1
+     Blaze       = 1        (46.9571)
+/threads{locality#0/total}/idle-rate,1,1188.829589,[s],50,[0.01%]
+/threads{locality#0/pool#default/worker-thread#0}/idle-rate,1,1188.829609,[s],50,[0.01%]
+/threads{locality#0/total}/time/average,1,1188.829611,[s],251475,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average,1,1188.829613,[s],251475,[ns]
+/threads{locality#0/total}/time/cumulative-overhead,1,1188.829615,[s],5.93983e+09,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/cumulative-overhead,1,1188.829617,[s],5.93983e+09,[ns]
+/threads{locality#0/total}/count/cumulative,1,1188.829618,[s],4.68539e+06
+/threads{locality#0/pool#default/worker-thread#0}/count/cumulative,1,1188.829620,[s],4.68539e+06
+/threads{locality#0/total}/time/average-overhead,1,1188.829622,[s],1267,[ns]
+/threads{locality#0/pool#default/worker-thread#0}/time/average-overhead,1,1188.829624,[s],1267,[ns]
