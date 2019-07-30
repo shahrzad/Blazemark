@@ -37,7 +37,7 @@ CXX=clang++
 
 # Special compiler flags
 # This variable specifies the compiler flags used for the compilation of all benchmarks.
-CXXFLAGS="-O3 -std=c++17 -stdlib=libc++ -DNDEBUG -march=native -fopenmp -DBLAZE_HPX_OLD=1 -DBLAZE_HPX_TRAINING=0 -fpermissive -DBLAZE_USE_HPX_THREADS -isystem /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/include"
+CXXFLAGS="-O3 -std=c++17 -stdlib=libc++ -DNDEBUG -march=native -fopenmp -DBLAZE_HPX_OLD=0 -DBLAZE_HPX_TRAINING=0 -fpermissive -DBLAZE_USE_HPX_THREADS -isystem /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/include"
 
 # Special include directives
 # This variable can be used to specify special/additional include-related compiler directives.
