@@ -1,13 +1,17 @@
 #!/bin/bash
 #bc -l
-cd ../data/matrix/06-13-2019
-for filename in *
-do
-echo $filename
-mv "$filename" "${filename/1-/marvin-}"
-
-echo $filename
-done
+string='(1231,1)'
+if [[ $string != *",1"* ]]; then
+  echo "It's there!"
+fi
+#cd ../data/matrix/06-13-2019
+#for filename in *
+#do
+#echo $filename
+#mv "$filename" "${filename/1-/marvin-}"
+#
+#echo $filename
+#done
 
 
 #NUMBER=501

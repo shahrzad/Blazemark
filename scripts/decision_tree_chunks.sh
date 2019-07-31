@@ -8,7 +8,7 @@ node=$1
 fi
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
-blaze_dir="/home/sshirzad/src/blaze_shahrzad"
+blaze_dir="/home/sshirzad/src/blaze_gabriel/blaze"
 hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
 hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt"
 results_dir="${blazemark_dir}/results"
@@ -16,7 +16,7 @@ benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 #thr=(1 4 8 16)
-thr=(1 4 8 16)
+thr=(1 4 8 12 16)
 
 rm -rf ${results_dir}/*.dat
 benchmarks=('dmattdmatadd')
@@ -72,7 +72,11 @@ for b in ${benchmarks[@]}
 				s='\/\/('
 		                sed -i "${line_number}s/(/${s}/" $param_filename
 			else
-                                sed -i "${line_number}s/)/,1)/" $param_filename
+				string=$(sed -n ${line_number}' p' $param_filename)
+				if [[ $string == *",1)"* ]]
+				then
+	                                sed -i "${line_number}s/)/,1)/" $param_filename
+				fi
 			fi
 	done
 	sed -i "58s/*/\//" $param_filename

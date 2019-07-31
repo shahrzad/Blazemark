@@ -36,7 +36,6 @@ else
 
 #    cp ~/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt ${results_dir}/hpx/hpx_cmake_log.txt
 fi
-
 benchmarks_dir=${blazemark_dir}"/benchmarks"
 
 rm -rf ${benchmarks_dir}/build_log.txt

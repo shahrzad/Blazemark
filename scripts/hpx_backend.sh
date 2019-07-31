@@ -1,21 +1,47 @@
 #!/bin/bash
-if [ $# == 0 ]
-then 
-branch="hpx_backend"
-node="marvin"
-elif [ $# == 1 ]
+steps=1
+if [ $# -ge 1 ]
 then
-branch=$1
-node="marvin"
-elif [ $# == 2 ]
-then
-branch=$1
-node=$1
+	blaze_id=$1
+	if [ $# -ge 2 ]
+	then
+		branch=$2
+		if [ $# -ge 3 ]
+		then
+			benchmark=$3
+               		if [ $# -ge 4 ]
+	                then
+				node=$4
+			else
+				node="marvin"
+			fi
+		else
+			benchmark="all"
+			node="marvin"
+		fi
+	else
+	        branch="hpx_backend"
+		benchmark="all"
+        	node="marvin"
+	fi
+else
+        blaze_id="blaze_shahrzad"
+        benchmark="all"
+        node="marvin"
 fi
+
+if [ $benchmark == "all" ]
+then
+        benchmarks=('dmatdmatmult' 'dmattdmatmult' 'dmatdmatadd' 'dmattdmatadd' 'dmatdvecmult' )
+else
+        benchmarks=( $benchmark )
+fi
+
+echo -e "blaze_id:$blaze_id \nbranch:$branch \nnode:$node \nbenchmarks:$benchmark"
 
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
-blaze_dir="/home/sshirzad/src/blaze_shahrzad"
+blaze_dir="/home/sshirzad/src/$blaze_id"
 hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
 hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt"
 results_dir="${blazemark_dir}/results"
@@ -26,8 +52,6 @@ export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_L
 #thr=(1 4 8 16)
 thr=(1 4 8 12 16)
 
-benchmarks=('dmatdmatmult' 'dmattdmatmult' 'dmatdmatadd' 'dmattdmatadd' 'dmatdvecmult' )
-#benchmarks=('dmatdvecmult')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
@@ -35,11 +59,11 @@ rm -rf ${results_dir}/*.dat
 rm -rf ${results_dir}/info
 mkdir ${results_dir}/info
 
-cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info
+cp -r ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info
 date>> ${results_dir}/info/date.txt
 cp ${hpx_log_file} ${results_dir}/info/
 cp ${config_dir}/Configfile_hpx ${results_dir}/info/
-cp ${blazemark_dir}/scripts/mat_hpx.sh ${results_dir}/info/
+cp ${blazemark_dir}/scripts/hpx_backend.sh ${results_dir}/info/
 cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info/
 git --git-dir $hpx_source_dir/.git log>>${results_dir}/info/hpx_git.txt
 cd ${blaze_dir}
@@ -85,10 +109,19 @@ for b in ${benchmarks[@]}
 	for line_number in $(seq 50 $((end_line-1)))
 		do			
 		if [ $line_number -le $start_line ] || [ $line_number -gt $((start_line+length)) ]
-			then 
-				s='\/\/('
-		                sed -i "${line_number}s/(/${s}/" $param_filename
-			fi
+		then
+			s='\/\/('
+		        sed -i "${line_number}s/(/${s}/" $param_filename			
+		else
+			if [ $steps == 1 ]
+                        then
+				string=$(sed -n ${line_number}' p' $param_filename)
+				if [[ $string != *",1"* ]]
+				then
+                                	sed -i "${line_number}s/)/,1)/" $param_filename
+				fi
+                        fi
+		fi
 	done
 	sed -i "58s/*/\//" $param_filename
 	sed -i "${end_line}s/*/\//" $param_filename
@@ -96,7 +129,7 @@ for b in ${benchmarks[@]}
 	
 	for th in "${thr[@]}"
 		do 	
-		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${node}-${b}-${th}-${branch}.dat
+		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive>>${results_dir}/${node}-${b}-${th}-${branch}.dat
 		    echo ${b} "benchmark for" ${r} "finished for "${th} "threads on $branch branch"
 	done
         cd ${blaze_dir}
