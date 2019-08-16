@@ -4,11 +4,12 @@
 blazemark_dir="/home/sshirzad/src/blaze/blazemark"
 config_dir="/home/sshirzad/repos/Blazemark/configurations"
 
-if [ $# -eq 3 ]
+if [ $# -eq 4 ]
 then
     benchmarks=$1
     runtimes=$2
     blazemark_dir=$3
+    node=$4
 #    if [ ${runtimes} == 'hpx' ]
 #    then
 ##        rm -rf ${results_dir}/hpx
@@ -19,6 +20,14 @@ then
 ##        cp ~/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt ${results_dir}/hpx/hpx_cmake_log.txt
 #    fi
 else
+    node="marvin"
+
+    if [ $# -eq 3 ]
+    then
+	benchmarks=$1
+        runtimes=$2
+        blazemark_dir=$3
+    fi
     if [ $# -eq 0 ] 
     then 
         #benchmarks=('daxpy' 'dvecdvecadd' 'dmatsvecmult' 'dmattdmatadd' 'dmattdmatmult' 'dmatsmatmult' 'smatdmatmult' 'dmattrans')
@@ -38,11 +47,10 @@ else
 fi
 benchmarks_dir=${blazemark_dir}"/benchmarks"
 
-rm -rf ${benchmarks_dir}/build_log.txt
-rm -rf ${benchmarks_dir}/compile_log.txt
-touch ${benchmarks_dir}/build_log.txt
-touch ${benchmarks_dir}/compile_log.txt
-
+rm -rf ${benchmarks_dir}/build_log_$node.txt
+rm -rf ${benchmarks_dir}/compile_log_$node.txt
+touch ${benchmarks_dir}/build_log_$node.txt
+touch ${benchmarks_dir}/compile_log_$node.txt
 
 cd ${blazemark_dir}
 for b in ${benchmarks[@]}
@@ -51,9 +59,10 @@ for b in ${benchmarks[@]}
         do
 echo $b
 echo $r
-        rm -rf ${benchmarks_dir}/${b}_${r}
-        echo ${b} ${r}>>${benchmarks_dir}/build_log.txt
-        echo ${b} ${r}>>${benchmarks_dir}/compile_log.txt
+echo $node
+        rm -rf ${benchmarks_dir}/${b}_${r}_$node
+        echo ${b} ${r} ${node}>>${benchmarks_dir}/build_log_$node.txt
+        echo ${b} ${r} ${node}>>${benchmarks_dir}/compile_log_$node.txt
         
         if [ -f ${blazemark_dir}/bin/${b} ]
         then
@@ -61,10 +70,10 @@ echo $r
         fi
         
         rm -rf Makefile
-        ${blazemark_dir}/configure ${config_dir}/Configfile_${r}>>${benchmarks_dir}/compile_log.txt
-        make ${b}>>${benchmarks_dir}/build_log.txt
-        mv ${blazemark_dir}/bin/${b} ${benchmarks_dir}/${b}_${r}
-        echo "benchmark "${b}" for "${r}" runtime created"
+	${blazemark_dir}/configure ${config_dir}/Configfile_${r}_$node>>${benchmarks_dir}/compile_log_$node.txt
+        make ${b}>>${benchmarks_dir}/build_log_$node.txt
+        mv ${blazemark_dir}/bin/${b} ${benchmarks_dir}/${b}_${r}_$node
+        echo "benchmark "${b}" for "${r}" runtime created on node $node"
     done
 done
 
