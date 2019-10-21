@@ -335,7 +335,8 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 #                    array=all_array[all_array[:,0]<=cutoff]                    
 
                     data_size=np.shape(array)[0]
-                    print(data_size)
+                    print(data_size,th,m)
+
                     if data_size>=8:
                         per = np.random.permutation(data_size)
                         train_size=int(np.ceil(0.6*data_size))
@@ -501,6 +502,8 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
     #                    if save:
     #                        plt.savefig(pp,format='pdf',bbox_inches='tight')
                 z1_t=[m_data[node][benchmark]['params'][th][m][1] for th in thr]
+                z1_t=[m_data[node][benchmark]['params'][th][m][1] for th in [4., 8.]]
+
                 n1=np.polyfit(thr,z1_t,6)
                 p1 = np.poly1d(n1)
                 
