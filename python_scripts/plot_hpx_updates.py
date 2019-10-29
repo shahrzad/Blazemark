@@ -12,7 +12,9 @@ from matplotlib import pyplot as plt
 import datetime
 now = datetime.datetime.now()
 date_str=now.strftime("%Y-%m-%d-%H%M")
-
+simdsize=4
+import math
+import csv
 
 #hpx_dir='/home/shahrzad/repos/Blazemark/data/matrix/dmatdmatadd/01-04-2019-1027'
 hpx_dir='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/marvin/'
@@ -194,7 +196,7 @@ def create_dict_relative(directory):
     return (d, chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)  
 ###########################################################################
 def create_dict_relative_norepeat(directories):
-    thr=[]
+    thr={}
     data_files=[]
     
     for directory in directories:
@@ -213,10 +215,12 @@ def create_dict_relative_norepeat(directories):
                 benchmarks.append(benchmark)   
                 mat_sizes[benchmark]=[]
                 block_sizes[benchmark]=[]
+        if node not in nodes:
+            thr[node]=[]
         if int(mat_size) not in mat_sizes[benchmark]:
             mat_sizes[benchmark].append(int(mat_size))
-        if int(th) not in thr:
-            thr.append(int(th))        
+        if int(th) not in thr[node]:
+            thr[node].append(int(th))        
         if block_size_row+'-'+block_size_col not in block_sizes[benchmark]:
             block_sizes[benchmark].append(block_size_row+'-'+block_size_col)
         if int(chunk_size) not in chunk_sizes:
@@ -224,7 +228,7 @@ def create_dict_relative_norepeat(directories):
         if node not in nodes:
             nodes.append(node)
                   
-    thr.sort()
+    [thr[node].sort() for node in thr.keys()]
     nodes.sort()      
     chunk_sizes.sort()
     benchmarks.sort()   
@@ -237,7 +241,7 @@ def create_dict_relative_norepeat(directories):
             block_sizes[benchmark].sort()
             d[node][benchmark]={}
            
-            for th in thr:
+            for th in thr[node]:
                 d[node][benchmark][th]={}
                 for bs in block_sizes[benchmark]:
                     d[node][benchmark][th][bs]={}
@@ -547,9 +551,7 @@ for benchmark in benchmarks:
 #plt.show()
 #pp.close()                   
 
-#simdsize=4
-#import math
-#import csv
+
 #f=open('/home/shahrzad/repos/Blazemark/data/data.csv','w')
 #f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 #f_writer.writerow(['benchmark','matrix_size','num_threads','block_size_row','block_size_col','chunk_size','num_blocks','mflops'])
@@ -568,6 +570,8 @@ for benchmark in benchmarks:
 #                            b_r=m
 #                        if b_c>m:
 #                            b_c=m
+#                        if b_c%simdsize!=0:
+#                                    b_c=b_c+simdsize-b_c%simdsize
 #                        equalshare1=math.ceil(m/b_r)
 #                        equalshare2=math.ceil(m/b_c)  
 #                        for i in range(len(d_hpx[benchmark][th][block_size][chunk_size]['size'])):
@@ -620,6 +624,8 @@ for benchmark in benchmarks:
                             b_r=m
                         if b_c>m:
                             b_c=m
+                        if b_c%simdsize!=0:
+                            b_c=b_c+simdsize-b_c%simdsize
                         equalshare1=math.ceil(m/b_r)
                         equalshare2=math.ceil(m/b_c)  
                         chunk_sizes.append(c)
@@ -771,6 +777,8 @@ for node in ['marvin', 'trillian']:
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             num_blocks=equalshare1*equalshare2
@@ -884,6 +892,8 @@ for node in ['marvin', 'trillian']:
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             num_blocks=equalshare1*equalshare2
@@ -992,6 +1002,8 @@ for node in ['marvin', 'trillian']:
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             num_blocks=equalshare1*equalshare2
@@ -1082,21 +1094,27 @@ import math
 import csv
 f=open('/home/shahrzad/repos/Blazemark/data/data_perf_all.csv','w')
 f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','cache_block','datatype','cost','mflops'])
+f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','mflops'])
 node_type=0
 for node in d_hpx.keys():
     if node=='marvin':
         L1cache='32768'
         L2cache='262144'
         L3cache='20971520'
-        cache_line='64'
-        cache_block='512'
+        cache_line='8'
+        set_associativity='512'
     elif node=='trillian':
         L1cache='65536'
         L2cache='2097152'
         L3cache='6291456'
+        cache_line='16'
+        set_associativity='131072'
+    elif node=='medusa':
+        L1cache='32768'
+        L2cache='1048576'
+        L3cache='28835840'
         cache_line='64'
-        cache_block='131072'
+        set_associativity='16' 
     benchmark_type=0
     for benchmark in d_hpx[node].keys():
         all_data=[]
@@ -1115,6 +1133,9 @@ for node in d_hpx.keys():
                                     b_r=m
                                 if b_c>m:
                                     b_c=m
+                                if b_c%simdsize!=0:
+                                    b_c=b_c+simdsize-b_c%simdsize
+                                
                                 equalshare1=math.ceil(m/b_r)
                                 equalshare2=math.ceil(m/b_c)  
                                 num_blocks=equalshare1*equalshare2
@@ -1150,7 +1171,7 @@ for node in d_hpx.keys():
                                 f_writer.writerow([node,benchmark,str(m),str(th),b.split('-')[0], 
                                                    b.split('-')[1], str(b_r * b_c), str(num_elements_uncomplete),str(c),
                                                    str(grain_size),str(num_blocks), str(num_blocks/c),
-                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,cache_block,str(data_type),str(cost),r])
+                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),r])
         benchmark_type+=1
     node_type+=1        
 f.close()                    
@@ -1159,7 +1180,7 @@ f.close()
 
 f=open('/home/shahrzad/repos/Blazemark/data/data_perf_max.csv','w')
 f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','cache_block','datatype','cost','mflops'])
+f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','mflops'])
 max_results={}   
 min_max_grain_size={}
 for node in d_hpx.keys():  
@@ -1169,13 +1190,13 @@ for node in d_hpx.keys():
         L2cache='262144'
         L3cache='20971520'
         cache_line='64'
-        cache_block='512'
+        set_associativity='512'
     elif node=='trillian':
         L1cache='65536'
         L2cache='2097152'
         L3cache='6291456'
         cache_line='64'
-        cache_block='131072'
+        set_associativity='131072'
     max_results[node]={}
     for benchmark in d_hpx[node].keys(): 
         min_max_grain_size[node][benchmark]={}
@@ -1213,6 +1234,8 @@ for node in d_hpx.keys():
                             b_r=m
                         if b_c>m:
                             b_c=m
+                        if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                         equalshare1=math.ceil(m/b_r)
                         equalshare2=math.ceil(m/b_c) 
                         num_blocks=equalshare1*equalshare2
@@ -1252,7 +1275,7 @@ for node in d_hpx.keys():
                             f_writer.writerow([node,benchmark,str(m),str(th),b.split('-')[0], 
                                                b.split('-')[1], str(b_r * b_c),str(num_elements_uncomplete), str(c),
                                                str(grain_size),str(num_blocks), str(num_blocks/c),
-                                               str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,cache_block,str(data_type),str(cost),str(r)])
+                                               str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(r)])
                 if m<1000:
 
                     print('matrix size:'+str(m)+'   num_threads:'+str(th)+'   min_grain_size:'+str(min_grain)+'    max_grain_size:'+str(max_grain))                
@@ -1338,6 +1361,8 @@ for benchmark in benchmarks:
                         b_r=m
                     if b_c>m:
                         b_c=m
+                    if b_c%simdsize!=0:
+                        b_c=b_c+simdsize-b_c%simdsize
                     equalshare1=math.ceil(m/b_r)
                     equalshare2=math.ceil(m/b_c)  
                     chunk_sizes.append(c)
@@ -1443,6 +1468,8 @@ for benchmark in benchmarks:
                         b_r=m
                     if b_c>m:
                         b_c=m
+                    if b_c%simdsize!=0:
+                        b_c=b_c+simdsize-b_c%simdsize
                     equalshare1=math.ceil(m/b_r)
                     equalshare2=math.ceil(m/b_c)  
                     chunk_sizes.append(c)
@@ -1514,6 +1541,8 @@ for node in d_hpx.keys():
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             chunk_sizes.append(c)
@@ -1597,6 +1626,8 @@ for node in d_hpx.keys():
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             chunk_sizes.append(c)
@@ -1706,6 +1737,8 @@ for node in d_hpx.keys():
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             chunk_sizes.append(c)
@@ -1810,6 +1843,8 @@ for node in d_hpx.keys():
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             chunk_sizes.append(c)
@@ -1907,76 +1942,164 @@ for node in d_hpx.keys():
         pp.close()     
 
 
-perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/grain_size/num_flops'
-###bath tub mflops_vs_chunksize_one-blocksize
+perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/grain_size/'
+###bath tub mflops_vs_grainsize_one-blocksize
 i=1
-node='marvin'
-for benchmark in benchmarks:
-    for th in d_hpx[node][benchmark].keys():
-#        pp = PdfPages(perf_directory+'/bath_tub_'+benchmark+'_different_matrix_sizes_'+str(th)+'.pdf')
-
-        for m in mat_sizes[benchmark]: 
-            plt.figure(i)
-            for b in ['2-256','3-256','4-256']: #d_hpx[node][benchmark][th].keys():
-
-                results=[]
-                chunk_sizes=[]
-                grain_sizes=[]
-                for c in d_hpx[node][benchmark][th][b].keys():                    
-                    k=d_hpx[node][benchmark][th][b][c]['size'].index(m)
-                    if 'mflops' in d_hpx[node][benchmark][th][b][c].keys() and d_hpx[node][benchmark][th][b][c]['mflops'][k]:
-                        b_r=int(b.split('-')[0])
-                        b_c=int(b.split('-')[1])
-                        rest1=b_r%simdsize
-                        rest2=b_c%simdsize
-                        if b_r>m:
-                            b_r=m
-                        if b_c>m:
-                            b_c=m
-                        equalshare1=math.ceil(m/b_r)
-                        equalshare2=math.ceil(m/b_c)  
-                        chunk_sizes.append(c)
-                        num_blocks=equalshare1*equalshare2
-                        num_elements_uncomplete=0
-                        if b_c<m:
-                            num_elements_uncomplete=(m%b_c)*b_r
-                        mflop=0
-                        if benchmark=='dmatdmatadd':                            
-                            mflop=b_r*b_c                            
-                        elif benchmark=='dmatdmatdmatadd':
-                            mflop=b_r*b_c*2
-                        else:
-                            mflop=b_r*b_c*(2*m)
-                        num_elements=[mflop]*num_blocks
-                        if num_elements_uncomplete:
-                            for j in range(1,equalshare1+1):
-                                num_elements[j*equalshare2-1]=num_elements_uncomplete
-                        data_type=8
-                        grain_size=sum(num_elements[0:c])
-                        num_mat=3
-                        if benchmark=='dmatdmatdmatadd':
-                            num_mat=4
-                        cost=c*mflop*num_mat/data_type
-                        grain_sizes.append(grain_size)
-                        results.append(d_hpx[node][benchmark][th][b][c]['mflops'][k])
-                if len(chunk_sizes)!=0:                    
+for node in ['medusa','trillian']:#d_hpx.keys():
+    for benchmark in d_hpx[node].keys():
+        for th in d_hpx[node][benchmark].keys():
+            pp = PdfPages(perf_directory+'/'+node+'_bath_tub_'+benchmark+'_different_matrix_sizes_'+str(th)+'.pdf')
+    
+            for m in mat_sizes[benchmark]: 
+                plt.figure(i)
+                for b in d_hpx[node][benchmark][th].keys():
+    
+                    results=[]
+                    chunk_sizes=[]
+                    grain_sizes=[]
+                    for c in d_hpx[node][benchmark][th][b].keys():                    
+                        k=d_hpx[node][benchmark][th][b][c]['size'].index(m)
+                        if 'mflops' in d_hpx[node][benchmark][th][b][c].keys() and d_hpx[node][benchmark][th][b][c]['mflops'][k]:
+                            b_r=int(b.split('-')[0])
+                            b_c=int(b.split('-')[1])
+                            rest1=b_r%simdsize
+                            rest2=b_c%simdsize
+                            if b_r>m:
+                                b_r=m
+                            if b_c>m:
+                                b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
+                            equalshare1=math.ceil(m/b_r)
+                            equalshare2=math.ceil(m/b_c)  
+                            chunk_sizes.append(c)
+                            num_blocks=equalshare1*equalshare2
+                            num_elements_uncomplete=0
+                            if b_c<m:
+                                num_elements_uncomplete=(m%b_c)*b_r
+                            mflop=0
+                            if benchmark=='dmatdmatadd':                            
+                                mflop=b_r*b_c                            
+                            elif benchmark=='dmatdmatdmatadd':
+                                mflop=b_r*b_c*2
+                            else:
+                                mflop=b_r*b_c*(2*m)
+                            num_elements=[mflop]*num_blocks
+                            if num_elements_uncomplete:
+                                for j in range(1,equalshare1+1):
+                                    num_elements[j*equalshare2-1]=num_elements_uncomplete
+                            data_type=8
+                            grain_size=sum(num_elements[0:c])
+                            num_mat=3
+                            if benchmark=='dmatdmatdmatadd':
+                                num_mat=4
+                            cost=c*mflop*num_mat/data_type
+                            grain_sizes.append(grain_size)
+                            results.append(d_hpx[node][benchmark][th][b][c]['mflops'][k])
+                    if len(chunk_sizes)!=0:                    
+                        
+    #                    plt.plot(chunk_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2))
+                        plt.plot(grain_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b_r)+'-'+str(b_c)+'  num_blocks:'+str(equalshare1*equalshare2))
+                        plt.xlabel("grain_size(flop)")           
+    
+    #                    plt.xlabel("chunk_size")           
+                        plt.ylabel('MFlops')
+                        plt.xscale('log')
+                        plt.title(benchmark)
+                        plt.grid(True, 'both')
+                        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                print('')     
+                plt.savefig(pp, format='pdf',bbox_inches='tight')
+                i=i+1
                     
-#                    plt.plot(chunk_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2))
-                    plt.plot(grain_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b_r)+'-'+str(b_c)+'  num_blocks:'+str(equalshare1*equalshare2))
-                    plt.xlabel("grain_size(flop)")           
+            plt.show()
+            pp.close() 
 
-#                    plt.xlabel("chunk_size")           
-                    plt.ylabel('MFlops')
-                    plt.xscale('log')
-                    plt.title(benchmark)
-                    plt.grid(True, 'both')
-                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-            print('')     
-#            plt.savefig(pp, format='pdf',bbox_inches='tight')
-            i=i+1
-                
-        plt.show()
-        pp.close() 
+
+###bath tub mflops_vs_number_of_tasks_one-blocksize
+i=1
+for node in d_hpx.keys():
+    for benchmark in d_hpx[node].keys():
+        for th in d_hpx[node][benchmark].keys():
+            pp = PdfPages(perf_directory+'/'+node+'_bath_tub_'+benchmark+'_different_matrix_sizes_'+str(th)+'_num_tasks.pdf')
+    
+            for m in mat_sizes[benchmark]: 
+                plt.figure(i)
+                for b in d_hpx[node][benchmark][th].keys():
+    
+                    results=[]
+                    chunk_sizes=[]
+                    grain_sizes=[]
+                    num_tasks=[]
+                    for c in d_hpx[node][benchmark][th][b].keys():                    
+                        k=d_hpx[node][benchmark][th][b][c]['size'].index(m)
+                        if 'mflops' in d_hpx[node][benchmark][th][b][c].keys() and d_hpx[node][benchmark][th][b][c]['mflops'][k]:
+                            b_r=int(b.split('-')[0])
+                            b_c=int(b.split('-')[1])
+                            rest1=b_r%simdsize
+                            rest2=b_c%simdsize
+                            if b_r>m:
+                                b_r=m
+                            if b_c>m:
+                                b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
+                            equalshare1=math.ceil(m/b_r)
+                            equalshare2=math.ceil(m/b_c)  
+                            chunk_sizes.append(c)
+                            num_blocks=equalshare1*equalshare2
+                            num_elements_uncomplete=0
+                            if b_c<m:
+                                num_elements_uncomplete=(m%b_c)*b_r
+                            mflop=0
+                            if benchmark=='dmatdmatadd':                            
+                                mflop=b_r*b_c                            
+                            elif benchmark=='dmatdmatdmatadd':
+                                mflop=b_r*b_c*2
+                            else:
+                                mflop=b_r*b_c*(2*m)
+                            num_elements=[mflop]*num_blocks
+                            if num_elements_uncomplete:
+                                for j in range(1,equalshare1+1):
+                                    num_elements[j*equalshare2-1]=num_elements_uncomplete
+                            num_tasks.append(np.ceil(num_blocks/c))
+                            data_type=8
+                            grain_size=sum(num_elements[0:c])
+                            num_mat=3
+                            if benchmark=='dmatdmatdmatadd':
+                                num_mat=4
+                            cost=c*mflop*num_mat/data_type
+                            grain_sizes.append(grain_size)
+                            results.append(1/d_hpx[node][benchmark][th][b][c]['mflops'][k])
+                    if len(chunk_sizes)!=0:   
+                        plt.figure(i)
+                        plt.plot(grain_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b_r)+'-'+str(b_c)+'  num_blocks:'+str(equalshare1*equalshare2))
+                        plt.xlabel("grain_size")           
+    
+    #                    plt.xlabel("chunk_size")           
+                        plt.ylabel('1/MFlops')
+                        plt.xscale('log')
+                        plt.title(benchmark)
+                        plt.grid(True, 'both')
+                        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    #                    plt.plot(chunk_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2))
+                        plt.figure(i+1)                    
+                        plt.plot(num_tasks, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b_r)+'-'+str(b_c)+'  num_blocks:'+str(equalshare1*equalshare2))
+                        plt.xlabel("num_tasks")           
+    
+    #                    plt.xlabel("chunk_size")           
+                        plt.ylabel('1/MFlops')
+                        plt.xscale('log')
+                        plt.title(benchmark)
+                        plt.grid(True, 'both')
+                        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                print('')     
+                plt.savefig(pp, format='pdf',bbox_inches='tight')
+                i=i+1
+                    
+            plt.show()
+            pp.close() 
+
 
 perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/grain_size/'
 ###bath tub mflops_vs_chunksize_one-blocksize
@@ -2004,6 +2127,8 @@ for node in d_hpx.keys():
                                 b_r=m
                             if b_c>m:
                                 b_c=m
+                            if b_c%simdsize!=0:
+                                b_c=b_c+simdsize-b_c%simdsize
                             equalshare1=math.ceil(m/b_r)
                             equalshare2=math.ceil(m/b_c)  
                             chunk_sizes.append(c)
@@ -2108,6 +2233,8 @@ for benchmark in benchmarks:
                         b_r=m
                     if b_c>m:
                         b_c=m
+                    if b_c%simdsize!=0:
+                        b_c=b_c+simdsize-b_c%simdsize
                     equalshare1=math.ceil(m/b_r)
                     equalshare2=math.ceil(m/b_c) 
                     num_blocks=equalshare1*equalshare2
@@ -2159,6 +2286,8 @@ for benchmark in benchmarks:
                     b_r=m
                 if b_c>m:
                     b_c=m
+                if b_c%simdsize!=0:
+                    b_c=b_c+simdsize-b_c%simdsize
                 equalshare1=math.ceil(m/b_r)
                 equalshare2=math.ceil(m/b_c) 
                 num_blocks=equalshare1*equalshare2
@@ -2198,6 +2327,8 @@ for benchmark in benchmarks:
                         b_r=m
                     if b_c>m:
                         b_c=m
+                    if b_c%simdsize!=0:
+                        b_c=b_c+simdsize-b_c%simdsize                        
                     equalshare1=math.ceil(m/b_r)
                     equalshare2=math.ceil(m/b_c)  
                     plt.figure(i)
