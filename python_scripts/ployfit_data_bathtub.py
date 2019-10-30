@@ -208,7 +208,7 @@ build_model=False
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','mflops']
+    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','mflops']
 
     ranges={}
     deg=2
@@ -253,6 +253,8 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             ranges[node][benchmark]={}
             m_data[node][benchmark]={'matrix_sizes':[],'threads':[]}
             m_data[node][benchmark]['matrix_sizes']=matrix_sizes
+            thr=thr[1:]
+            matrix_sizes=matrix_sizes[:-5]
             m_data[node][benchmark]['threads']=thr
             m_data[node][benchmark]['params']={}
             m_data[node][benchmark]['params_bfit']={}
@@ -267,58 +269,34 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 pp = PdfPages(perf_filename)
             popts=[]
             q=1
-            thr=thr[1:]
-            for th in thr:
-                if build_model or collect_3d_data:
-                    all_data[node][benchmark][th]={}
-                    P_train=[]
-                    G_train=[]
-                    M_train=[]
-                    T_train=[]
-                    P_test=[]
-                    G_test=[]
-                    M_test=[]
-                    T_test=[]
-
+            for m in matrix_sizes:
+                all_data[node][benchmark][m]={'train':[[],[],[],[]],'test':[[],[],[],[]]}
+#            pp = PdfPages(perf_directory+'/'+node+'_'+benchmark+'_'+plot_type+'_bathtub.pdf')
+            for th in thr:                
                 p_range=[0.,np.inf]
                 m_data[node][benchmark]['params'][th]={}
                 m_data[node][benchmark]['params_bfit'][th]={}
-                matrix_sizes=[690.,912.]
-                def my_func_total(x,a,b,b2,c,x0):
-                    return a+b/(th**x)+b2*((x-x0))**th+c/(th**(x-x0))
-                
-#                def my_func_total(x,a,b,b2,c,x0):
-#                    return a+(b/x)+b2*(np.log(x/x0)/np.log(th))+c*(x0)
+                def my_func_total_h(d,ts,alpha,c,f): 
+                    return (alpha*d+ts)/((th-np.log(1+(np.exp(th)-1)*np.exp(-d))))+d*c+f
+                def my_func_total_new(x,a,b,c,x0):
+                    return a+b/x+c*(x-x0)**th
+                def my_func_total(x,a,b,c,d,x0):
+                    return a+b/(th**x)+c*((x-x0))**th+d/(th**(x-x0))
+
                 def my_func_bath(x,b):
-                    c=np.log10(692.*692.)/np.log10(th)
+                    n=m
+                    if m%simdsize!=0:
+                        n=m+simdsize-m%simdsize
+                    c=np.log10(n*n)/np.log10(th)
                     print(th,c)
                     return (b/(x-th))+(1/(c-x))
                 def my_func(x,a,b,alpha):                    
                     return a*x**(b-1)*2**(alpha*x)
                 for m in matrix_sizes:
-                    m_selected=df_nb_selected['matrix_size']==m
-                    th_selected=df_nb_selected['num_threads']==th
-                    block_selected_r=df_nb_selected['block_size_row']==4
-                    block_selected_c=df_nb_selected['block_size_col']==1024
-                    features=['grain_size','mflops']
-                    df_selected=df_nb_selected[m_selected & th_selected][features]
-#                    df_selected_m=df_nb_selected[df_nb_selected['matrix_size']==690.][['grain_size','num_threads','mflops']]
-
-                    array=df_selected.values
-                    array=array.astype(float)
-                    real_array=array[:,:-1]                 
-                    array[:,0]=np.log10(array[:,0])/np.log10(th)   
-                    array[:,-1]=1/(array[:,-1])   
-                    a_s=np.argsort(array[:,0])
-                    array[:,0]=array[a_s,0]
-                    array[:,1]=array[a_s,1]
-
-                    array=remove_duplicates(array)
-                    
                     simdsize=4.
 #                    if m%simdsize!=0:
 #                        m=m+simdsize-m%simdsize
-                    benchmark='dmatdmatadd'
+#                    benchmark='dmatdmatadd'
                     if benchmark=='dmatdmatadd':                            
                         mflop=m**2                           
                     elif benchmark=='dmatdmatdmatadd':
@@ -326,17 +304,28 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     else:
                         mflop=2*m**3        
                     max_grain_size=(mflop)
-                    g_m=np.log10(max_grain_size/th)
-#                    if th==1:
-#                        cutoff=4.
-#                    else:
-#                        cutoff=np.log10((m**2)/(th-1))
-#                    all_array=array
-#                    array=all_array[all_array[:,0]<=cutoff]                    
+                    
+                    m_selected=df_nb_selected['matrix_size']==m
+                    th_selected=df_nb_selected['num_threads']==th
+                    block_selected_r=df_nb_selected['block_size_row']==4
+                    block_selected_c=df_nb_selected['block_size_col']<=512
+                    features=['grain_size','mflops']
+                    df_selected=df_nb_selected[m_selected & th_selected & block_selected_r & block_selected_c][features]
+#                    df_selected_m=df_nb_selected[df_nb_selected['matrix_size']==690.][['grain_size','num_threads','mflops']]
 
+                    array=df_selected.values
+                    array=array.astype(float)
+                    real_array=array[:,:-1]                 
+#                    array[:,0]=np.log10(array[:,0])/np.log10(th)   
+                    array[:,0]=np.ceil(mflop/array[:,0])
+                    array[:,-1]=1/(array[:,-1])   
+                    a_s=np.argsort(array[:,0])
+                    for ir in range(np.shape(array)[1]):
+                        array[:,ir]=array[a_s,ir]
+
+                    array=remove_duplicates(array)
+                    
                     data_size=np.shape(array)[0]
-                    print(data_size,th,m)
-
                     if data_size>=8:
                         per = np.random.permutation(data_size)
                         train_size=int(np.ceil(0.6*data_size))
@@ -347,237 +336,225 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                         test_size=data_size-train_size
                         plt.figure(q)
                         plt.scatter(train_set[:,0],mflop*train_labels,color='blue')
-#                        plt.xscale('log')
-                        popt1, pcov=curve_fit(my_func_total,train_set[:,0],mflop*train_labels,method='lm')
-#s='{'
-#for i in range(train_size):
-#    s=s+'{'+str(train_set[i,0])+','+str(mflop*train_labels[i])+'},'
-#s=s[:-1]+'}'
-#print(s)
+                        plt.xscale('log')
+                        try:
+                            popt1, pcov=curve_fit(my_func_total_h,train_set[:,0],mflop*train_labels,method='lm')
+                            z=my_func_total_h(train_set[:,0],*popt1)  
+    #                        plt.plot(a,my_func_bath(a,*popt1),color='green')
+                            d=np.linspace(1,mflop,100)
+                            plt.scatter(train_set[:,0],z,color='green')
+#                            plt.xscale('log')
+#
+#                            plt.plot(d,popt1[1]*d,label='overhead')
+#                            plt.xscale('log')
+#
+#                            plt.plot(d,popt1[0]/(th-np.log(1+(np.exp(th-1)-1)*np.exp(-d))),label='starvation')
+#                            plt.xscale('log')
+#
+#                            plt.scatter(train_set[:,0],np.ceil(th-np.log(1+(np.exp(th-1)-1)*np.exp(-train_set[:,0]))),label='softplus')
 
-#                        popt1, pcov=curve_fit(my_func_piece1,train_set[:,0],mflop*train_labels,method='lm')
+                            plt.xscale('log')
+                            plt.title('matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+                            q=q+1
+#                            plt.savefig(pp,format='pdf',bbox_inches='tight')
+                            m_data[node][benchmark]['params'][th][m]=popt1.tolist()
+                        except:
+                            m_data[node][benchmark]['params'][th][m]=[0]
+                            print('no function was fitted for matrix size '+str(int(m))+' with '+str(int(th))+' threads')
 
-#                        popt1, pcov=curve_fit(my_func,train_set[:,0],mflop*train_labels,method='lm')
-                        z=my_func_total(train_set[:,0],*popt1)  
-#                        plt.plot(a,my_func_bath(a,*popt1),color='green')
-
-                        plt.scatter(train_set[:,0],z,color='green')
-#                        plt.xscale('log')
-
-                        q=q+1
-                        print(m,th)
-                        m_data[node][benchmark]['params'][th][m]=popt1.tolist()
-#                        A=np.argsort(train_set[:,0])
-#                        g=np.asarray([train_set[a,0] for a in A])
-#                        mf=np.asarray([train_labels[a] for a in A])
-#                        
-#                        plt.plot(g, mf, label='training data')
                         if build_model or collect_3d_data:
                             for j in range(train_size):
-                                G_train.append(train_set[j,0])
-                                P_train.append(train_labels[j])
-                                M_train.append(float(m))
-                                T_train.append(float(th))
+                                all_data[node][benchmark][m]['train'][0].append(train_set[j,0])
+                                all_data[node][benchmark][m]['train'][1].append(train_labels[j])
+                                all_data[node][benchmark][m]['train'][2].append(float(m))
+                                all_data[node][benchmark][m]['train'][3].append(float(th))
                             for j in range(data_size-train_size):
-                                G_test.append(test_set[j,0])
-                                P_test.append(test_labels[j])
-                                M_test.append(float(m))
-                                T_test.append(float(th))
+                                all_data[node][benchmark][m]['test'][0].append(test_set[j,0])
+                                all_data[node][benchmark][m]['test'][1].append(test_labels[j])
+                                all_data[node][benchmark][m]['test'][2].append(float(m))
+                                all_data[node][benchmark][m]['test'][3].append(float(th))
+                    else:
+                        print('no data for matrix size '+str(int(m))+' with '+str(int(th))+' threads')
 
-#                        if plot:
-#                            if plot_type=='params_th' or plot_type=='all':
-#                                plt.figure(i)
-#                                plt.scatter(m,popt[0])
-#                                plt.xlabel('matrix size')
-#                                plt.ylabel('z[0],z[1],z[2]')   
-#                                plt.grid(True, 'both')
-#                                plt.title(node+' '+benchmark+'  '+str(int(th))+' threads')
-#                                plt.figure(i)
-#                                plt.scatter(m,popt[1])
-#                                plt.xlabel('matrix size')
-#                                plt.ylabel('z[0],z[1],z[2]')  
-#                                plt.grid(True, 'both')
-#                                plt.title(node+' '+benchmark+'  '+str(int(th))+' threads')
-#                                plt.figure(i)
-#                                plt.scatter(m,popt[2])
-#                                plt.xlabel('matrix size')
-#                                plt.ylabel('z[0],z[1],z[2]')  
-#                                plt.grid(True, 'both')
-#                                plt.title(node+' '+benchmark+'  '+str(int(th))+' threads')
-#                            if plot_type=='perf_curves' or plot_type=='all':    
-#                                plt.figure(h)
-#                                plt.plot([x0,x1],[p(x0),p(x1)],marker='+',label='interval of max performance  matrix size:'+str(m))
-#                    #            plt.scatter(max_perf,p(max_perf),marker='o',color='r')
-#                                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#                                plt.title(node+'  '+benchmark+'  '+str(th)+' threads')
-#                                plt.grid(True, 'both')
-#                                plt.xlabel('grain size')
-#                                plt.ylabel('MFlops')   
-#                                A=np.argsort(test_set[:,0])
-#                                g=np.asarray([test_set[a,0] for a in A])
-#                                mf=np.asarray([test_labels[a] for a in A])
-#                                plt.figure(h)
-#                                plt.plot(g, p(g), label='test set fitted with degree '+str(deg)+'  matrix size:'+str(m))
-#                    #            plt.plot(g,mf,label='test set real')
-#                                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#                                plt.title(node+'  '+benchmark+'  '+str(th)+' threads')
-#                                plt.grid(True, 'both')
-#                                plt.xlabel('grain size')
-#                                plt.ylabel('MFlops')   
-#                                if save and m==matrix_sizes[-1] and (plot_type=='perf_curves' or plot_type=='all'):
-#                                    plt.savefig(pp,format='pdf',bbox_inches='tight')
-
-                h=h+1
-
-#                ranges[node][benchmark][th]=[10**p_range[0], 10**p_range[1]]
-#                z0_t=[m_data[node][benchmark]['params'][th][m][0] for m in matrix_sizes]
-#                n=np.polyfit(matrix_sizes,z0_t,3)
-#                p1 = np.poly1d(n)
-#                m_data[node][benchmark]['params_bfit'][th]['a']=n
-##                modeled_params[node][benchmark][th]['z0']=n
-#                if plot and (plot_type=='params_th' or plot_type=='all'):
-#                    plt.figure(i)
-#                    plt.plot(matrix_sizes,p1(matrix_sizes),label='z[0]')
-#                    plt.xlabel('matrix size')
-#                    plt.ylabel('z[0],z[1],z[2]')   
-#                    plt.grid(True, 'both')
-#                    plt.title(node+' '+benchmark+'  '+str(int(th))+' threads')
-#                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)                                      
-##                    if save:
-##                        plt.savefig(pp,format='pdf',bbox_inches='tight')
-#                z1_t=[m_data[node][benchmark]['params'][th][m][1] for m in matrix_sizes]
-#                n=np.polyfit(matrix_sizes,z1_t,3)
-#                p2 = np.poly1d(n)
-#                m_data[node][benchmark]['params_bfit'][th]['b']=n
-#
-##                modeled_params[node][benchmark][th]['z1']=n
-#                if plot and (plot_type=='params_th' or plot_type=='all'):
-#                    plt.figure(i)
-#                    plt.plot(matrix_sizes,p2(matrix_sizes),label='z[1]')
-#                    plt.xlabel('matrix size')
-#                    plt.ylabel('z[0],z[1],z[2]')   
-#                    plt.grid(True, 'both')
-#                    plt.title(node+' '+benchmark+'  '+str(int(th))+' threads')
-#                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-##                    if save:
-##                        plt.savefig(pp,format='pdf',bbox_inches='tight')
-#                z2_t=[m_data[node][benchmark]['params'][th][m][2] for m in matrix_sizes]
-#                n=np.polyfit(matrix_sizes,z2_t,3)
-#                p3 = np.poly1d(n)
-#                m_data[node][benchmark]['params_bfit'][th]['alpha']=n
-#
-#                if plot and (plot_type=='params_th' or plot_type=='all'):
-#                    plt.figure(i)
-#                    plt.plot(matrix_sizes,p3(matrix_sizes),label='z[2]')
-#                    plt.xlabel('matrix size')
-#                    plt.ylabel('z[0],z[1],z[2]')   
-#                    plt.grid(True, 'both')
-#                    plt.title(node+' '+benchmark+'  '+str(int(th))+' threads')
-#                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#                    if save:
-#                        plt.savefig(pp,format='pdf',bbox_inches='tight')
-                if collect_3d_data:
-                    all_data[node][benchmark][th]['train']=[G_train,M_train,T_train,P_train]
-                    all_data[node][benchmark][th]['test']=[G_test,M_test,T_test,P_test]
                 #for a fixed m
-                
-            def my_func_exp(x,a):
-                return a*np.exp(-x)
+            def uslfit2d(x, y):           
+                Q = np.zeros((x.size, 7))
+                Q[:,0]=(x-1)*y
+                Q[:,1]=x*(x-1)*y
+                Q[:,2]=-1
+                Q[:,3]=-x*(x-1)
+                Q[:,4]=(x-1)*(x**2)*y
+                Q[:,5]=-(x-1)
+                Q[:,6]=-(1/x)
+                m, _, _, _ = np.linalg.lstsq(Q, -y)
+                return m            
+            
+            def uslvalue2d(x, m):           
+                y=(m[5]*(x-1)+m[3]*x*(x-1)+m[2]+m[6]/x)/(1+m[0]*(x-1)+m[1]*(x*(x-1))+m[4]*(x-1)*x**2)
+                return y
+
+#            def uslfit2d(x, y):           
+#                Q = np.zeros((x.size, 8))
+#                Q[:,0]=-(x-1)
+#                Q[:,1]=-x*(x-1)
+#                Q[:,2]=-(x-1)*(x**2)
+#                Q[:,3]=y
+#                Q[:,4]=(x-1)*y
+#                Q[:,5]=(x-1)*x*y
+#                Q[:,6]=(x-1)*(x**2)*y
+#                Q[:,7]=(x-1)*x**3*y
+#                m, _, _, _ = np.linalg.lstsq(Q, -np.ones((x.size,1)))
+#                return m            
+#            
+#            def uslvalue2d(x, m):           
+#                y=(1+m[0]*(x-1)+m[1]*x*(x-1)+m[2]*(x-1)*(x**2)+m[7]*(x-1)*x**3)/(m[4]*(x-1)+m[5]*x*(x-1)+m[6]*(x**2)*(x-1))
+#                
+#                return y
+
+
+            params={}
+            params[node]={}
+            
+            params[node][benchmark]={}        
             for m in matrix_sizes:
+                params[node][benchmark][m]=[[],[],[],[]]
                 z0_t=[m_data[node][benchmark]['params'][th][m][0] for th in thr]
-    
-                n0=np.polyfit(1/thr,z0_t,1)
-                p0 = np.poly1d(n0)            
+                model=uslfit2d(np.asarray(thr),np.asarray(z0_t))
+                z0=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+                params[node][benchmark][m][0]=model
+                z=uslvalue2d(np.asarray(thr),model)            
     #                modeled_params[node][benchmark][th]['z0']=n
                 if plot and (plot_type=='params_th' or plot_type=='all'):
                     plt.figure(i)
-                    plt.scatter(thr,z0_t,label='real')
-    
-                    plt.plot(thr,p0(1/thr),label='z[0]')
+                    plt.scatter((thr),z0_t,label='real ')
+                    plt.scatter(thr,z,label='z[0]')
                     plt.xlabel('threads')
-                    plt.ylabel('z[0],z[1],z[2]')   
+                    plt.ylabel('z[0],z[1],z[2],z[3]')   
                     plt.grid(True, 'both')
                     plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
-                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)                                      
-    #                    if save:
-    #                        plt.savefig(pp,format='pdf',bbox_inches='tight')
-                z1_t=[m_data[node][benchmark]['params'][th][m][1] for th in thr]
-                z1_t=[m_data[node][benchmark]['params'][th][m][1] for th in [4., 8.]]
+                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)   
+                    if save:
+                        plt.savefig(pp,format='pdf',bbox_inches='tight')
 
-                n1=np.polyfit(thr,z1_t,6)
-                p1 = np.poly1d(n1)
-                
-    #                modeled_params[node][benchmark][th]['z1']=n
+                z1_t=[m_data[node][benchmark]['params'][th][m][1] for th in thr]                
+                model=uslfit2d(np.asarray(thr),np.asarray(z1_t))
+                params[node][benchmark][m][1]=model
+                z1=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+
+
+                z=uslvalue2d(np.asarray(thr),model)
                 if plot and (plot_type=='params_th' or plot_type=='all'):
-                    plt.figure(i)
-                    plt.scatter(thr,z1_t,label ='real')
-    
-                    plt.plot(thr,p1((thr)),label='z[1]')
+                    plt.figure(i+1)
+                    plt.scatter(thr,z1_t,label ='real ')
+                    plt.scatter(thr,z,label='z[1]')
                     plt.xlabel('threads')
-                    plt.ylabel('z[0],z[1],z[2]')   
+                    plt.ylabel('z[0],z[1],z[2],z[3]')   
                     plt.grid(True, 'both')
                     plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
-    #                    if save:
-    #                        plt.savefig(pp,format='pdf',bbox_inches='tight')
+                    if save:
+                        plt.savefig(pp,format='pdf',bbox_inches='tight')
+                        
                 z2_t=[m_data[node][benchmark]['params'][th][m][2] for th in thr]
-                n2=np.polyfit(thr,z2_t,6)
-                p2 = np.poly1d(n2)
-    
+                model=uslfit2d(np.asarray(thr),np.asarray(z2_t))
+                params[node][benchmark][m][2]=model
+                z=uslvalue2d(np.asarray(thr),model)
+                z2=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+
                 if plot and (plot_type=='params_th' or plot_type=='all'):
-                    plt.figure(i)
+                    plt.figure(i+2)
                     plt.scatter(thr,z2_t,label='real')
-                    plt.plot(thr,p2(thr),label='z[2]')
+                    plt.scatter(thr,z,label='z[2]')
                     plt.xlabel('threads')
-                    plt.ylabel('z[0],z[1],z[2]')   
+                    plt.ylabel('z[0],z[1],z[2],z[3]')   
                     plt.grid(True, 'both')
                     plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
                     if save:
                         plt.savefig(pp,format='pdf',bbox_inches='tight')        
-                        
+
                 z3_t=[m_data[node][benchmark]['params'][th][m][3] for th in thr]
-                n3=np.polyfit(thr,z3_t,6)
-                p3 = np.poly1d(n3)
-    
+                model=uslfit2d(np.asarray(thr),np.asarray(z3_t))
+                params[node][benchmark][m][3]=model
+                z=uslvalue2d(np.asarray(thr),model)
+                z3=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+
                 if plot and (plot_type=='params_th' or plot_type=='all'):
-                    plt.figure(i)
+                    plt.figure(i+3)
                     plt.scatter(thr,z3_t,label='real')
-                    plt.plot(thr,p3(thr),label='z[3]')
+                    plt.scatter(thr,z,label='z[3]')
                     plt.xlabel('threads')
-                    plt.ylabel('z[0],z[1],z[2]')   
+                    plt.ylabel('z[0],z[1],z[2],z[3]')   
                     plt.grid(True, 'both')
                     plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
                     if save:
                         plt.savefig(pp,format='pdf',bbox_inches='tight')     
-                        
-                z4_t=[m_data[node][benchmark]['params'][th][m][4] for th in thr]
-                n4=np.polyfit(1/thr,z4_t,1)
-                p4 = np.poly1d(n4)
-    
-                if plot and (plot_type=='params_th' or plot_type=='all'):
+                i=i+4
+            
+            
+            plt.scatter(np.arange(4),z0[1])
+            plt.scatter(np.arange(4),z1[1])
+            plt.scatter(np.arange(4),z2[1])
+            plt.scatter(np.arange(4),z3[1])
+
+            def predict_exec_time(m,th,g):
+                num_tasks=g #np.ceil(m**2/g)
+                params_t=[]
+                for i in range(4):
+                    z=uslvalue2d(th,params[node][benchmark][m][i])
+                    params_t.append(z)
+                return my_func_total_h(num_tasks, *params_t)
+            
+            def predict_exec_time_total(m,th,g):
+                num_tasks=g #np.ceil(m**2/g)
+                params_t=[]
+                for i in range(4):
+                    z=uslvalue2d(th,params[node][benchmark][m][i])
+                    params_t.append(z)
+                return my_func_total_h(num_tasks, *params_t)
+                
+            i=1
+            for m in matrix_sizes:
+                h=1
+                plt.figure(i)
+                plt.axes([0, 0, 3, 1])
+                test_data=all_data[node][benchmark][m]['test']
+                for d in range(len(test_data[0])):
+                    th=test_data[3][d]
+                    nt=test_data[0][d]
+                    t=test_data[1][d]
+                    p=predict_exec_time(m,th,nt)
+                    print(m, th, nt, m**2*t, p,(1-p/((m**2)*test_data[1][d])))
+#                    plt.scatter(h,p,label='prediction')
+                    plt.scatter(d,(1-p/((m**2)*test_data[1][d])),label='true value')
+#                    print(m,d,(1-p/((m**2)*test_data[1][d])))
+
+#                    print(((test_data[2][d]**2)*test_data[1][d]-p)/((test_data[2][d]**2)*test_data[1][d]))
+                    plt.title('matrix size '+str(int(test_data[2][d])))
+                i=i+1
+                for nt in [10,100,1000,10000]:
+                    es=[]
+                    for th in range(2,9):
+                        p=predict_exec_time(m,th,nt)
+                        es.append((m**2)/p)
                     plt.figure(i)
-                    plt.scatter(thr,z4_t,label='real')
-                    plt.plot(thr,p4(1/thr),label='z[4]')
-                    plt.xlabel('threads')
-                    plt.ylabel('z[0],z[1],z[2]')   
-                    plt.grid(True, 'both')
-                    plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
-                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
-                    if save:
-                        plt.savefig(pp,format='pdf',bbox_inches='tight')        
-                        
-           
-#            modeled_params[node][benchmark]['all']={'a':n0,'b':n1,'alpha':n2}
+                    plt.plot(np.arange(2,9),es)
+                    plt.title('num tasks: '+str(nt))
+                    i=i+1
 
-                i=i+3
 
-            for i in range(len(m_data[node][benchmark]['params'][th][m])):
-                plt.figure(i+1)
-                z_t=[m_data[node][benchmark]['params'][th][m][i] for th in thr]
-                plt.scatter(thr,z_t,label='real')
-                plt.title(i+1)
+            for m in matrix_sizes:
+                if m!=264.:
+                    for i in range(len(m_data[node][benchmark]['params'][th][m])):
+                        plt.figure(i+1)
+                        z_t=[m_data[node][benchmark]['params'][th][m][i] for th in thr]
+                        plt.scatter(thr,z_t,label='matrix size '+str(int(m)))
+                        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
+                        plt.ylabel('num threads')
+        #                z0_m=[m_data[node][benchmark]['params'][th][m][i] for m in matrix_sizes]
+        #                plt.scatter(matrix_sizes,z0_m,label='real')
+                        plt.title("parameter "+str(i+1))
 
 #            if plot and (plot_type=='params_th' or plot_type=='all'):  
 #                for k_p in ['a','b','alpha']:

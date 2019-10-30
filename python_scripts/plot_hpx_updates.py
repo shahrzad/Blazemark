@@ -521,6 +521,7 @@ d_hpx_ref=create_dict(hpx_dir_ref)
 hpx_dir='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/marvin/'         
 hpx_dir1='/home/shahrzad/repos/Blazemark/data/matrix/09-15-2019/'         
 hpx_dir2='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/trillian/'
+hpx_dir3='/home/shahrzad/repos/Blazemark/results/new_threads/'
 (d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir,hpx_dir1,hpx_dir2])                 
            
 d_openmp=create_dict_openmp(openmp_dir_1)
@@ -1094,7 +1095,7 @@ import math
 import csv
 f=open('/home/shahrzad/repos/Blazemark/data/data_perf_all.csv','w')
 f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','mflops'])
+f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','mflops'])
 node_type=0
 for node in d_hpx.keys():
     if node=='marvin':
@@ -1103,11 +1104,13 @@ for node in d_hpx.keys():
         L3cache='20971520'
         cache_line='8'
         set_associativity='512'
+        simdsize=4
     elif node=='trillian':
         L1cache='65536'
         L2cache='2097152'
         L3cache='6291456'
         cache_line='16'
+        simdsize=4
         set_associativity='131072'
     elif node=='medusa':
         L1cache='32768'
@@ -1115,6 +1118,7 @@ for node in d_hpx.keys():
         L3cache='28835840'
         cache_line='64'
         set_associativity='16' 
+        simdsize=8
     benchmark_type=0
     for benchmark in d_hpx[node].keys():
         all_data=[]
@@ -1171,7 +1175,7 @@ for node in d_hpx.keys():
                                 f_writer.writerow([node,benchmark,str(m),str(th),b.split('-')[0], 
                                                    b.split('-')[1], str(b_r * b_c), str(num_elements_uncomplete),str(c),
                                                    str(grain_size),str(num_blocks), str(num_blocks/c),
-                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),r])
+                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),r])
         benchmark_type+=1
     node_type+=1        
 f.close()                    

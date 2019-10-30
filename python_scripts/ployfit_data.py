@@ -119,10 +119,44 @@ def polyval3d_given_x(x, x_p, y_p, z_p, m):
         k=j*(z_p+1)+l
         coef[k] += a * x**i
     return np.array(coef)
+def remove_duplicates(array):
+    g=array[:,0]
+    p=array[:,-1]
+    g_dict={}
+    if np.shape(array)[1]==2:
+        for i in range(len(g)):
+            if g[i] not in g_dict.keys():
+                g_dict[g[i]]=p[i]
+            else:
+                g_dict[g[i]]+=p[i]
+        p=np.asarray([g_dict[gd]/Counter(g)[gd] for gd in g_dict.keys()])
+        g=np.asarray([gd for gd in g_dict.keys()])
+        array=np.zeros((np.shape(p)[0],2))
+        array[:,0]=g
+        array[:,1]=p
+    else:
+        t=array[:,1]
+        count={}
+        for i in range(len(g)):
+            if (g[i],t[i]) not in g_dict.keys():
+                g_dict[(g[i],t[i])]=p[i]
+                count[(g[i],t[i])]=1
+            else:
+                g_dict[(g[i],t[i])]+=p[i]                
+                count[(g[i],t[i])]+=1
+        p=np.asarray([g_dict[gd]/count[gd] for gd in g_dict.keys()])
+        g=np.asarray([gd[0] for gd in g_dict.keys()])
+        t=np.asarray([gd[1] for gd in g_dict.keys()])
+
+        array=np.zeros((np.shape(p)[0],3))
+        array[:,0]=g
+        array[:,1]=t
+        array[:,2]=p
+    return array
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','cache_block','datatype','cost','mflops']
+    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','cache_block','datatype','cost','simd_size','mflops']
 
     ranges={}
     deg=2
@@ -201,14 +235,15 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     array=df_selected.values
                     array=array.astype(float)
                     real_array=array[:,:-1]                 
-                    array[:,:-1]=np.log10(array[:,:-1])                    
+                    array[:,:-1]=np.log10(array[:,:-1])      
+                    array=remove_duplicates(array)
+
                     data_size=np.shape(array)[0]
                     m_data[node][benchmark]['params'][th][m]=[0.0]*(deg+1)
                     if data_size>=8:
 
                         per = np.random.permutation(data_size)
                         train_size=int(np.ceil(0.6*data_size))
-                        train_set_real=real_array[per[0:train_size],:-1]  
                         train_set=array[per[0:train_size],:-1]  
                         train_labels=array[per[0:train_size],-1]  
                         test_set=array[per[train_size:],:-1]  
@@ -410,8 +445,17 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                             g_dict[mg]={}   
                         if g not in g_dict[mg].keys():
                             g_dict[mg][g]=[[],[]]
+#                        if all_data[node][benchmark][th]['train'][2][g_index] in g_dict[mg][g][0]:
+#                            th_index=g_dict[mg][g][0].index(all_data[node][benchmark][th]['train'][2][g_index])
+#                            try:
+#                                g_dict[mg][g][1][th_index].append(all_data[node][benchmark][th]['train'][3][g_index])
+#                            except:
+#                                g_dict[mg][g][1][th_index]=[g_dict[mg][g][1][th_index]]
+#                        else:
                         g_dict[mg][g][0].append(all_data[node][benchmark][th]['train'][2][g_index])
                         g_dict[mg][g][1].append(all_data[node][benchmark][th]['train'][3][g_index])
+#                    for r in g_dict[mg][g][1]:
+                        
                     [x.append(i) for i in all_data[node][benchmark][th]['train'][0]]
                     [y.append(i) for i in all_data[node][benchmark][th]['train'][1]]
                     [z.append(i) for i in all_data[node][benchmark][th]['train'][2]]
@@ -915,6 +959,13 @@ g_models={}
 j=1
 for (mg,g_dict) in data['g_params'][node][benchmark].items():
     #mg is matrix size
+    mflop=0
+    if benchmark=='dmatdmatadd':                            
+        mflop=mg**2                           
+    elif benchmark=='dmatdmatdmatadd':
+        mflop=2*mg**2
+    else:
+        mflop=2*mg**3        
     g_models[mg]=[]
     m0=[]
     m1=[]
@@ -922,47 +973,62 @@ for (mg,g_dict) in data['g_params'][node][benchmark].items():
     all_g=[]
     all_g_n_1=[]
     mflops_n_1=[]
+    
+    th=4.
     for (g,m_dict) in g_dict.items():
         print(g)
         all_g.append(g)
         for i in range(len(m_dict[0])):
-            if m_dict[0][i]==1:
+            if m_dict[0][i]==4.:
                 all_g_n_1.append(g)
-                mflops_n_1.append(m_dict[1][i])
+                mflops_n_1.append(mflop/m_dict[1][i])
+    
     plt.figure(j)    
     plt.scatter(all_g_n_1,mflops_n_1,label='true')
     plt.xlabel('grain_size')
     plt.ylabel('mflops')
-    plt.title('mflops with 1 thread with different grain sizes\nmatrix size:'+str(int(mg)))
-    m=np.polyfit(all_g_n_1,mflops_n_1,2)
-    p=np.poly1d(m)
-    plt.scatter(all_g_n_1,p(all_g_n_1),label='pred')
+    plt.title('mflops with '+str(int(th))+' thread with different grain sizes\nmatrix size:'+str(int(mg)))
+#    m=np.polyfit(all_g_n_1,mflops_n_1,2)
+#    p=np.poly1d(m)
+#    plt.scatter(all_g_n_1,p(all_g_n_1),label='pred')
     plt.xlabel('grain_size')
     plt.ylabel('mflops')
-    popt, pcov = curve_fit(sigmoid, np.asarray(all_g_n_1), mflops_n_1,method='trf')
-    y=sigmoid(np.asarray(all_g_n_1),*popt)
-    plt.scatter(np.asarray(all_g_n_1),y,color='purple',label='sigmoid')
+    popt, pcov = curve_fit(my_func_total, np.asarray(all_g_n_1), mflops_n_1,method='lm')
+    y=my_func_total(np.asarray(all_g_n_1),*popt)
+    plt.scatter(np.asarray(all_g_n_1),y,color='purple',label='bathtub')
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     
     all_g.sort()
-    for g in all_g:         
+    for g in all_g:     
+        def my_func_total_g(x,a,b,c,d,x0):
+            return a*x/(1+b*(x-1)+c*x*(x-1))
         m_dict=g_dict[g]
         d=np.asarray(m_dict[1])
         z=np.asarray(m_dict[0])
-        model=uslfit2d_given_l(z,d,p(g))
-        pred=uslvalue2d_given_l(z,p(g),model)
-        m0.append(model[0])
-        plt.figure(j+1)
-        plt.xlabel('grain_size')
-        plt.ylabel('m0')
-        plt.title('matrix size:'+str(int(mg)))
-        plt.scatter(g,model[0])
-        m1.append(model[1])
-        plt.figure(j+2)
-        plt.scatter(g,model[1])
-        plt.xlabel('grain_size')
-        plt.ylabel('m1')
-        plt.title('matrix size:'+str(int(mg)))
+        try:
+            model, pcov = curve_fit(my_func_total, z, d,method='lm')
+            y=my_func_total(z,*model)
+            plt.figure(i)
+            plt.plot(z,d,label='real')
+            plt.plot(z,y,label='real')
+            i=i+1
+        except:
+            print('no fit found for grain size '+str(g))
+                
+    #        model=uslfit2d_given_l(z,d,p(g))
+    #        pred=uslvalue2d_given_l(z,p(g),model)
+            m0.append(model[0])
+            plt.figure(j+1)
+            plt.xlabel('grain_size')
+            plt.ylabel('m0')
+            plt.title('matrix size:'+str(int(mg)))
+            plt.scatter(g,model[0])
+            m1.append(model[1])
+            plt.figure(j+2)
+            plt.scatter(g,model[1])
+            plt.xlabel('grain_size')
+            plt.ylabel('m1')
+            plt.title('matrix size:'+str(int(mg)))
         
         
         
