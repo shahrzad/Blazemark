@@ -11,160 +11,16 @@ from scipy.optimize import curve_fit
 from collections import Counter
 
 filename='/home/shahrzad/repos/Blazemark/data/data_perf_all.csv'
-perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
+perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/bathtub'
 benchmarks=['dmatdmatadd']
 plot=True
 error=False
 save=False
+node='marvin'
+benchmark='dmatdmatadd'
+collect_3d_data=True
+build_model=False
 plot_type='params_th'
-def create_dict_refernce(directory):
-    thr=[]
-    nodes=[]
-    data_files=glob.glob(directory+'/*.dat')
-    benchmark=''
-    benchmarks=[]
-    
-    for filename in data_files:
-        try:
-            (node, benchmark, th) = filename.split('/')[-1].replace('.dat','').split('-')   
-        except:
-            (node, benchmark, th, ref) = filename.split('/')[-1].replace('.dat','').split('-')  
-        if benchmark not in benchmarks:
-                benchmarks.append(benchmark)                
-        if int(th) not in thr:
-            thr.append(int(th))
-        if node not in nodes:
-            nodes.append(node)        
-                  
-    thr.sort()
-    benchmarks.sort()      
-    nodes.sort()      
-    
-    d_all={}   
-    for node in nodes:
-        d_all[node]={}
-        for benchmark in benchmarks:  
-            d_all[node][benchmark]={}
-            for th in thr:
-                d_all[node][benchmark][th]={}     
-                                            
-    data_files.sort()        
-    for filename in data_files:                
-        stop=False
-        f=open(filename, 'r')
-                 
-        result=f.readlines()[3:]
-        try:
-            (node, benchmark, th) = filename.split('/')[-1].replace('.dat','').split('-')   
-        except:
-            (node, benchmark, th, ref) = filename.split('/')[-1].replace('.dat','').split('-')          
-        th = int(th)
-        size=[]
-        mflops=[]    
-        for r in result:        
-            if "N=" in r or '/' in r:
-                stop=True
-            if not stop:
-                size.append(int(r.strip().split(' ')[0]))
-                mflops.append(float(r.strip().split(' ')[-1]))
-            
-        d_all[node][benchmark][th]['size']=size
-        d_all[node][benchmark][th]['mflops']=mflops
- 
-            
-    return d_all                           
-
-def polyfit3d(x, y, z, d, x_p, y_p, z_p):
-    #m**3*g**2
-    ncols = (x_p + 1)*(y_p + 1)*(z_p + 1)
-    Q = np.zeros((x.size, ncols))
-    ijl = itertools.product(range(x_p + 1), range(y_p + 1), range(z_p + 1))
-    for k, (i,j,l) in enumerate(ijl):
-        Q[:,k] = x**i * y**j * z**l
-    m, _, _, _ = np.linalg.lstsq(Q, d)
-    return m
-
-def polyval3d(x, y, z, x_p, y_p, z_p, m):
-    ijl = itertools.product(range(x_p + 1), range(y_p + 1), range(z_p + 1))
-    w = np.zeros_like(x)
-    for a, (i,j,l) in zip(m, ijl):
-        w += a * x**i * y**j * z**l
-    return w
-
-def polyval3d_given_yz(y, z, x_p, y_p, z_p, m):
-    ijl = itertools.product(range(x_p + 1), range(y_p + 1), range(z_p + 1))
-    coef=[0.]*(x_p+1)
-    for a, (i,j,l) in zip(m, ijl):
-        coef[x_p-i] += a * y**j * z**l
-    return np.array(coef)
-
-def polyval3d_given_xy(x, y, x_p, y_p, z_p, m):
-    ijl = itertools.product(range(x_p + 1), range(y_p + 1), range(z_p + 1))
-    coef=[0.]*(z_p+1)
-    for a, (i,j,l) in zip(m, ijl):
-        coef[z_p-l] += a * x**i * y**j
-    return np.array(coef)
-
-def polyval3d_given_y(y, x_p, y_p, z_p, m):
-    ijl = itertools.product(range(x_p + 1), range(y_p + 1), range(z_p + 1))
-    coef=[0.]*(x_p+1)*(z_p+1)
-    for a, (i,j,l) in zip(m, ijl):
-        k=i*(z_p+1)+l
-        coef[k] += a * y**j
-    return np.array(coef)
-
-def polyval3d_given_x(x, x_p, y_p, z_p, m):
-    ijl = itertools.product(range(x_p + 1), range(y_p + 1), range(z_p + 1))
-    coef=[0.]*(y_p+1)*(z_p+1)
-    for a, (i,j,l) in zip(m, ijl):
-        k=j*(z_p+1)+l
-        coef[k] += a * x**i
-    return np.array(coef)
-
-def polyfit2d(x, y, z, x_p, y_p):
-    ncols = (x_p + 1)*(y_p + 1)
-    Q = np.zeros((x.size, ncols))
-    ij = itertools.product(range(x_p + 1), range(y_p + 1))
-    for k, (i,j) in enumerate(ij):
-        Q[:,k] = x**i * y**j
-    model, _, _, _ = np.linalg.lstsq(Q, z)
-    return model
-def polyval2d(x, y, x_p, y_p, model):
-    ij = itertools.product(range(x_p + 1), range(y_p + 1))
-    w = np.zeros_like(x)
-    for a, (i,j) in zip(model, ij):
-        w += a * x**i * y**j
-    return w
-
-def my_func(x,a,b,alpha):                    
-    return a*x**(b-1)*2**(alpha*x)
-            
-def my_func_3(x,a,b,c,d,e,f):
-    return (-a)*10**(-b*x)+c*x+(-d)*10**(e*x)+f
-
-def my_exp(x,a,b,c,d):
-    return d*np.log10(a*x**2+b*x+c)    
-    
-def my_func_k(x,a,b,c):    
-    return -a*b*(x**(a-1))*((1-x)**(b-1))+c
-
-def my_func_log(x,a,b,alpha):                    
-    return a+(b-1)*np.log(g)+(alpha*x)
-
-def my_func_piece1(x,a,b):    
-    return (a+b/(10**(x)))
-
-def my_func_piece2(x,a,b):
-    return a*np.exp(10**x)+b
-
-
-#
-#def my_func_total(x,a,b,b2,c,x0):
-#    return a+b/(10**x)+b2*(x-x0)**2+c/(10**(x-x0))
-#def my_func_total(x,a,b,b2,c,x0):
-#    return a+b/(10**x)+b2*((x-x0))**2+c/(10**(x-x0))
-
-
     
 def remove_duplicates(array):
     g=array[:,0]
@@ -201,14 +57,11 @@ def remove_duplicates(array):
         array[:,2]=p
     return array
 
-node='marvin'
-benchmark='dmatdmatadd'
-collect_3d_data=False
-build_model=False
+
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','mflops']
+    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
 
     ranges={}
     deg=2
@@ -254,7 +107,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             m_data[node][benchmark]={'matrix_sizes':[],'threads':[]}
             m_data[node][benchmark]['matrix_sizes']=matrix_sizes
             thr=thr[1:]
-            matrix_sizes=matrix_sizes[:-5]
+            matrix_sizes=matrix_sizes
             m_data[node][benchmark]['threads']=thr
             m_data[node][benchmark]['params']={}
             m_data[node][benchmark]['params_bfit']={}
@@ -277,7 +130,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 m_data[node][benchmark]['params'][th]={}
                 m_data[node][benchmark]['params_bfit'][th]={}
                 def my_func_total_h(d,ts,alpha,c,f): 
-                    return (alpha*d+ts)/((th-np.log(1+(np.exp(th)-1)*np.exp(-d))))+d*c+f
+                    return (alpha*d+ts)/((th-1-np.log(1+(np.exp(th-1)-1)*np.exp(-d))))+d*c+f
                 def my_func_total_new(x,a,b,c,x0):
                     return a+b/x+c*(x-x0)**th
                 def my_func_total(x,a,b,c,d,x0):
@@ -294,31 +147,31 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     return a*x**(b-1)*2**(alpha*x)
                 for m in matrix_sizes:
                     simdsize=4.
-#                    if m%simdsize!=0:
-#                        m=m+simdsize-m%simdsize
+                    aligned_m=m
+                    if m%simdsize!=0:
+                        aligned_m=m+simdsize-m%simdsize
 #                    benchmark='dmatdmatadd'
                     if benchmark=='dmatdmatadd':                            
-                        mflop=m**2                           
+                        mflop=(aligned_m)**2                           
                     elif benchmark=='dmatdmatdmatadd':
-                        mflop=2*m**2
+                        mflop=2*(aligned_m)**2
                     else:
-                        mflop=2*m**3        
-                    max_grain_size=(mflop)
+                        mflop=2*(aligned_m)**3        
                     
                     m_selected=df_nb_selected['matrix_size']==m
                     th_selected=df_nb_selected['num_threads']==th
                     block_selected_r=df_nb_selected['block_size_row']==4
                     block_selected_c=df_nb_selected['block_size_col']<=512
-                    features=['grain_size','mflops']
-                    df_selected=df_nb_selected[m_selected & th_selected & block_selected_r & block_selected_c][features]
-#                    df_selected_m=df_nb_selected[df_nb_selected['matrix_size']==690.][['grain_size','num_threads','mflops']]
+                    features=['num_tasks','execution_time']
+                    df_selected=df_nb_selected[m_selected & th_selected][features]
+
+#                    df_selected=df_nb_selected[m_selected & th_selected & block_selected_r & block_selected_c][features]
 
                     array=df_selected.values
                     array=array.astype(float)
-                    real_array=array[:,:-1]                 
 #                    array[:,0]=np.log10(array[:,0])/np.log10(th)   
-                    array[:,0]=np.ceil(mflop/array[:,0])
-                    array[:,-1]=1/(array[:,-1])   
+#                    array[:,0]=np.ceil((aligned_m**2)/array[:,0])
+#                    array[:,-1]=mflop/(array[:,-1])   
                     a_s=np.argsort(array[:,0])
                     for ir in range(np.shape(array)[1]):
                         array[:,ir]=array[a_s,ir]
@@ -327,35 +180,53 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     
                     data_size=np.shape(array)[0]
                     if data_size>=8:
-                        per = np.random.permutation(data_size)
-                        train_size=int(np.ceil(0.6*data_size))
-                        train_set=array[per[0:train_size],:-1]  
-                        train_labels=array[per[0:train_size],-1]  
-                        test_set=array[per[train_size:],:-1]  
-                        test_labels=array[per[train_size:],-1]  
+                        per=[i for i in range(data_size) if i%3!=2]
+                        train_size=len(per)
+
+#                        train_size=int(np.ceil(0.6*data_size))
                         test_size=data_size-train_size
-                        plt.figure(q)
-                        plt.scatter(train_set[:,0],mflop*train_labels,color='blue')
-                        plt.xscale('log')
+#                        per = np.random.permutation(data_size)
+#                        train_set=array[per[0:train_size],:-1] 
+#                        train_labels=array[per[0:train_size],-1]  
+#                        test_set=array[per[train_size:],:-1]  
+#                        test_labels=array[per[train_size:],-1]  
+                        train_set=array[per,:-1]  
+                        train_labels=array[per,-1]  
+                        test_items=[item for item in np.arange((data_size)) if item not in per]
+                        test_set=array[test_items,:-1]  
+                        test_labels=array[test_items,-1]  
+#                        plt.scatter(array[:,0],array[:,-1],color='blue',label='true')
+#                        plt.xscale('log')
+#                        plt.xlabel('number of tasks')
+#                        plt.ylabel('execution time')
+#                        plt.xscale('log')
                         try:
-                            popt1, pcov=curve_fit(my_func_total_h,train_set[:,0],mflop*train_labels,method='lm')
+                            popt1, pcov=curve_fit(my_func_total_h,train_set[:,0],train_labels,method='lm')
                             z=my_func_total_h(train_set[:,0],*popt1)  
-    #                        plt.plot(a,my_func_bath(a,*popt1),color='green')
-                            d=np.linspace(1,mflop,100)
-                            plt.scatter(train_set[:,0],z,color='green')
-#                            plt.xscale('log')
-#
-#                            plt.plot(d,popt1[1]*d,label='overhead')
-#                            plt.xscale('log')
-#
-#                            plt.plot(d,popt1[0]/(th-np.log(1+(np.exp(th-1)-1)*np.exp(-d))),label='starvation')
-#                            plt.xscale('log')
-#
-#                            plt.scatter(train_set[:,0],np.ceil(th-np.log(1+(np.exp(th-1)-1)*np.exp(-train_set[:,0]))),label='softplus')
+                            plt.figure(q)
+                            plt.scatter(train_set[:,0],train_labels,color='blue',label='true')
+
+                            plt.scatter(train_set[:,0],z,color='green',label='pred')
+                            plt.title('train set    matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+                            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                            
+                            plt.xscale('log')
+                            plt.xlabel('number of tasks')
+                            plt.ylabel('execution time')
+#                            plt.savefig(pp,format='pdf',bbox_inches='tight')
+
+                            z=my_func_total_h(test_set[:,0],*popt1)  
+                            plt.figure(q+1)
+
+                            plt.scatter(test_set[:,0],test_labels,color='red',label='true')
+                            plt.scatter(test_set[:,0],z,color='purple',label='pred')
 
                             plt.xscale('log')
-                            plt.title('matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
-                            q=q+1
+                            plt.xlabel('number of tasks')
+                            plt.ylabel('execution time')
+                            plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+                            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                            q=q+2
 #                            plt.savefig(pp,format='pdf',bbox_inches='tight')
                             m_data[node][benchmark]['params'][th][m]=popt1.tolist()
                         except:
@@ -375,7 +246,8 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                                 all_data[node][benchmark][m]['test'][3].append(float(th))
                     else:
                         print('no data for matrix size '+str(int(m))+' with '+str(int(th))+' threads')
-
+#            plt.show()
+#            pp.close()
                 #for a fixed m
             def uslfit2d(x, y):           
                 Q = np.zeros((x.size, 7))
@@ -520,19 +392,40 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 plt.figure(i)
                 plt.axes([0, 0, 3, 1])
                 test_data=all_data[node][benchmark][m]['test']
+                Es=[]
+                Ts=[]
+                Ps=[]
                 for d in range(len(test_data[0])):
                     th=test_data[3][d]
                     nt=test_data[0][d]
                     t=test_data[1][d]
                     p=predict_exec_time(m,th,nt)
-                    print(m, th, nt, m**2*t, p,(1-p/((m**2)*test_data[1][d])))
+#                    print(d,m, th, nt,t, p,100*abs(1-p/t))
 #                    plt.scatter(h,p,label='prediction')
-                    plt.scatter(d,(1-p/((m**2)*test_data[1][d])),label='true value')
-#                    print(m,d,(1-p/((m**2)*test_data[1][d])))
+                    Es.append(t-p)
+                    Ts.append(t)
+                    Ps.append(p)
+                plt.hist(Es)
+                Es=np.array(Es)
+                a=np.argsort(Es)
+                new_Es=Es[a[5:-5]]  
+                plt.hist(new_Es)
 
+                mu=np.mean(Es)
+                cv=np.std(new_Es)/np.mean(new_Es)
+                print(m,cv)
+                plt.title('matrix size: '+str(int(m)))
+                    plt.scatter(d,100*abs(1-p/t),label='true value')                  
+                    plt.annotate(str(int(nt)), # this is the text
+                                 (d,100*abs(1-p/t)), # this is the point to label
+                                 textcoords="offset points", # how to position the text
+                                 xytext=(0,10), # distance from text to points (x,y)
+                                 ha='center') # horizontal alignment can be left, right or center
+             
 #                    print(((test_data[2][d]**2)*test_data[1][d]-p)/((test_data[2][d]**2)*test_data[1][d]))
                     plt.title('matrix size '+str(int(test_data[2][d])))
                 i=i+1
+                
                 for nt in [10,100,1000,10000]:
                     es=[]
                     for th in range(2,9):
@@ -542,8 +435,46 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     plt.plot(np.arange(2,9),es)
                     plt.title('num tasks: '+str(nt))
                     i=i+1
+        perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/bathtub/'
+#        pp = PdfPages(perf_directory+'params_th.pdf')
+        def m_func(x,a,b):
+            change_point=np.sqrt(20*1024*1024/24)
+            return np.exp(a*x+b) #+np.log(1+np.exp(n[0]*(x-change_point)))
+        
+        i=0
+        th=8.
+        m_sizes=[m for m in matrix_sizes if m>1000]
+        exec_times_th=[m_data[node][benchmark]['params'][th][m][i] for m in matrix_sizes if m>1000]
+        popt, pcov=curve_fit(m_func,matrix_sizes,[m_data[node][benchmark]['params'][th][m][i] for m in matrix_sizes],method='lm')
+        popt, pcov=curve_fit(m_func,m_sizes,exec_times_th,method='lm')
 
+        n=np.polyfit(m_sizes,exec_times_th,1)
+        p=np.poly1d(n)
+        plt.plot(m_sizes,p(m_sizes),label='fit')
+        plt.plot(m_sizes,exec_times_th,label='true')
+        m_sizes=[m for m in matrix_sizes if m<1000]
+        exec_times_th=[m_data[node][benchmark]['params'][th][m][i] for m in matrix_sizes if m<1000]
+        n=np.polyfit((m_sizes),np.log(exec_times_th),1)
+        p=np.poly1d(n)
+        plt.plot(m_sizes,np.exp(p(m_sizes)),label='fit')
+        plt.plot(m_sizes,exec_times_th,label='true')
 
+        for th in thr:
+            for i in range(len(m_data[node][benchmark]['params'][th][m])):
+                plt.figure(i)
+                plt.scatter(matrix_sizes,[m_data[node][benchmark]['params'][th][m][i] for m in matrix_sizes],label='paramater '+str(i)+' '+str(int(th))+'th')
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.) 
+#        for th in thr:
+#        for i in range(len(m_data[node][benchmark]['params'][th][m])):
+#            plt.figure(i)
+#            plt.savefig(pp,format='pdf',bbox_inches='tight')  
+#        plt.show()
+#        pp.close()
+                for j in range(len(params[node][benchmark][m][i])):
+                    plt.figure(i)
+                    plt.scatter(matrix_sizes,[params[node][benchmark][m][i][j] for m in matrix_sizes],label='paramater '+str(i)+' '+str(j)+'th')
+                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
+                
             for m in matrix_sizes:
                 if m!=264.:
                     for i in range(len(m_data[node][benchmark]['params'][th][m])):
