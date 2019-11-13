@@ -1,0 +1,162 @@
+#!/bin/bash
+if [ $# -ne 1 ]
+then
+echo "node not specified, marvin by default"
+node="marvin"
+else
+node=$1
+echo "Running on $node"
+fi
+saved_path=$LD_LIBRARY_PATH
+blaze_dir="/home/sshirzad/src/blaze_shahrzad"
+blazemark_dir="/home/sshirzad/repos/Blazemark"
+results_dir="$blazemark_dir/results"
+benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
+config_dir="${blaze_dir}/blaze/config"
+#thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+thr=(1 2 3 4 5 6 7 8)
+block_sizes_row=(4 8 16 32)
+block_sizes_col=(64 128 256 512)
+rm -rf ${results_dir}/*.dat
+rm -rf ${results_dir}/info
+mkdir ${results_dir}/info
+
+#benchmarks=('daxpy')
+#('dvecdvecadd')
+benchmarks=('dmatdmatadd')
+r='openmp'
+cd ${blazemark_dir}/scripts
+mkdir -p ${results_dir}/info
+date>> ${results_dir}/info/date.txt
+cp $blazemark_dir/scripts/openmp_log_chunks.sh ${results_dir}/info/
+cp $blaze_dir/blaze/math/smp/openmp/* ${results_dir}/info/
+cd ${blaze_dir}
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+#if [[ "$BRANCH" != "master" ]]; then
+#        git checkout master
+#fi
+#BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "$BRANCH branch">>${results_dir}/info/blaze_git.txt
+git --git-dir $blaze_dir/.git log>>${results_dir}/info/blaze_git.txt
+
+for b in ${benchmarks[@]}
+	do
+	if [ $b == 'dvecdvecadd' ] || [ $b == 'daxpy' ]
+	then 
+		end_line=219
+	elif [ $b == 'dmatdmatmult' ] || [ $b == 'dmattdmatmult' ]
+	then 
+		start_line=81
+		length=37
+                end_line=119
+	elif [ $b == 'dmatdvecmult' ]
+	then
+		start_line=111
+		length=35
+		end_line=147
+	elif [ $b == 'dmatdmatadd' ] || [ $b == 'dmattdmatadd' ]
+        then
+                start_line=91
+                length=16
+                end_line=119
+        else
+		echo "benchmark not specified"
+	fi
+	param_filename=${blaze_dir}/blazemark/params/$b.prm
+
+	cd ${blaze_dir}
+        git checkout $param_filename
+
+        for line_number in $(seq 50 $((end_line-1)))
+                do
+                #if [ $line_number -le $start_line ] || [ $line_number -gt $((start_line+length)) ]
+                #then
+                s='\/\/('
+                sed -i "${line_number}s/(/${s}/" $param_filename
+                #else
+        done
+        sed -i "58s/*/\//" $param_filename
+        sed -i "${end_line}s/*/\//" $param_filename
+
+	for block_size_row in ${block_sizes_row[@]}
+	do
+	        cd ${blazemark_dir}/scripts
+		./change_hpx_parameters.sh BLAZE_HPX_MATRIX_BLOCK_SIZE_ROW "${block_size_row}"
+	
+		for block_size_col in ${block_sizes_col[@]}
+		do
+
+                        cd ${blazemark_dir}/scripts
+			./change_hpx_parameters.sh BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN "${block_size_col}"
+
+			for line_number in $(seq $((start_line+1)) $((start_line+length)))
+		        do
+		                s='\/\/('
+		                sed -i "${line_number}s/${s}/(/" $param_filename
+		                l=$(sed -n ${line_number}' p' $param_filename)
+		                if [[ $l != *",1"* ]]
+		                then
+		                        mat_size=${l:1:-1}
+		                else
+		                        mat_size=${l:1:-3}
+		                fi                                                                                                                  
+		                mat_size=$(echo -e "${mat_size}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+
+	        		num_chunks_1=$(python -c "from math import ceil;print (ceil($mat_size/$block_size_row))")
+	        		num_chunks_2=$(python -c "from math import ceil;print (ceil($mat_size/$block_size_col))")
+		        	num_chunks=$((num_chunks_1*num_chunks_2))
+		        	echo "matrix size: $mat_size num_chunks: "$((num_chunks_1*num_chunks_2))
+				for c in "${chunk_sizes[@]}"
+					do
+						if [ $c -lt $num_chunks ]
+						then
+		
+							#./change_hpx_parameters.sh reset HPX.h
+						        cd ${blazemark_dir}/scripts
+						        ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_CHUNK_SIZE "${c}"
+				                        ./generate_benchmarks.sh $b openmp "${blaze_dir}/blazemark/" $node
+							chunk_size=$(sed -n '49 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+							echo "chunk size:" ${chunk_size}	
+		
+					                block_size_value_row=$(sed -n '53 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+					                block_size_value_col=$(sed -n '57 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+	
+					                echo "block size row:" $block_size_value_row
+					                echo "block size col:" $block_size_value_col	
+	
+							for th in "${thr[@]}"
+								do 
+									export OMP_NUM_THREADS=${th}
+									export OMP_PLACES=cores
+	
+									${benchmarks_dir}/${b}_${r}_${node} -only-blaze>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+								    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: $mat_size"
+							done
+					      fi
+				done
+				c=$num_chunks
+			        cd ${blazemark_dir}/scripts
+		                ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_CHUNK_SIZE "${c}"
+                       		./generate_benchmarks.sh $b openmp "${blaze_dir}/blazemark/" $node
+				chunk_size=$(sed -n '49 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+		                echo "chunk size:" ${chunk_size}	
+		                block_size_value_row=$(sed -n '53 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+		                block_size_value_col=$(sed -n '57 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)	
+	        	        echo "block size row:" $block_size_value_row
+		                echo "block size col:" $block_size_value_col
+	
+		                for th in "${thr[@]}"
+	        	        do
+					export OMP_NUM_THREADS=${th}
+					export OMP_PLACES=cores
+
+                                        ${benchmarks_dir}/${b}_${r}_${node} -only-blaze>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+
+					echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: ${mat_size}"
+				done	    
+		                sed -i "${line_number}s/(/${s}/" $param_filename
+			done
+		done
+	done
+done
+export LD_LIBRARY_PATH=${saved_path}
