@@ -1095,7 +1095,7 @@ import math
 import csv
 f=open('/home/shahrzad/repos/Blazemark/data/data_perf_all.csv','w')
 f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','mflops'])
+f_writer.writerow(['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops'])
 node_type=0
 for node in d_hpx.keys():
     if node=='marvin':
@@ -1171,11 +1171,22 @@ for node in d_hpx.keys():
                                     num_mat=4
                                 cost=c*mflop*num_mat/data_type
                                 r=d_hpx[node][benchmark][th][b][c]['mflops'][k]
-                                
+                                aligned_m=m
+                                if m%simdsize!=0:
+                                    aligned_m=m+simdsize-m%simdsize
+                                if benchmark=='dmatdmatadd':                            
+                                    mflop=(aligned_m)**2                           
+                                elif benchmark=='dmatdmatdmatadd':
+                                    mflop=2*(aligned_m)**2
+                                else:
+                                    mflop=2*(aligned_m)**3        
+                    
+                                exec_time=mflop/r
+                                num_tasks=np.ceil(num_blocks/c)
                                 f_writer.writerow([node,benchmark,str(m),str(th),b.split('-')[0], 
                                                    b.split('-')[1], str(b_r * b_c), str(num_elements_uncomplete),str(c),
                                                    str(grain_size),str(num_blocks), str(num_blocks/c),
-                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),r])
+                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),str(exec_time),str(num_tasks),r])
         benchmark_type+=1
     node_type+=1        
 f.close()                    
@@ -2004,7 +2015,7 @@ for node in ['medusa','trillian']:#d_hpx.keys():
                         
     #                    plt.plot(chunk_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2))
                         plt.plot(grain_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b_r)+'-'+str(b_c)+'  num_blocks:'+str(equalshare1*equalshare2))
-                        plt.xlabel("grain_size(flop)")           
+                        plt.xlabel("grain_size")           
     
     #                    plt.xlabel("chunk_size")           
                         plt.ylabel('MFlops')
