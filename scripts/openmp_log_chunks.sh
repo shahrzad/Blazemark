@@ -14,9 +14,10 @@ results_dir="$blazemark_dir/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blaze_dir}/blaze/config"
 #thr=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)
+chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1200 1380 1587 1800 2000 3000 4000 5000 6000 7000)
 thr=(1 2 3 4 5 6 7 8)
 block_sizes_row=(4 8 16 32)
-block_sizes_col=(64 128 256 512)
+block_sizes_col=(64)
 rm -rf ${results_dir}/*.dat
 rm -rf ${results_dir}/info
 mkdir ${results_dir}/info
