@@ -21,7 +21,9 @@ benchmark='dmatdmatadd'
 collect_3d_data=True
 build_model=False
 plot_type='params_th'
-    
+runtime='hpx'
+runtime='openmp'
+
 def remove_duplicates(array):
     g=array[:,0]
     p=array[:,-1]
@@ -61,12 +63,12 @@ def remove_duplicates(array):
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
+    titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
 
     ranges={}
     deg=2
     dataframe = pandas.read_csv(filename, header=0,index_col=False,dtype=str,names=titles)
-    for col in titles[2:]:
+    for col in titles[3:]:
         dataframe[col] = dataframe[col].astype(float)
     i=1  
     h=1
@@ -96,8 +98,9 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             g_params[node][benchmark]={}
             all_data[node][benchmark]={}
             benchmark_selected=dataframe['benchmark']==benchmark
+            rt_selected=dataframe['runtime']=='openmp'
             num_threads_selected=dataframe['num_threads']<=8
-            df_nb_selected=df_n_selected[benchmark_selected & num_threads_selected]         
+            df_nb_selected=df_n_selected[benchmark_selected & num_threads_selected & rt_selected]         
             matrix_sizes=df_nb_selected['matrix_size'].drop_duplicates().values
             matrix_sizes.sort()
             thr=df_nb_selected['num_threads'].drop_duplicates().values
@@ -112,7 +115,6 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             m_data[node][benchmark]['params']={}
             m_data[node][benchmark]['params_bfit']={}
             m_data[node][benchmark]['params_final_fit']={}
-
             if save:
                 perf_filename=perf_directory+'/'+node+'_'+benchmark+'_'+plot_type+'.pdf'
             else:
@@ -124,7 +126,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             q=1
             for m in matrix_sizes:
                 all_data[node][benchmark][m]={'train':[[],[],[],[]],'test':[[],[],[],[]]}
-#            pp = PdfPages(perf_directory+'/'+node+'_'+benchmark+'_'+plot_type+'_bathtub.pdf')
+            pp = PdfPages(perf_directory+'/'+runtime+'_'+node+'_'+benchmark+'_'+plot_type+'_bathtub.pdf')
             errors={}
             for th in thr:     
                 errors[th]={}
@@ -133,13 +135,14 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 p_range=[0.,np.inf]
                 m_data[node][benchmark]['params'][th]={}
                 m_data[node][benchmark]['params_bfit'][th]={}
-                def my_func_total_h(d,ts,alpha,c,f): 
-                    return (alpha*d+ts)/((th-1-np.log(1+(np.exp(th-1)-1)*np.exp(-d))))+d*c+f
+                def my_func_total_h(d,ts,alpha,f,c): 
+                    return (alpha*d+ts)/((th-1-np.log(1+(np.exp(th-1)-1)*np.exp(-d))))+f+c*(d%th)/d
                 def my_func_total_new(x,a,b,c,x0):
                     return a+b/x+c*(x-x0)**th
                 def my_func_total(x,a,b,c,d,x0):
                     return a+b/(th**x)+c*((x-x0))**th+d/(th**(x-x0))
-
+                def my_func_total_der(x,a,b,c,d,x0):
+                    return -b/(th**x)+c*th*((x-x0))**(th-1)-d/(th**(x-x0))
                 def my_func_bath(x,b):
                     n=m
                     if m%simdsize!=0:
@@ -166,7 +169,9 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     th_selected=df_nb_selected['num_threads']==th
                     block_selected_r=df_nb_selected['block_size_row']==4
                     block_selected_c=df_nb_selected['block_size_col']<=512
-                    features=['num_tasks','execution_time','mflops']
+                    features=['num_tasks','execution_time']
+#                    features=['grain_size','mflops']
+
                     df_selected=df_nb_selected[m_selected & th_selected][features]
 
 #                    df_selected=df_nb_selected[m_selected & th_selected & block_selected_r & block_selected_c][features]
@@ -196,9 +201,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 #                        test_set=array[per[train_size:],:-1]  
 #                        test_labels=array[per[train_size:],-1]  
                         train_set=array[per,:-1]  
-                        train_labels_f=array[per,-1]  
-                        train_labels=array[per,1]  
-
+                        train_labels=array[per,-1]  
                         test_items=[item for item in np.arange((data_size)) if item not in per]
                         test_set=array[test_items,:-1]  
                         test_labels=array[test_items,-1]  
@@ -211,11 +214,8 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                             popt1, pcov=curve_fit(my_func_total_h,train_set[:,0],train_labels,method='lm')
                             z=my_func_total_h(train_set[:,0],*popt1)  
                             plt.figure(q)
-                            plt.scatter(train_set[:,0],train_labels,color='blue',label='true')
-                            plt.scatter(train_set[:,0],train_labels_f,color='blue',label='true')
-                            plt.scatter(train_set[:,0],z,color='green',label='pred')
-
-                            plt.scatter(train_set[:,0],mflop/z,color='green',label='pred')
+                            plt.scatter(train_set[:,0],train_labels,color='blue',label='true',marker='.')
+#                            plt.scatter(train_set[:,0],z,color='green',label='pred',marker='.')
                             plt.title('train set    matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
                             plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
                             
@@ -224,13 +224,13 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                             plt.xscale('log')
                             plt.xlabel('number of tasks')
                             plt.ylabel('execution time')
-#                            plt.savefig(pp,format='pdf',bbox_inches='tight')
+                            plt.savefig(pp,format='pdf',bbox_inches='tight')
 
                             z=my_func_total_h(test_set[:,0],*popt1)  
 #                            plt.figure(q+1)
 
-                            plt.scatter(test_set[:,0],test_labels,color='red',label='true')
-                            plt.scatter(test_set[:,0],z,color='purple',label='pred')
+                            plt.scatter(test_set[:,0],test_labels,color='red',label='true',marker='.')
+                            plt.scatter(test_set[:,0],z,color='purple',label='pred',marker='.')
 
                             plt.xscale('log')
                             plt.xlabel('number of tasks')
@@ -240,7 +240,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                             test_error=sum([abs(test_labels[w]-z[w])*100/test_labels[w] for w in range(len(z))])/len(z)
                             errors[th]['test'].append(test_error)
                             q=q+2
-#                            plt.savefig(pp,format='pdf',bbox_inches='tight')
+                            plt.savefig(pp,format='pdf',bbox_inches='tight')
                             m_data[node][benchmark]['params'][th][m]=popt1.tolist()
                         except:
                             m_data[node][benchmark]['params'][th][m]=[0]
@@ -259,12 +259,21 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                                 all_data[node][benchmark][m]['test'][3].append(float(th))
                     else:
                         print('no data for matrix size '+str(int(m))+' with '+str(int(th))+' threads')
-#            plt.show()
-#            pp.close()
+            plt.show()
+            pp.close()
                 #for a fixed m
                 
             for th in thr:
                 plt.figure(q)
+                d1=np.arange(1,11)
+                d=np.linspace(10,10000,400)
+                d=np.hstack((d,d1))
+                plt.scatter(d,(d%th)/d,label=str(int(th))+' threads')
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.xscale('log')
+                plt.xlabel('number of tasks')
+                plt.ylabel('execution time')
+                plt.figure(q+1)
                 plt.axes([0, 0, 2, 1])
 
                 plt.scatter(matrix_sizes,errors[th]['train'],color='green',label='train')
@@ -272,7 +281,25 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 
                 plt.title(str(int(th))+' threads')
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                q=q+1
+                q=q+2
+                
+            def uslfit2d(x, y):           
+                Q = np.zeros((x.size, 4))
+                Q[:,0]=1/x
+                Q[:,1]=(x-1)/x
+                Q[:,2]=x-1
+                Q[:,3]=(x-1)*x
+#                Q[:,4]=(x-1)*(x**2)*y
+#                Q[:,5]=-(x-1)
+#                Q[:,6]=-(1/x)
+                m, _, _, _ = np.linalg.lstsq(Q, y)
+                return m            
+            
+            def uslvalue2d(x, m):           
+                y=m[0]/x+m[1]*(x-1)/x+m[2]*(x-1)+m[3]*x*(x-1)
+                return y
+            
+            
             def uslfit2d(x, y):           
                 Q = np.zeros((x.size, 7))
                 Q[:,0]=(x-1)*y
@@ -288,6 +315,82 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             def uslvalue2d(x, m):           
                 y=(m[5]*(x-1)+m[3]*x*(x-1)+m[2]+m[6]/x)/(1+m[0]*(x-1)+m[1]*(x*(x-1))+m[4]*(x-1)*x**2)
                 return y
+            
+            
+            
+            def totalfit3d(x, y, z):  
+                Q = np.zeros((x.size, 12))
+                k=(x-1-np.log(1+(np.exp(x-1)-1)*np.exp(-y)))
+                Q[:,0]=y/(x*k)
+                Q[:,1]=y*(x-1)/(x*k)
+                Q[:,2]=y*(x-1)/k
+                Q[:,3]=y*(x-1)*x/k
+                Q[:,4]=1/(x*k)
+                Q[:,5]=(x-1)/(x*k)
+                Q[:,6]=(x-1)/k
+                Q[:,7]=(x-1)*x/k
+                Q[:,8]=1/x
+                Q[:,9]=(x-1)/x
+                Q[:,10]=x-1
+                Q[:,11]=(x-1)*x
+#                Q[:,4]=(x-1)*(x**2)*y
+#                Q[:,5]=-(x-1)
+#                Q[:,6]=-(1/x)
+                m, _, _, _ = np.linalg.lstsq(Q, y)
+                return m            
+            
+            def uslvalue3d(x, y, model): 
+                Q = np.zeros((x.size, 12))
+                k=(x-1-np.log(1+(np.exp(x-1)-1)*np.exp(-y)))
+                Q[:,0]=y/(x*k)
+                Q[:,1]=y*(x-1)/(x*k)
+                Q[:,2]=y*(x-1)/k
+                Q[:,3]=y*(x-1)*x/k
+                Q[:,4]=1/(x*k)
+                Q[:,5]=(x-1)/(x*k)
+                Q[:,6]=(x-1)/k
+                Q[:,7]=(x-1)*x/k
+                Q[:,8]=1/x
+                Q[:,9]=(x-1)/x
+                Q[:,10]=x-1
+                Q[:,11]=(x-1)*x
+                z=np.dot(Q,model)
+                return z
+            train_data=all_data[node][benchmark][m]['train']
+            x=np.asarray(train_data[3])
+            y=np.asarray(train_data[0])
+            z=np.asarray(train_data[1])
+            model=totalfit3d(x, y, z)
+            p=uslvalue3d(x, y, model)
+            for d in range(p.size):
+                plt.figure(i)
+                plt.axes([0, 0, 2, 1])
+
+                plt.scatter(d,100*abs(1-p[d]/z[d]),label='true value')                  
+                plt.annotate(str(int(x[d])), # this is the text
+                             (d,100*abs(1-p[d]/z[d])), # this is the point to label
+                             textcoords="offset points", # how to position the text
+                             xytext=(0,10), # distance from text to points (x,y)
+                             ha='center') # horizontal alignment can be left, right or center
+         
+    #                    print(((test_data[2][d]**2)*test_data[1][d]-p)/((test_data[2][d]**2)*test_data[1][d]))
+                plt.title('matrix size '+str(int(train_data[2][d])))
+            
+#            def uslfit2d(x, y):           
+#                Q = np.zeros((x.size, 7))
+#                Q[:,0]=(x-1)*y
+#                Q[:,1]=x*(x-1)*y
+#                Q[:,2]=-1
+#                Q[:,3]=-x*(x-1)
+#                Q[:,4]=(x-1)*(x**2)*y
+#                Q[:,5]=-(x-1)
+#                Q[:,6]=-(1/x)
+#                m, _, _, _ = np.linalg.lstsq(Q, -y)
+#                return m            
+#            
+#            def uslvalue2d(x, m):           
+#                y=(m[5]*(x-1)+m[3]*x*(x-1)+m[2]+m[6]/x)/(1+m[0]*(x-1)+m[1]*(x*(x-1))+m[4]*(x-1)*x**2)
+#                return y
 
 #            def uslfit2d(x, y):           
 #                Q = np.zeros((x.size, 8))
@@ -313,10 +416,10 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             
             params[node][benchmark]={}        
             for m in matrix_sizes:
-                params[node][benchmark][m]=[[],[],[],[]]
+                params[node][benchmark][m]=[[]]*len(popt1)
                 z0_t=[m_data[node][benchmark]['params'][th][m][0] for th in thr]
                 model=uslfit2d(np.asarray(thr),np.asarray(z0_t))
-                z0=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+#                z0=[model[0]-model[1],model[1]-model[2],model[2]-model[3],model[3]]
                 params[node][benchmark][m][0]=model
                 z=uslvalue2d(np.asarray(thr),model)            
     #                modeled_params[node][benchmark][th]['z0']=n
@@ -335,8 +438,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 z1_t=[m_data[node][benchmark]['params'][th][m][1] for th in thr]                
                 model=uslfit2d(np.asarray(thr),np.asarray(z1_t))
                 params[node][benchmark][m][1]=model
-                z1=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
-
+#                z1=[model[0]-model[1],model[1]-model[2],model[2]-model[3],model[3]]
 
                 z=uslvalue2d(np.asarray(thr),model)
                 if plot and (plot_type=='params_th' or plot_type=='all'):
@@ -355,7 +457,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 model=uslfit2d(np.asarray(thr),np.asarray(z2_t))
                 params[node][benchmark][m][2]=model
                 z=uslvalue2d(np.asarray(thr),model)
-                z2=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+#                z2=[model[0]-model[1],model[1]-model[2],model[2]-model[3],model[3]]
 
                 if plot and (plot_type=='params_th' or plot_type=='all'):
                     plt.figure(i+2)
@@ -373,7 +475,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 model=uslfit2d(np.asarray(thr),np.asarray(z3_t))
                 params[node][benchmark][m][3]=model
                 z=uslvalue2d(np.asarray(thr),model)
-                z3=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+#                z3=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
 
                 if plot and (plot_type=='params_th' or plot_type=='all'):
                     plt.figure(i+3)
@@ -385,7 +487,25 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
                     if save:
-                        plt.savefig(pp,format='pdf',bbox_inches='tight')     
+                        plt.savefig(pp,format='pdf',bbox_inches='tight')  
+                        
+#                z4_t=[m_data[node][benchmark]['params'][th][m][4] for th in thr]
+#                model=uslfit2d(np.asarray(thr),np.asarray(z4_t))
+#                params[node][benchmark][m][4]=model
+#                z=uslvalue2d(np.asarray(thr),model)
+##                z4=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+#
+#                if plot and (plot_type=='params_th' or plot_type=='all'):
+#                    plt.figure(i+4)
+#                    plt.scatter(thr,z4_t,label='real')
+#                    plt.scatter(thr,z,label='z[4]')
+#                    plt.xlabel('threads')
+#                    plt.ylabel('z[0],z[1],z[2],z[3]')   
+#                    plt.grid(True, 'both')
+#                    plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
+#                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
+#                    if save:
+#                        plt.savefig(pp,format='pdf',bbox_inches='tight')   
                 i=i+4
             
             
@@ -397,7 +517,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             def predict_exec_time(m,th,g):
                 num_tasks=g #np.ceil(m**2/g)
                 params_t=[]
-                for i in range(4):
+                for i in range(len(popt1)):
                     z=uslvalue2d(th,params[node][benchmark][m][i])
                     params_t.append(z)
                 return my_func_total_h(num_tasks, *params_t)
@@ -412,33 +532,39 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 
             i=1
             for m in matrix_sizes:
-                h=1
+#                ts=m_data[node][benchmark]['params'][th][m][0]
+#                alpha=m_data[node][benchmark]['params'][th][m][1]
+#                c=m_data[node][benchmark]['params'][th][m][2]
+#                ratio=alpha**2-4*alpha*c
+#                if ratio>0:
+#                    print(m,(alpha-np.sqrt(ratio))/(2*alpha),(alpha+np.sqrt(ratio))/(2*alpha),alpha*(th**2)-ts,th-1)
+#                h=1
                 plt.figure(i)
                 plt.axes([0, 0, 3, 1])
                 test_data=all_data[node][benchmark][m]['test']
-                Es=[]
-                Ts=[]
-                Ps=[]
+#                Es=[]
+#                Ts=[]
+#                Ps=[]
                 for d in range(len(test_data[0])):
                     th=test_data[3][d]
                     nt=test_data[0][d]
                     t=test_data[1][d]
                     p=predict_exec_time(m,th,nt)
-#                    print(d,m, th, nt,t, p,100*abs(1-p/t))
-#                    plt.scatter(h,p,label='prediction')
-                    Es.append(t-p)
-                    Ts.append(t)
-                    Ps.append(p)
-                plt.hist(Es)
-                Es=np.array(Es)
-                a=np.argsort(Es)
-                new_Es=Es[a[5:-5]]  
-                plt.hist(new_Es)
-
-                mu=np.mean(Es)
-                cv=np.std(new_Es)/np.mean(new_Es)
-                print(m,cv)
-                plt.title('matrix size: '+str(int(m)))
+##                    print(d,m, th, nt,t, p,100*abs(1-p/t))
+##                    plt.scatter(h,p,label='prediction')
+#                    Es.append(t-p)
+#                    Ts.append(t)
+#                    Ps.append(p)
+#                plt.hist(Es)
+#                Es=np.array(Es)
+#                a=np.argsort(Es)
+#                new_Es=Es[a[5:-5]]  
+#                plt.hist(new_Es)
+#
+#                mu=np.mean(Es)
+#                cv=np.std(new_Es)/np.mean(new_Es)
+#                print(m,cv)
+#                plt.title('matrix size: '+str(int(m)))
                     plt.scatter(d,100*abs(1-p/t),label='true value')                  
                     plt.annotate(str(int(nt)), # this is the text
                                  (d,100*abs(1-p/t)), # this is the point to label

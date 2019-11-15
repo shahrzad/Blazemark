@@ -22,11 +22,11 @@ collect_3d_data=True
 build_model=False
 plot_type='params_th'
     
-def remove_duplicates(array):
+def remove_duplicates(array,option=1):
     g=array[:,0]
     p=array[:,-1]
     g_dict={}
-    if np.shape(array)[1]==2:
+    if option==1:
         for i in range(len(g)):
             if g[i] not in g_dict.keys():
                 g_dict[g[i]]=p[i]
@@ -37,6 +37,22 @@ def remove_duplicates(array):
         array=np.zeros((np.shape(p)[0],2))
         array[:,0]=g
         array[:,1]=p
+    elif option==2:
+        t=array[:,1]
+        for i in range(len(g)):
+            if g[i] not in g_dict.keys():
+                g_dict[g[i]]=[p[i],t[i]]
+            else:
+                g_dict[g[i]][0]+=p[i]
+                g_dict[g[i]][1]+=t[i]
+
+        p=np.asarray([g_dict[gd][0]/Counter(g)[gd] for gd in g_dict.keys()])
+        t=np.asarray([g_dict[gd][1]/Counter(g)[gd] for gd in g_dict.keys()])
+        g=np.asarray([gd for gd in g_dict.keys()])
+        array=np.zeros((np.shape(p)[0],3))
+        array[:,0]=g
+        array[:,1]=t
+        array[:,-1]=p
     else:
         t=array[:,1]
         count={}
@@ -133,8 +149,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 p_range=[0.,np.inf]
                 m_data[node][benchmark]['params'][th]={}
                 m_data[node][benchmark]['params_bfit'][th]={}
-                def my_func_total_h(d,ts,alpha,c,f): 
-                    return (alpha*d+ts)/((th-1-np.log(1+(np.exp(th-1)-1)*np.exp(-d))))+d*c+f
+                
                 def my_func_total_new(x,a,b,c,x0):
                     return a+b/x+c*(x-x0)**th
                 def my_func_total(x,a,b,c,d,x0):
@@ -161,7 +176,8 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                         mflop=2*(aligned_m)**2
                     else:
                         mflop=2*(aligned_m)**3        
-                    
+                    def my_func_total_h(d,ts,alpha,c,f,k): 
+                        return (alpha*(d)+ts)/(th-1-np.log(1+(np.exp(th-1)-1)*np.exp(-d)))+f+c*(d%th)/d
                     m_selected=df_nb_selected['matrix_size']==m
                     th_selected=df_nb_selected['num_threads']==th
                     block_selected_r=df_nb_selected['block_size_row']==4
@@ -180,7 +196,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     for ir in range(np.shape(array)[1]):
                         array[:,ir]=array[a_s,ir]
 
-                    array=remove_duplicates(array)
+                    array=remove_duplicates(array,2)
                     
                     data_size=np.shape(array)[0]
                     if data_size>=8:
@@ -201,25 +217,31 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 
                         test_items=[item for item in np.arange((data_size)) if item not in per]
                         test_set=array[test_items,:-1]  
-                        test_labels=array[test_items,-1]  
+                        test_labels=array[test_items,1]  
+                        test_labels_f=array[test_items,-1]  
+
 #                        plt.scatter(array[:,0],array[:,-1],color='blue',label='true')
 #                        plt.xscale('log')
 #                        plt.xlabel('number of tasks')
 #                        plt.ylabel('execution time')
 #                        plt.xscale('log')
                         try:
-                            popt1, pcov=curve_fit(my_func_total_h,train_set[:,0],train_labels,method='lm')
+                            popt1, pcov=curve_fit(my_func_total_h,train_set[:,0],mflop/train_labels_f,method='lm')
                             z=my_func_total_h(train_set[:,0],*popt1)  
                             plt.figure(q)
-                            plt.scatter(train_set[:,0],train_labels,color='blue',label='true')
+#                            plt.scatter(train_set[:,0],train_labels,color='blue',label='true')
                             plt.scatter(train_set[:,0],train_labels_f,color='blue',label='true')
-                            plt.scatter(train_set[:,0],z,color='green',label='pred')
+#                            plt.scatter(train_set[:,0],z,color='green',label='pred')
 
-                            plt.scatter(train_set[:,0],mflop/z,color='green',label='pred')
+                            plt.scatter(train_set[:,0],z,color='green',label='pred')
                             plt.title('train set    matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
                             plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                            
-                            train_error=sum([abs(train_labels[w]-z[w])*100/train_labels[w] for w in range(len(z))])/len(z)
+                            ts=popt1[0]
+                            alpha=popt1[1]
+
+                            der_coef=[alpha*th*(np.exp(th-1)-1)/2,-alpha-alpha*th*(np.exp(th-1)-1),alpha*th*np.exp(th-1)-ts]
+                            print((-der_coef[1]/(2*der_coef[0])))
+                            train_error=sum([abs(train_labels_f[w]-mflop/z[w])*100/train_labels_f[w] for w in range(len(z))])/len(z)
                             errors[th]['train'].append(train_error)
                             plt.xscale('log')
                             plt.xlabel('number of tasks')
@@ -229,15 +251,15 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                             z=my_func_total_h(test_set[:,0],*popt1)  
 #                            plt.figure(q+1)
 
-                            plt.scatter(test_set[:,0],test_labels,color='red',label='true')
-                            plt.scatter(test_set[:,0],z,color='purple',label='pred')
+                            plt.scatter(test_set[:,0],test_labels_f,color='red',label='true')
+                            plt.scatter(test_set[:,0],mflop/z,color='purple',label='pred')
 
                             plt.xscale('log')
                             plt.xlabel('number of tasks')
                             plt.ylabel('execution time')
                             plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
                             plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                            test_error=sum([abs(test_labels[w]-z[w])*100/test_labels[w] for w in range(len(z))])/len(z)
+                            test_error=sum([abs(test_labels_f[w]-mflop/z[w])*100/test_labels_f[w] for w in range(len(z))])/len(z)
                             errors[th]['test'].append(test_error)
                             q=q+2
 #                            plt.savefig(pp,format='pdf',bbox_inches='tight')
@@ -249,12 +271,12 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                         if build_model or collect_3d_data:
                             for j in range(train_size):
                                 all_data[node][benchmark][m]['train'][0].append(train_set[j,0])
-                                all_data[node][benchmark][m]['train'][1].append(train_labels[j])
+                                all_data[node][benchmark][m]['train'][1].append(train_labels_f[j])
                                 all_data[node][benchmark][m]['train'][2].append(float(m))
                                 all_data[node][benchmark][m]['train'][3].append(float(th))
                             for j in range(data_size-train_size):
                                 all_data[node][benchmark][m]['test'][0].append(test_set[j,0])
-                                all_data[node][benchmark][m]['test'][1].append(test_labels[j])
+                                all_data[node][benchmark][m]['test'][1].append(test_labels_f[j])
                                 all_data[node][benchmark][m]['test'][2].append(float(m))
                                 all_data[node][benchmark][m]['test'][3].append(float(th))
                     else:
@@ -313,7 +335,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             
             params[node][benchmark]={}        
             for m in matrix_sizes:
-                params[node][benchmark][m]=[[],[],[],[]]
+                params[node][benchmark][m]=[[]]*len(popt1)
                 z0_t=[m_data[node][benchmark]['params'][th][m][0] for th in thr]
                 model=uslfit2d(np.asarray(thr),np.asarray(z0_t))
                 z0=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
@@ -386,7 +408,25 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
                     if save:
                         plt.savefig(pp,format='pdf',bbox_inches='tight')     
-                i=i+4
+                        
+                z4_t=[m_data[node][benchmark]['params'][th][m][4] for th in thr]
+                model=uslfit2d(np.asarray(thr),np.asarray(z4_t))
+                params[node][benchmark][m][4]=model
+                z=uslvalue2d(np.asarray(thr),model)
+                z4=[[model[6],-model[5],model[5]-model[3],model[3]],[1-model[0],-model[1]+model[0],model[1]-model[4],model[4]]]
+
+                if plot and (plot_type=='params_th' or plot_type=='all'):
+                    plt.figure(i+4)
+                    plt.scatter(thr,z4_t,label='real')
+                    plt.scatter(thr,z,label='z[3]')
+                    plt.xlabel('threads')
+                    plt.ylabel('z[0],z[1],z[2],z[3]')   
+                    plt.grid(True, 'both')
+                    plt.title(node+' '+benchmark+'  matrix size:'+str(int(m)))
+                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)  
+                    if save:
+                        plt.savefig(pp,format='pdf',bbox_inches='tight')     
+                i=i+5
             
             
             plt.scatter(np.arange(4),z0[1])
@@ -397,9 +437,12 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             def predict_exec_time(m,th,g):
                 num_tasks=g #np.ceil(m**2/g)
                 params_t=[]
-                for i in range(4):
-                    z=uslvalue2d(th,params[node][benchmark][m][i])
-                    params_t.append(z)
+                for i in range(len(popt1)):
+                    if params[node][benchmark][m][i]!=[]:
+                        z=uslvalue2d(th,params[node][benchmark][m][i])
+                        params_t.append(z)
+                    else:
+                        params_t.append(1.)
                 return my_func_total_h(num_tasks, *params_t)
             
             def predict_exec_time_total(m,th,g):
@@ -425,20 +468,20 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     t=test_data[1][d]
                     p=predict_exec_time(m,th,nt)
 #                    print(d,m, th, nt,t, p,100*abs(1-p/t))
-#                    plt.scatter(h,p,label='prediction')
-                    Es.append(t-p)
-                    Ts.append(t)
-                    Ps.append(p)
-                plt.hist(Es)
-                Es=np.array(Es)
-                a=np.argsort(Es)
-                new_Es=Es[a[5:-5]]  
-                plt.hist(new_Es)
-
-                mu=np.mean(Es)
-                cv=np.std(new_Es)/np.mean(new_Es)
-                print(m,cv)
-                plt.title('matrix size: '+str(int(m)))
+##                    plt.scatter(h,p,label='prediction')
+#                    Es.append(t-p)
+#                    Ts.append(t)
+#                    Ps.append(p)
+#                plt.hist(Es)
+#                Es=np.array(Es)
+#                a=np.argsort(Es)
+#                new_Es=Es[a[5:-5]]  
+#                plt.hist(new_Es)
+#
+#                mu=np.mean(Es)
+#                cv=np.std(new_Es)/np.mean(new_Es)
+#                print(m,cv)
+#                plt.title('matrix size: '+str(int(m)))
                     plt.scatter(d,100*abs(1-p/t),label='true value')                  
                     plt.annotate(str(int(nt)), # this is the text
                                  (d,100*abs(1-p/t)), # this is the point to label
@@ -446,7 +489,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                                  xytext=(0,10), # distance from text to points (x,y)
                                  ha='center') # horizontal alignment can be left, right or center
              
-#                    print(((test_data[2][d]**2)*test_data[1][d]-p)/((test_data[2][d]**2)*test_data[1][d]))
+    #                    print(((test_data[2][d]**2)*test_data[1][d]-p)/((test_data[2][d]**2)*test_data[1][d]))
                     plt.title('matrix size '+str(int(test_data[2][d])))
                 i=i+1
                 
