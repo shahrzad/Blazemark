@@ -2300,9 +2300,9 @@ for node in d_hpx.keys():
                             results.append(d_hpx[node][benchmark][th][b][c]['mflops'][k])
                     if len(chunk_sizes)!=0:                    
                         
-    #                    plt.plot(chunk_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2))
+                        plt.scatter(chunk_sizes, results, label=str(int(th))+' threads  matrix_size:'+str(int(m))+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2))
 #                        plt.plot(grain_sizes, results, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b_r)+'-'+str(b_c)+'  num_blocks:'+str(equalshare1*equalshare2))
-                        plt.plot(grain_sizes, results, label='block_size:'+str(b_r)+'-'+str(int(b_c))+'  num_blocks:'+str(equalshare1*equalshare2))
+#                        plt.plot(grain_sizes, results, label='block_size:'+str(b_r)+'-'+str(int(b_c))+'  num_blocks:'+str(equalshare1*equalshare2))
 
                         plt.xlabel("grain_size")           
     
