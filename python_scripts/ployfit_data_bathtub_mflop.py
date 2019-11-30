@@ -77,12 +77,12 @@ def remove_duplicates(array,option=1):
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
+    titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
 
     ranges={}
     deg=2
     dataframe = pandas.read_csv(filename, header=0,index_col=False,dtype=str,names=titles)
-    for col in titles[2:]:
+    for col in titles[3:]:
         dataframe[col] = dataframe[col].astype(float)
     i=1  
     h=1
@@ -112,10 +112,13 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             g_params[node][benchmark]={}
             all_data[node][benchmark]={}
             benchmark_selected=dataframe['benchmark']==benchmark
+            rt_selected=dataframe['runtime']==runtime
+
             num_threads_selected=dataframe['num_threads']<=8
-            df_nb_selected=df_n_selected[benchmark_selected & num_threads_selected]         
+            df_nb_selected=df_n_selected[benchmark_selected & num_threads_selected & rt_selected]         
             matrix_sizes=df_nb_selected['matrix_size'].drop_duplicates().values
             matrix_sizes.sort()
+            
             thr=df_nb_selected['num_threads'].drop_duplicates().values
             thr.sort()
             threads[node][benchmark]=thr

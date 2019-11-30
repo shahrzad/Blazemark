@@ -138,7 +138,9 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     mflop=2*(aligned_m)**3        
                 
                 m_selected=df_nb_selected['matrix_size']==m
-                features=['num_tasks','num_threads','execution_time']
+                features=['num_tasks','num_threads','chunk_size','num_blocks','grain_size','execution_time']
+#                features=['num_tasks','num_threads','execution_time']
+
 #                    features=['grain_size','mflops']
 
                 df_selected=df_nb_selected[m_selected][features]
@@ -154,7 +156,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 for ir in range(np.shape(array)[1]):
                     array[:,ir]=array[a_s,ir]
 
-                array=remove_duplicates(array)
+#                array=remove_duplicates(array)
                     
                 data_size=np.shape(array)[0]
                 per=[i for i in range(data_size) if i%3!=2]
@@ -174,24 +176,57 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 test_items=[item for item in np.arange((data_size)) if item not in per]
                 test_set=array[test_items,:-1]  
                 test_labels=array[test_items,-1]  
-                def my_func_3d(data,ts,alpha,q,l):
-                    t=data[:,1]
-                    d=data[:,0]
-                    M=(th-1-np.log(1+(np.exp(th-1)-1)*np.exp(-d)))
+                def my_func_3d_1(data,ts,alpha,q,gamma):
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,3]
+                    c=data[:,2]
+                    M=np.minimum(n_t,N) 
+#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
 #                    return alpha*d/M+ts*(1-q)+ts*q/M
-                    return alpha*d/M+ts/M+ts*q*(M-1)/M+l*(d%t)/d
+                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)
+                def my_func_3d_2(data,ts,alpha,q,gamma,w):
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,3]
+                    c=data[:,2]
+                    M=np.minimum(n_t,N) 
+#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
+#                    return alpha*d/M+ts*(1-q)+ts*q/M
+                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(n_b%c)/c
 
+                def my_func_3d_3(data,ts,alpha,q,gamma,w):
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,3]
+                    c=data[:,2]
+                    g=data[:,3]
+                    M=np.minimum(n_t,N) 
+#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
+#                    return alpha*d/M+ts*(1-q)+ts*q/M
+                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c-n_b%c)*g
                 i=1
-                popt1, pcov=curve_fit(my_func_3d,train_set,train_labels,method='lm')
+                popt1, pcov=curve_fit(my_func_3d_1,train_set,train_labels,method='lm')
+                popt2, pcov=curve_fit(my_func_3d_2,train_set,train_labels,method='lm')
+
+                popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='lm')
+
                 for th in thr:                                
                     new_array=test_set[test_set[:,1]==th]
-                    z=my_func_3d(new_array,*popt1)
+                    z1=my_func_3d_1(new_array,*popt1)
+                    z2=my_func_3d_2(new_array,*popt2)
+                    z3=my_func_3d_3(new_array,*popt3)
+
                     plt.figure(i)
-                    plt.scatter(new_array[:,0],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
-                    plt.scatter(new_array[:,0],z,color='green',label='pred',marker='.')
+                    plt.axes([0, 0, 2, 1])
+                    plt.scatter(new_array[:,-1],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
+                    plt.scatter(new_array[:,-1],z1,label='pred1',marker='.')
+                    plt.scatter(new_array[:,-1],z2,label='pred2',marker='.')
+#                    plt.scatter(new_array[:,-1],z3,label='pred3',marker='.')
+
                     plt.xscale('log')
-                    plt.xlabel('number of tasks')
-                    plt.ylabel('execution time')
+                    plt.xlabel('Grain size')
+                    plt.ylabel('Execution time')
                     plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
                     i=i+1
