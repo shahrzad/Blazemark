@@ -14,7 +14,8 @@ rm -rf ${results_dir}/*
 #benchmarks=('dmatdmatmult')
 benchmarks=('dvecdvecadd' 'dmatdmatadd')
 #benchmarks=('dmatdmatadd')
-r='openmp'
+#benchmarks=('dvecdvecadd')
+r=openmp
 mkdir -p ${results_dir}/info
 date>> ${results_dir}/info/date.txt
 git --git-dir ~/src/hpxMP/.git log>>${results_dir}/info/hpxmp_git_log.txt
@@ -38,30 +39,30 @@ end_line=119
 fi
 param_filename=${blaze_dir}/blazemark/params/$b.prm
 cd ${blaze_dir}
-#git checkout $param_filename
-#
-#for p in $(seq 6)
-#do
-#	line_number=$((49+p))
-#	s='\/\/('
-#	sed -i "${line_number}s/(/${s}/" $param_filename
-#done
-#sed -i "58s/*/\//" $param_filename 
-#sed -i "${end_line}s/*/\//" $param_filename
-#
+git checkout $param_filename
+
+for p in $(seq 6)
+do
+	line_number=$((49+p))
+	s='\/\/('
+	sed -i "${line_number}s/(/${s}/" $param_filename
+done
+sed -i "58s/*/\//" $param_filename 
+sed -i "${end_line}s/*/\//" $param_filename
+
 $repo_dir/scripts/generate_benchmarks.sh ${b} ${r} "${blaze_dir}/blazemark/"
 
 for th in $(seq 16)
 do
-for i in $(seq 11)
-do
+#for i in $(seq 11)
+#do
 export OMP_NUM_THREADS=${th} 
 export OMP_PLACES=cores
 #export HPX_COMMANDLINE_OPTIONS="--hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead"
-LD_PRELOAD=/home/sshirzad/src/hpxMP/build_release/libhpxmp.so ${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${i}-${b}-${th}-hpxmp.dat
-#${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${i}-${b}-${th}-${r}.dat
+#LD_PRELOAD=/home/sshirzad/src/hpxMP/build_release/libhpxmp.so ${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${b}-${th}-hpxmp.dat
+${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${b}-${th}-${r}.dat
 
-echo "${i}th time finished for ${th} threads"
-done
+echo "finished for ${th} threads"
+#done
 done
 done

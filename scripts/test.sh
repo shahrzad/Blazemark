@@ -1,17 +1,19 @@
 #!/bin/bash
 #bc -l
-string='(1231,1)'
-if [[ $string != *",1"* ]]; then
-  echo "It's there!"
-fi
-#cd ../data/matrix/06-13-2019
-#for filename in *
-#do
+#echo $(python -c "from math import ceil;print ($mat_sizemod2)")
+#string='(1231,1)'
+#if [[ $string != *",1"* ]]; then
+#  echo "It's there!"
+#fi
+cd ../data/hpxmp/CCGRID20-Nov/
+for filename in *
+do
+echo $filename
+#mv "$filename" "${filename/marvin-/}"
+mv "$filename" "marvin-${filename}"
+
 #echo $filename
-#mv "$filename" "${filename/1-/marvin-}"
-#
-#echo $filename
-#done
+done
 
 
 #NUMBER=501

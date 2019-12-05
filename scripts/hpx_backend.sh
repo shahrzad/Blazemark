@@ -1,5 +1,6 @@
 #!/bin/bash
-steps=1
+#blaze_id branch benchmark node
+steps=0
 if [ $# -ge 1 ]
 then
 	blaze_id=$1
@@ -42,15 +43,15 @@ echo -e "blaze_id:$blaze_id \nbranch:$branch \nnode:$node \nbenchmarks:$benchmar
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/$blaze_id"
-hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
-hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp/hpx_cmake_log.txt"
+hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_$node/lib64"
+hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_$node/info/*"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
 hpx_source_dir="/home/sshirzad/src/hpx"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 #thr=(1 4 8 16)
-thr=(1 4 8 12 16)
+thr=(1 2 3 4 5 6 7 8)
 
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
@@ -64,7 +65,7 @@ date>> ${results_dir}/info/date.txt
 cp ${hpx_log_file} ${results_dir}/info/
 cp ${config_dir}/Configfile_hpx ${results_dir}/info/
 cp ${blazemark_dir}/scripts/hpx_backend.sh ${results_dir}/info/
-cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info/
+cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_$node/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info/
 git --git-dir $hpx_source_dir/.git log>>${results_dir}/info/hpx_git.txt
 cd ${blaze_dir}
 BR=$(git rev-parse --abbrev-ref HEAD)
@@ -92,7 +93,7 @@ for b in ${benchmarks[@]}
 		start_line=111
 		length=35
 		end_line=147
-	elif [ $b == 'dmatdmatadd' ] || [ $b == 'dmattdmatadd' ]
+	elif [ $b == 'dmatdmatadd' ] || [ $b == 'dmattdmatadd' ] || [ $b == 'dmatdmatdmatadd' ]
         then
                 start_line=91
                 length=16
@@ -125,11 +126,11 @@ for b in ${benchmarks[@]}
 	done
 	sed -i "58s/*/\//" $param_filename
 	sed -i "${end_line}s/*/\//" $param_filename
-	./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/"	               
+	./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" $node	               
 	
 	for th in "${thr[@]}"
 		do 	
-		    ${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive>>${results_dir}/${node}-${b}-${th}-${branch}.dat
+		    ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive>>${results_dir}/${node}-${b}-${th}-${branch}.dat
 		    echo ${b} "benchmark for" ${r} "finished for "${th} "threads on $branch branch"
 	done
         cd ${blaze_dir}

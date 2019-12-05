@@ -37,7 +37,7 @@ else
     then
         benchmarks=$1
     fi
-    runtimes=('hpx' 'openmp' 'cpp' 'boost')
+    #runtimes=('hpx' 'openmp' 'cpp' 'boost')
 #    rm -rf ${results_dir}/hpx
 #    mkdir ${results_dir}/hpx
     #date>>${results_dir}/hpx/date.txt
