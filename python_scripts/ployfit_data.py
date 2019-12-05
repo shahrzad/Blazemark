@@ -156,12 +156,12 @@ def remove_duplicates(array):
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','cache_block','datatype','cost','simd_size','mflops']
+    titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
 
     ranges={}
     deg=2
     dataframe = pandas.read_csv(filename, header=0,index_col=False,dtype=str,names=titles)
-    for col in titles[2:]:
+    for col in titles[3:]:
         dataframe[col] = dataframe[col].astype(float)
     i=1  
     h=1
@@ -191,8 +191,9 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             g_params[node][benchmark]={}
             all_data[node][benchmark]={}
             benchmark_selected=dataframe['benchmark']==benchmark
-            num_threads_selected=dataframe['num_threads']<=17
-            df_nb_selected=df_n_selected[benchmark_selected & num_threads_selected]         
+            num_threads_selected=dataframe['num_threads']<=8
+            rt_selected=dataframe['runtime']=='hpx'
+            df_nb_selected=df_n_selected[benchmark_selected & num_threads_selected & rt_selected ]       
             matrix_sizes=df_nb_selected['matrix_size'].drop_duplicates().values
             matrix_sizes.sort()
             thr=df_nb_selected['num_threads'].drop_duplicates().values
@@ -552,20 +553,33 @@ def select_chunk_block(data,th,m,node,benchmark,block_size_row,block_size_col=No
         x1=(-new_eq[1]-np.sqrt(new_eq[1]**2-4*new_eq[0]*new_eq[2]))/(2*new_eq[0])   
         ranges=[10**min(x0,x1), 10**max(x0,x1)]
         if exact:
-            min_r=int(equalshare2*np.floor(ranges[0]/row_sum))+1
-            max_r=int(min_r+equalshare2+1)
-            for i in range(min_r,max_r):
-                if sum(num_elements[0:i])<ranges[0] and sum(num_elements[0:i+1])>ranges[0]:
+            min_found=False
+            max_found=False            
+            
+            for i in range(num_blocks):
+                if not min_found and sum(num_elements[0:i])>p_range[0]:
                     min_c=i
-                    break
-                min_c=min_r
-            min_r=int(equalshare2*np.floor(ranges[1]/row_sum))+1
-            max_r=int(min_r+equalshare2+1)
-            for i in range(min_r,max_r):
-                if sum(num_elements[0:i])<ranges[1] and sum(num_elements[0:i+1])>ranges[1]:
+                    min_found=True
+                if not max_found and sum(num_elements[0:i])>p_range[1]:
                     max_c=i-1
-                    break            
-                max_c=min_r-1
+                    max_found=True
+            if not min_found or not max_found:
+                print("error")
+                
+#            min_r=int(equalshare2*np.floor(ranges[0]/row_sum))+1
+#            max_r=int(min_r+equalshare2+1)
+#            for i in range(min_r,max_r):
+#                if sum(num_elements[0:i])<ranges[0] and sum(num_elements[0:i+1])>ranges[0]:
+#                    min_c=i
+#                    break
+#                min_c=min_r
+#            min_r=int(equalshare2*np.floor(ranges[1]/row_sum))+1
+#            max_r=int(min_r+equalshare2+1)
+#            for i in range(min_r,max_r):
+#                if sum(num_elements[0:i])<ranges[1] and sum(num_elements[0:i+1])>ranges[1]:
+#                    max_c=i-1
+#                    break            
+#                max_c=min_r-1
             return [min_c,max_c]
 
         else:
