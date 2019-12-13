@@ -32,6 +32,8 @@ openmp_dir='/home/shahrzad/repos/Blazemark/data/openmp/all'
 hpxmp_dir_1='/home/shahrzad/repos/Blazemark/data/hpxmp/all'
 hpxmp_dir_2='/home/shahrzad/repos/Blazemark/data/hpxmp/2/idle_on'
 hpxmp_dir_3='/home/shahrzad/repos/Blazemark/data/hpxmp/3'
+hpxmp_dir_4='/home/shahrzad/repos/Blazemark/data/hpxmp/4'
+
 hpx_ref_date_str='11-22-18-1027'  #reference hpx dvecdvecadd
 hpx_ref_dir='/home/shahrzad/repos/Blazemark/data/vector/'+hpx_ref_date_str
 hpx_counters_dir='/home/shahrzad/repos/Blazemark/data/hpxmp/3/dvecdvecadd_6repeat_201216size/hpx'
@@ -456,6 +458,76 @@ for benchmark in hpxmp_benchmarks_3:
 #        d_hpxmp_3[benchmark][th]['size']=size_0
 #        d_hpxmp_3[benchmark][th]['mflops']=[x/float(max(repeats)-1) for x in mflops]
 ####################################################
+#hpxmp_4
+####################################################        
+data_files=glob.glob(hpxmp_dir_4+'/*.dat')
+d_hpxmp_4={}
+
+thr=[]
+repeats=[]
+hpxmp_benchmarks_4=[]
+for filename in data_files:
+    if 'hpxmp' in filename:        
+        (repeat,benchmark, th, runtime) = filename.split('/')[-1].replace('.dat','').split('-')
+        if benchmark not in hpxmp_benchmarks_4:
+            hpxmp_benchmarks_4.append(benchmark)
+            
+        if int(th) not in thr:
+            thr.append(int(th))
+        if int(repeat) not in repeats:
+            repeats.append(int(repeat))
+        
+thr.sort()
+hpxmp_benchmarks_4.sort()      
+repeats.sort()      
+d_hpxmp_all_4={}   
+
+for repeat in repeats:
+    d_hpxmp_all_4[repeat]={}
+    for benchmark in hpxmp_benchmarks_4:   
+        d_hpxmp_all_4[repeat][benchmark]={}
+        for th in thr:
+            d_hpxmp_all_4[repeat][benchmark][th]={}
+
+
+data_files.sort()        
+for filename in data_files:    
+    size=[]
+    mflops=[]    
+
+    if 'hpxmp' in filename:
+        f=open(filename, 'r')
+                 
+        result=f.readlines()[3:]
+        stop=False
+        benchmark=filename.split('/')[-1].split('-')[1]
+        th=int(filename.split('/')[-1].split('-')[2])       
+        repeat=int(filename.split('/')[-1].split('-')[0])       
+        if th in thr:
+            
+            for r in result:
+                if "N=" in r:
+                    stop=True
+                if not stop:
+                    size.append(int(r.strip().split(' ')[0]))
+                    mflops.append(float(r.strip().split(' ')[-1]))
+            
+            d_hpxmp_all_4[repeat][benchmark][th]['size']=size
+            d_hpxmp_all_4[repeat][benchmark][th]['mflops']=mflops
+     
+d_hpxmp_4={}
+for benchmark in hpxmp_benchmarks_4:
+    d_hpxmp_4[benchmark]={}
+    for th in thr:
+        d_hpxmp_4[benchmark][th]={}
+        size_0=d_hpxmp_all_4[1][benchmark][th]['size']
+        mflops=[0]*len(size_0)
+        size=d_hpxmp_all_4[1][benchmark][th]['size']
+        mflops=d_hpxmp_all_4[1][benchmark][th]['mflops']
+        d_hpxmp_4[benchmark][th]['size']=size
+        d_hpxmp_4[benchmark][th]['mflops']=mflops
+        
+####################################################
 #hpx performance counters
 ####################################################        
 data_files=glob.glob(hpx_counters_dir+'/*.dat')
@@ -641,15 +713,17 @@ for benchmark in hpxmp_counters_benchmarks:
 i=1
 for benchmark in hpxmp_benchmarks_2:       
     for th in [1, 4,8,16]:
-        pp = PdfPages(perf_directory+'/figures/'+benchmark+'_'+str(th)+'.pdf')
+#        pp = PdfPages(perf_directory+'/figures/'+benchmark+'_'+str(th)+'.pdf')
 
         plt.figure(i)
 
         plt.plot(d_hpxmp_1[benchmark][th]['size'], d_hpxmp_1[benchmark][th]['mflops'],label="hpxMP previous",color='black',linestyle=':')
 #        if benchmark in d_hpxmp_2.keys():
 #            plt.plot(d_hpxmp_2[benchmark][th]['size'], d_hpxmp_2[benchmark][th]['mflops'],label='hpxmp_idle_on '+str(th)+' threads')
-        plt.plot(d_hpxmp_2[benchmark][th]['size'], d_hpxmp_2[benchmark][th]['mflops'],label="hpxMP", color='black', linestyle='dashed')
         plt.plot(d_openmp[benchmark][th]['size'], d_openmp[benchmark][th]['mflops'],label="llvm-OpenMP", color='black')
+
+#        plt.plot(d_hpxmp_2[benchmark][th]['size'], d_hpxmp_2[benchmark][th]['mflops'],label="hpxMP", color='black', linestyle='dashed')
+        plt.plot(d_hpxmp_4[benchmark][th]['size'], d_hpxmp_4[benchmark][th]['mflops'],label="hpxMP", color='black', linestyle='dashed')
 
 #        plt.plot(d_hpxmp_3[benchmark][th]['size'], d_hpxmp_3[benchmark][th]['mflops'],label="hpxmp "+str(th)+" threads", color='black', linestyle='dashed')
 #        plt.plot(d_hpx[benchmark][10][256][th]['size'], d_hpx[benchmark][10][256][th]['mflops'],label='hpx '+str(th)+' threads')
@@ -664,6 +738,48 @@ for benchmark in hpxmp_benchmarks_2:
         plt.savefig(pp, format='pdf',bbox_inches='tight')
         plt.show()
         pp.close() 
+        
+        
+        
+        
+        
+i=1
+for benchmark in benchmarks:       
+    for th in [1, 4,8,16]:
+        pp = PdfPages(perf_directory+'/'+benchmark+'_'+str(th)+'.pdf')
+
+        plt.figure(i)
+        plt.plot(d_hpxmp_1[benchmark][th]['size'], d_hpxmp_1[benchmark][th]['mflops'],label="hpxMP previous",color='black',linestyle='dashed')
+
+        plt.plot(d_hpxmp[node][benchmark][th]['size'], d_hpxmp[node][benchmark][th]['mflops'],label="hpxMP",color='black',linestyle='solid')
+#        if benchmark in d_hpxmp_2.keys():
+#            plt.plot(d_hpxmp_2[benchmark][th]['size'], d_hpxmp_2[benchmark][th]['mflops'],label='hpxmp_idle_on '+str(th)+' threads')
+        plt.plot(d_openmp[node][benchmark][th]['size'], d_openmp[node][benchmark][th]['mflops'],label="OpenMP", color='gray', linestyle='solid')
+
+#        plt.plot(d_hpxmp_3[benchmark][th]['size'], d_hpxmp_3[benchmark][th]['mflops'],label="hpxmp "+str(th)+" threads", color='black', linestyle='dashed')
+#        plt.plot(d_hpx[benchmark][10][256][th]['size'], d_hpx[benchmark][10][256][th]['mflops'],label='hpx '+str(th)+' threads')
+
+        plt.xlabel("size $n$")           
+        plt.ylabel('MFlops ('+str(th)+" threads)")
+        plt.xscale('log')
+        plt.grid(True, 'both')
+        plt.legend(loc=2)
+#        plt.title(benchmark)
+        i=i+1
+        
+        
+        plt.savefig(pp, format='pdf',bbox_inches='tight')
+        plt.show()
+        pp.close()         
+        
+        
+        
+        
+        
+        
+        
+        
+        
 #    print('')
 #plt.show()
 #pp.close() 

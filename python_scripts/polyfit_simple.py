@@ -9,6 +9,7 @@ from mpl_toolkits import mplot3d
 import math
 from scipy.optimize import curve_fit
 from collections import Counter
+from sklearn.metrics import r2_score
 
 def remove_duplicates(array):
     g=array[:,0]
@@ -88,6 +89,10 @@ for m in matrix_sizes:
     m_data['params'][m]={}
     train_errors=[]
     test_errors=[]
+    train_errors_l=[]
+    test_errors_l=[]
+    R2_tr=[]
+    R2_te=[]
     q=1
     np.random.seed(1)
     p_range=[0.,np.inf]
@@ -118,7 +123,12 @@ for m in matrix_sizes:
             z = np.polyfit(train_set[:,0], train_labels, deg)
             m_data['params'][m][th]=z
             p = np.poly1d(z)
-            train_errors.append(100*np.mean(np.abs(1-p(train_set[:,0])/train_labels)))
+            train_errors.append(np.mean(np.abs(train_labels-p(train_set[:,0]))))
+
+#            train_errors.append(100*np.mean(np.abs(1-p(train_set[:,0])/train_labels)))
+            mse=np.mean((train_labels-p(train_set[:,0]))**2)
+#            train_errors_l.append(mse/np.var(train_labels))
+            R2_tr.append(r2_score(train_labels,p(train_set[:,0])))
             [x.append(k[0]) for k in train_set]
             [y.append(k) for k in train_labels]
             [d.append(th) for k in range(np.shape(train_labels)[0])]
@@ -129,14 +139,19 @@ for m in matrix_sizes:
             print(len(x),len(y),len(d))
             if plot_type=='perf_curves' or plot_type=='all': 
                 plt.figure(q)
-    #            plt.scatter(train_set[:,0],p(train_set[:,0]),label='fitted',marker='+')
-    #            plt.scatter(train_set[:,0],train_labels,label='true',marker='.')
-    #            test_errors.append(100*np.mean(np.abs(1-p(test_set[:,0])/test_labels)))
-#                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#                plt.grid(True, 'both')
-#                plt.xlabel('Grain size')
-#                plt.ylabel('MFlops')  
-                
+                plt.scatter(train_set[:,0],p(train_set[:,0]),label='fitted',marker='+')
+                plt.scatter(train_set[:,0],train_labels,label='true',marker='.')
+                test_errors.append(np.mean(np.abs(test_labels-p(test_set[:,0]))))
+
+#                test_errors.append(100*np.mean(np.abs(1-p(test_set[:,0])/test_labels)))
+                mse=np.mean((test_labels-p(test_set[:,0]))**2)
+                test_errors_l.append(mse/np.var(test_labels))
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.grid(True, 'both')
+                plt.xlabel('Grain size')
+                plt.ylabel('MFlops')  
+                R2_te.append(r2_score(test_labels,p(test_set[:,0])))
+
                 max_perf=np.asarray(-z[1]/(2*z[0]))    
                 y0=p(max_perf)
                 new_eq=[z[0],z[1],z[2]-0.9*y0] 
@@ -147,7 +162,7 @@ for m in matrix_sizes:
                 #plot individual range
 #                plt.plot([x0,x1],[p(x0),p(x1)],marker='|',color='red', linewidth=3)
     #            plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_690_'+str(int(th))+'_peak_range_red.png', bbox_inches='tight',dpi=250)
-    #            q=q+1
+                q=q+1
                 ##################
                 
                 
@@ -185,28 +200,30 @@ for m in matrix_sizes:
 #    plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_range_all.png', bbox_inches='tight',dpi=300)
 #
     p_range=[np.floor(10**p_range[0]),np.floor(10**p_range[1])]
-        
-parameters=['a','b','c']
-param_errors=[]
-all_thr=thr
-for i in range(len(m_data['params'][m][th])):
-    indices=[j for j in range(len(all_thr)) if j%3!=2]
-    plt.figure(i)
-    params=np.asarray([m_data['params'][m][th][i] for th in thr])
-    plt.scatter(thr,params,label='true')
-    z=np.polyfit(thr[indices],params[indices],3)
-    p=np.poly1d(z)
-#    plt.scatter(thr[indices],p(thr[indices]),label='fitted')
-    plt.scatter(thr,p(thr),label='fitted')
-    plt.grid(True, 'both')
-    plt.xlabel('# cores')
-    plt.ylabel('Parameter '+parameters[i]) 
-    not_indices=[j for j in range(len(all_thr)) if j%3==2]
-#    plt.scatter(thr[not_indices],p(thr[not_indices]),label='true',color='yellow')
-    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)    
-    param_errors.append([100*np.mean(np.abs(1-p(thr[indices])/params[indices])),100*np.mean(np.abs(1-p(thr[not_indices])/params[not_indices]))])
 
-#    plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_690_params_'+str(i)+'.png', bbox_inches='tight',dpi=300)
+for m in matrix_sizes:
+        
+    parameters=['a','b','c']
+    param_errors=[]
+    all_thr=thr
+    for i in range(len(m_data['params'][m][th])):
+        indices=[j for j in range(len(all_thr)) if j%3!=2]
+        plt.figure(i)
+        params=np.asarray([m_data['params'][m][th][i] for th in thr])
+        plt.scatter(thr,params,label='true')
+        z=np.polyfit(thr[indices],params[indices],3)
+        p=np.poly1d(z)
+    #    plt.scatter(thr[indices],p(thr[indices]),color='orange')
+#        plt.scatter(thr,p(thr),label='fitted')
+        plt.grid(True, 'both')
+        plt.xlabel('# cores')
+        plt.ylabel('Parameter '+parameters[i]) 
+        not_indices=[j for j in range(len(all_thr)) if j%3==2]
+    #    plt.scatter(thr[not_indices],p(thr[not_indices]),label='true',color='blue')
+#        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)    
+        param_errors.append([100*np.mean(np.abs(1-p(thr[indices])/params[indices])),100*np.mean(np.abs(1-p(thr[not_indices])/params[not_indices]))])
+
+        plt.savefig('/home/shahrzad/src/Dissertation/Genral_presentation/images/polyfit/fig_'+str(int(m))+'_params_'+str(i)+'before_fit.png', bbox_inches='tight',dpi=300)
     
 fig=plt.figure()
 ax = fig.add_subplot(111)
@@ -220,8 +237,27 @@ ax.set_xticklabels(parameters)
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 
+fig=plt.figure()
+ax = fig.add_subplot(111)
+width=0.25
+rects1 = ax.bar(np.arange(1,9),[train_errors[i] for i in range(8)], width, color='royalblue',label='training')
+rects2 = ax.bar(np.arange(1,9)+width,[test_errors[i] for i in range(8)], width, color='seagreen',label='test')
+plt.xlabel('# Cores')
+plt.ylabel('prediction error(MAE)')
+plt.xticks(np.array(np.arange(1,9)))
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/error_690_mae.png', bbox_inches='tight',dpi=300)
 
+fig=plt.figure()
+ax = fig.add_subplot(111)
+width=0.25
+rects1 = ax.bar(np.arange(1,9),[R2_tr[i] for i in range(8)], width, color='royalblue',label='training')
+rects2 = ax.bar(np.arange(1,9)+width,[R2_te[i] for i in range(8)], width, color='seagreen',label='test')
+plt.xlabel('# Cores')
+plt.ylabel('prediction error(R-squared)')
 
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/error_690_r2.png', bbox_inches='tight',dpi=300)
 
 def polyfit2d(x, y, z, x_p, y_p):
     #m**3*g**2
@@ -318,7 +354,8 @@ for m in matrix_sizes:
     params[m]=model
     pred_errors=[]
     pred_errors_corrected=[]
-    
+    R2_te=[]
+    R2_tr=[]
 #    p_range=[0.,np.inf]
     
     for th in thr:
@@ -351,10 +388,14 @@ for m in matrix_sizes:
         
     #    plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_690_total_'+str(int(th))+'_range.png', bbox_inches='tight',dpi=250)
     #    plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_690_total_'+str(int(th))+'.png', bbox_inches='tight',dpi=250)
+        
         train_error_1=np.abs(1-pred[indices]/p[indices])[g_i[0]]
+        R2_tr.append(r2_score(p[indices],pred[indices]))
         test_error_1=np.abs(1-pred_test[indices_test]/p_test[indices_test])[g_it[0]]
-        pred_errors.append([100*np.mean(np.abs(1-pred[indices]/p[indices])),100*np.mean(np.abs(1-pred_test[indices_test]/p_test[indices_test]))])
-    
+        R2_te.append(r2_score(p_test[indices_test],pred_test[indices_test]))
+#        pred_errors.append([100*np.mean(np.abs(1-pred[indices]/p[indices])),100*np.mean(np.abs(1-pred_test[indices_test]/p_test[indices_test]))])
+        pred_errors.append([np.mean(np.abs(p[indices]-pred[indices])),np.mean(np.abs(p_test[indices_test]-pred_test[indices_test]))])
+
         indices=[j for j in indices if j!=indices[g_i[0]]]
         indices_test=[j for j in indices_test if j!=indices_test[g_it[0]]]
         pred_errors_corrected.append([100*np.mean(np.abs(1-pred[indices]/p[indices])),100*np.mean(np.abs(1-pred_test[indices_test]/p_test[indices_test]))])
@@ -372,6 +413,31 @@ for m in matrix_sizes:
     ax.set_xticklabels([int(th) for th in thr])
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     #plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_690_total_error.png', bbox_inches='tight',dpi=250)
+    
+    fig=plt.figure()
+    ax = fig.add_subplot(111)
+    width=0.25
+    rects1 = ax.bar(np.array(thr),[R2_tr[i] for i in range(len(thr))], width, color='royalblue',label='training')
+    rects2 = ax.bar(np.array(thr)+width,[R2_te[i] for i in range(len(thr))], width, color='seagreen',label='test')
+    plt.xlabel('# cores')
+    plt.ylabel('prediction error(R-squared)')
+    plt.xticks(np.array(thr))
+    ax.set_xticklabels([int(th) for th in thr])
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#    plt.savefig('/home/shahrzad/src/Dissertation/Genral_presentation/images/polyfit/fig_690_total_error_r2.png', bbox_inches='tight',dpi=250)
+    
+    fig=plt.figure()
+    ax = fig.add_subplot(111)
+    width=0.25
+    rects1 = ax.bar(np.array(thr),[pred_errors[i][0] for i in range(len(thr))], width, color='royalblue',label='training')
+    rects2 = ax.bar(np.array(thr)+width,[pred_errors[i][1] for i in range(len(thr))], width, color='seagreen',label='test')
+    plt.xlabel('# cores')
+    plt.ylabel('prediction error(MAE)')
+    plt.xticks(np.array(thr))
+    ax.set_xticklabels([int(th) for th in thr])
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#    plt.savefig('/home/shahrzad/src/Dissertation/Genral_presentation/images/polyfit/fig_690_total_error_mae.png', bbox_inches='tight',dpi=250)
+    
     
     
     fig=plt.figure()
@@ -601,36 +667,36 @@ for th in thr[1:]:
             plt.grid(True, 'both')
     #            plt.title('matrix size:'+str(int(m))+'  '+str(th)+' threads predicted range of chunk size:['+str(c_range[0])+','+str(c_range[1])+'] vs ['+str(c_range_exact[0])+','+str(c_range_exact[1])+']')
 #    plt.figure(q)
-    plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_'+str(int(m))+'_chunks_'+str(int(th))+'_'+str(block_size_row)+'-'+str(block_size_col)+'.png', bbox_inches='tight',dpi=300)
+#    plt.savefig('/home/shahrzad/src/Dissertation/images/polyfit/fig_'+str(int(m))+'_chunks_'+str(int(th))+'_'+str(block_size_row)+'-'+str(block_size_col)+'.png', bbox_inches='tight',dpi=300)
     q=q+1           
     
 
 
-         if not stop:
-                plt.figure(i)
-                plt.bar(str(chunk_size),prediction,color='r')             
-                label = block                    
-                plt.annotate(label, # this is the text
-                             (str(chunk_size),prediction), # this is the point to label
-                             textcoords="offset points", # how to position the text
-                             xytext=(0,5), # distance from text to points (x,y)
-                             ha='center') # horizontal alignment can be left, right or center
-#                plt.title('model created based on data from '+build_benchmark+' on '+build_node+' tested on '+ evaluate_benchmark+' on '+evaluate_node+'\n matrix size:'+str(int(m))+'  '+str(int(th))+' threads   maximum performance:'+str(max_perf)+'   prediction:'+str(prediction))            
-                if chunk_size>median_chunk_size and not stop:
-                    chunk_selected=df_nb_selected['chunk_size']==median_chunk_size
-                    if df_nb_selected[chunk_selected & block_selected]['mflops'].size!=0:
-                        prediction=df_nb_selected[chunk_selected & block_selected]['mflops'].values[-1]
-                        plt.figure(i)
-                        plt.bar('median:'+str(int(median_chunk_size)),prediction,color='r')             
-                        label = block                    
-                        plt.annotate(label, # this is the text
-                                     ('median:'+str(int(median_chunk_size)),prediction), # this is the point to label
-                                     textcoords="offset points", # how to position the text
-                                     xytext=(0,5), # distance from text to points (x,y)
-                                     ha='center') # horizontal alignment can be left, right or center
-                        plt.title('model created based on data from '+build_benchmark+' on '+build_node+' tested on '+ evaluate_benchmark+' on '+evaluate_node+'\n matrix size:'+str(int(m))+'  '+str(int(th))+' threads   maximum performance:'+str(max_perf)+'   prediction:'+str(prediction))                                   
-                        plt.ylabel('mflops')
-                if save:
-                    plt.savefig(pp,format='pdf',bbox_inches='tight')
-                stop=True
-                
+#         if not stop:
+#                plt.figure(i)
+#                plt.bar(str(chunk_size),prediction,color='r')             
+#                label = block                    
+#                plt.annotate(label, # this is the text
+#                             (str(chunk_size),prediction), # this is the point to label
+#                             textcoords="offset points", # how to position the text
+#                             xytext=(0,5), # distance from text to points (x,y)
+#                             ha='center') # horizontal alignment can be left, right or center
+##                plt.title('model created based on data from '+build_benchmark+' on '+build_node+' tested on '+ evaluate_benchmark+' on '+evaluate_node+'\n matrix size:'+str(int(m))+'  '+str(int(th))+' threads   maximum performance:'+str(max_perf)+'   prediction:'+str(prediction))            
+#                if chunk_size>median_chunk_size and not stop:
+#                    chunk_selected=df_nb_selected['chunk_size']==median_chunk_size
+#                    if df_nb_selected[chunk_selected & block_selected]['mflops'].size!=0:
+#                        prediction=df_nb_selected[chunk_selected & block_selected]['mflops'].values[-1]
+#                        plt.figure(i)
+#                        plt.bar('median:'+str(int(median_chunk_size)),prediction,color='r')             
+#                        label = block                    
+#                        plt.annotate(label, # this is the text
+#                                     ('median:'+str(int(median_chunk_size)),prediction), # this is the point to label
+#                                     textcoords="offset points", # how to position the text
+#                                     xytext=(0,5), # distance from text to points (x,y)
+#                                     ha='center') # horizontal alignment can be left, right or center
+#                        plt.title('model created based on data from '+build_benchmark+' on '+build_node+' tested on '+ evaluate_benchmark+' on '+evaluate_node+'\n matrix size:'+str(int(m))+'  '+str(int(th))+' threads   maximum performance:'+str(max_perf)+'   prediction:'+str(prediction))                                   
+#                        plt.ylabel('mflops')
+#                if save:
+#                    plt.savefig(pp,format='pdf',bbox_inches='tight')
+#                stop=True
+#                

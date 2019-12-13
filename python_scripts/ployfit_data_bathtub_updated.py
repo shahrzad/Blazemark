@@ -9,6 +9,7 @@ from mpl_toolkits import mplot3d
 import math
 from scipy.optimize import curve_fit
 from collections import Counter
+from sklearn.metrics import r2_score
 
 filename='/home/shahrzad/repos/Blazemark/data/data_perf_all.csv'
 perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/bathtub'
@@ -130,8 +131,12 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             errors={}
             for th in thr:     
                 errors[th]={}
-                errors[th]['train']=[]
-                errors[th]['test']=[]
+                errors[th]['train']={}
+                errors[th]['test']={}
+                errors[th]['train']['r2']=[]
+                errors[th]['test']['r2']=[]
+                errors[th]['train']['mae']=[]
+                errors[th]['test']['mae']=[]
                 p_range=[0.,np.inf]
                 m_data[node][benchmark]['params'][th]={}
                 m_data[node][benchmark]['params_bfit'][th]={}
@@ -221,8 +226,12 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 #                            plt.title('train set    matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
 #                            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
                             
-                            train_error=sum([abs(train_labels[w]-z[w])*100/train_labels[w] for w in range(len(z))])/len(z)
-                            errors[th]['train'].append(train_error)
+#                            train_error=sum([abs(train_labels[w]-z[w])*100/train_labels[w] for w in range(len(z))])/len(z)
+#                            train_error=sum([abs(train_labels[w]-z[w]) for w in range(len(z))])/len(z)
+                            train_error=np.mean(abs(train_labels-z))
+                            errors[th]['train']['mae'].append(train_error)
+                            errors[th]['train']['r2'].append(r2_score(train_labels,z))
+
                             plt.grid(True, 'both')
 
                             plt.xscale('log')
@@ -234,10 +243,12 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 
                             z=my_func_total_h(test_set[:,0],*popt1)  
 #                            plt.figure(q+1)
-
+                            errors[th]['test']['r2'].append(r2_score(test_labels,z))
                             plt.scatter(test_set[:,0],test_labels,color='blue',marker='.')
                             plt.scatter(test_set[:,0],z,color='red',label='fitted',marker='.')
-                            test_error=sum([abs(test_labels[w]-z[w])*100/test_labels[w] for w in range(len(z))])/len(z)
+#                            test_error=sum([abs(test_labels[w]-z[w])*100/test_labels[w] for w in range(len(z))])/len(z)
+#                            test_error=sum([abs(test_labels[w]-z[w]) for w in range(len(z))])/len(z)
+                            train_error=np.mean(abs(test_labels-z))
 
                             z=my_func_total_h(train_set[:,0],*popt1)  
                             plt.scatter(train_set[:,0],z,color='red',marker='.')
@@ -248,10 +259,12 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                             plt.ylabel('Execution time')
 #                            plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
                             plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                            errors[th]['test'].append(test_error)
+                            errors[th]['test']['mae'].append(test_error)
+                            
+
                             q=q+2
 #                            plt.savefig(pp,format='pdf',bbox_inches='tight')
-                            plt.savefig('/home/shahrzad/src/Dissertation/images/bathtub/pred/pred_'+str(int(m))+'_'+str(int(th))+'.png',dpi=300,bbox_inches='tight')
+#                            plt.savefig('/home/shahrzad/src/Dissertation/images/bathtub/pred/pred_'+str(int(m))+'_'+str(int(th))+'.png',dpi=300,bbox_inches='tight')
 
                             m_data[node][benchmark]['params'][th][m]=popt1.tolist()
                         except:
@@ -275,18 +288,37 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             pp.close()
                 #for a fixed m
             q=1
+            
             for m in matrix_sizes:
+#                if m==690.:
                 fig=plt.figure(q)
                 ax = fig.add_subplot(111)
                 width=0.25
-                rects1 = ax.bar(np.array(thr),[errors[th]['train'][0] for th in thr], width, color='royalblue',label='training')
-                rects2 = ax.bar(np.array(thr)+width,[errors[th]['test'][0] for th in thr], width, color='seagreen',label='test')
+                rects1 = ax.bar(np.array(thr),[errors[th]['train']['r2'][q-1] for th in thr], width, color='royalblue',label='training')
+                rects2 = ax.bar(np.array(thr)+width,[errors[th]['test']['r2'][q-1] for th in thr], width, color='seagreen',label='test')
                 plt.xlabel('# cores')
-                plt.ylabel('prediction error(%)')
+                plt.ylabel('prediction error(R-squared)')
                 plt.xticks(np.array(thr))
                 ax.set_xticklabels([int(th) for th in thr])
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                plt.savefig('/home/shahrzad/src/Dissertation/images/bathtub/error_'+str(int(m))+'.png',dpi=300,bbox_inches='tight')
+                plt.savefig('/home/shahrzad/src/Dissertation/Genral_presentation/images/bathtub/error_'+str(int(m))+'r2.png',dpi=300,bbox_inches='tight')
+                q=q+1
+                
+            q=1
+            
+            for m in matrix_sizes:
+                if m==690.:
+                    fig=plt.figure(q)
+                    ax = fig.add_subplot(111)
+                    width=0.25
+                    rects1 = ax.bar(np.array(thr),[errors[th]['train']['mae'][q-1] for th in thr], width, color='royalblue',label='training')
+                    rects2 = ax.bar(np.array(thr)+width,[errors[th]['test']['mae'][q-1] for th in thr], width, color='seagreen',label='test')
+                    plt.xlabel('# cores')
+                    plt.ylabel('prediction error(MAE)')
+                    plt.xticks(np.array(thr))
+                    ax.set_xticklabels([int(th) for th in thr])
+                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                    plt.savefig('/home/shahrzad/src/Dissertation/Genral_presentation/images/bathtub/error_'+str(int(m))+'mae.png',dpi=300,bbox_inches='tight')
                 q=q+1
                 
             for th in thr:
@@ -439,7 +471,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 
             params={}
             params[node]={}
-            
+            all_thr=thr
             params[node][benchmark]={}        
             for m in matrix_sizes:
                 params[node][benchmark][m]=[[]]*len(popt1)
@@ -565,6 +597,11 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 return my_func_total_h(num_tasks, *params_t)
                 
             i=1
+            
+            
+            errors_th={}
+            for th in thr:
+                errors_th[th]=[]
             for m in matrix_sizes:
 #                ts=m_data[node][benchmark]['params'][th][m][0]
 #                alpha=m_data[node][benchmark]['params'][th][m][1]
@@ -576,6 +613,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 plt.figure(i)
                 plt.axes([0, 0, 3, 1])
                 test_data=all_data[node][benchmark][m]['test']
+                print(1.5*len(test_data[0]))
 #                Es=[]
 #                Ts=[]
 #                Ps=[]
@@ -584,6 +622,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     nt=test_data[0][d]
                     t=test_data[1][d]
                     p=predict_exec_time(m,th,nt)
+                    errors_th[th].append(abs(p-t))
 ##                    print(d,m, th, nt,t, p,100*abs(1-p/t))
 ##                    plt.scatter(h,p,label='prediction')
 #                    Es.append(t-p)
@@ -599,7 +638,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 #                cv=np.std(new_Es)/np.mean(new_Es)
 #                print(m,cv)
 #                plt.title('matrix size: '+str(int(m)))
-                    plt.scatter(d,100*abs(1-p/t),label='true value')                  
+                    plt.scatter(d,abs(t-p),label='true value')                  
                     plt.annotate(str(int(nt)), # this is the text
                                  (d,100*abs(1-p/t)), # this is the point to label
                                  textcoords="offset points", # how to position the text
@@ -609,7 +648,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     plt.ylabel('Prediction error(%)')   
 #                    print(((test_data[2][d]**2)*test_data[1][d]-p)/((test_data[2][d]**2)*test_data[1][d]))
 #                    plt.title('matrix size '+str(int(test_data[2][d])))
-                plt.savefig('/home/shahrzad/src/Dissertation/images/bathtub/prediction_error_overall'+str(int(m))+'.png',dpi=300,bbox_inches='tight')
+#                plt.savefig('/home/shahrzad/src/Dissertation/images/bathtub/prediction_error_overall'+str(int(m))+'.png',dpi=300,bbox_inches='tight')
 
                 i=i+1
                 
@@ -622,6 +661,51 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     plt.plot(np.arange(2,9),es)
                     plt.title('num tasks: '+str(nt))
                     i=i+1
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+        for th in thr:
+            print(len(errors_th[th]))
+            errors_th[th]=sum(errors_th[th])/len(errors_th[th])
+                    
+                    
+                    
+                    
+fig=plt.figure()
+ax = fig.add_subplot(111)
+width=0.25
+rects1 = ax.bar(np.arange(2,9),[errors_th_tr[i] for i in range(2,9)], width, color='royalblue',label='training')
+rects1 = ax.bar(np.arange(2,9)+width,[errors_th[i] for i in range(2,9)], width, color='seagreen',label='test')
+plt.xlabel('# cores')
+plt.ylabel('prediction error(MAE)')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)            
+plt.savefig('/home/shahrzad/src/Dissertation/Genral_presentation/images/bathtub/error_final_'+str(int(m))+'mae.png',dpi=300,bbox_inches='tight')
+                    
+            errors_th_tr={}
+            for th in thr:
+                errors_th_tr[th]=[]
+            train_data=all_data[node][benchmark][m]['train']
+
+            for d in range(len(train_data[0])):
+                th=train_data[3][d]
+                nt=train_data[0][d]
+                t=train_data[1][d]
+                p=predict_exec_time(m,th,nt)
+                errors_th_tr[th].append(abs(p-t))                    
+            for th in thr:
+                print(len(errors_th_tr[th]))
+                errors_th_tr[th]=sum(errors_th_tr[th])/len(errors_th_tr[th])         
+                    
         perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/bathtub/'
 #        pp = PdfPages(perf_directory+'params_th.pdf')
         def m_func(x,a,b):

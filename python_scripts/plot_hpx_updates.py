@@ -460,10 +460,13 @@ def create_dict_openmp(directory):
                     d[benchmark][th]['mflops']=[x/float(max(repeats)-1) for x in mflops]
     return d                           
 
-def create_dict_reference(directory):
+def create_dict_reference(directory,runtime='openmp'):
     thr=[]
     nodes=[]
-    data_files=glob.glob(directory+'/*.dat')
+#    data_files=glob.glob(directory+'/*.dat')
+    data_files=[]
+    
+    [data_files.append(i) for i in glob.glob(directory+'/*.dat') if runtime in i.split('/')[-1]]
     benchmark=''
     benchmarks=[]
     for filename in data_files:
@@ -501,21 +504,23 @@ def create_dict_reference(directory):
         except:
             (node, benchmark, th, ref) = filename.split('/')[-1].replace('.dat','').split('-')          
         th = int(th)
-        size=[]
-        mflops=[]    
-        for r in result:        
-            if "N=" in r or '/' in r:
-                stop=True
-            if not stop:
-                size.append(int(r.strip().split(' ')[0]))
-                mflops.append(float(r.strip().split(' ')[-1]))
-            
-        d_all[node][benchmark][th]['size']=size
-        d_all[node][benchmark][th]['mflops']=mflops
+        if th not in [10,11]:
+            size=[]
+            mflops=[]    
+            for r in result:     
+                if "N=" in r or '/' in r:
+                    stop=True
+                if not stop:
+                    size.append(int(r.strip().split(' ')[0]))
+                    mflops.append(float(r.strip().split(' ')[-1]))
+                
+            d_all[node][benchmark][th]['size']=size
+            d_all[node][benchmark][th]['mflops']=mflops
  
             
     return d_all                           
-           
+ ########################################################################################
+          
 hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/reference_hpx/marvin/master/'         
 d_hpx_ref=create_dict(hpx_dir_ref)      
 hpx_dir='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/marvin/'         
@@ -523,7 +528,9 @@ hpx_dir1='/home/shahrzad/repos/Blazemark/data/matrix/09-15-2019/'
 hpx_dir2='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/trillian/'
 hpx_dir3='/home/shahrzad/repos/Blazemark/results/new_threads/'
 (d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir,hpx_dir1,hpx_dir2])                 
-           
+hpxmp_dir='/home/shahrzad/repos/Blazemark/data/hpxmp/CCGRID20-Nov/'
+d_hpxmp=create_dict_reference(hpxmp_dir,'hpx')                 
+d_openmp=create_dict_reference(hpxmp_dir)                 
 
 openmp_dir='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/openmp/'
 (d_openmp,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([openmp_dir])                 
@@ -727,6 +734,108 @@ for benchmark in benchmarks:
             print('')     
             plt.savefig(pp, format='pdf',bbox_inches='tight')
             i=i+1
+
+#plot number of cache misses based on chunk size for a matrix size
+for benchmark in benchmarks:
+#        pp = PdfPages(perf_directory+'/bath_tub_'+benchmark+'_different_matrix_sizes_'+str(th)+'.pdf')
+
+    for m in mat_sizes[benchmark]: 
+        for th in d_hpx[node][benchmark].keys():
+
+            plt.figure(i)
+            results=[]
+            l2_cm=[]
+            l2_ch=[]
+            l2_miss_rate=[]
+            chunk_sizes=[]
+            grain_sizes=[]
+            block_sizes=[]
+            for b in d_hpx[node][benchmark][th].keys():            
+                for c in d_hpx[node][benchmark][th][b].keys():                    
+                    k=d_hpx[node][benchmark][th][b][c]['size'].index(m)
+                    if 'mflops' in d_hpx[node][benchmark][th][b][c].keys() and d_hpx[node][benchmark][th][b][c]['mflops'][k]:
+                        b_r=int(b.split('-')[0])
+                        b_c=int(b.split('-')[1])
+                        rest1=b_r%simdsize
+                        rest2=b_c%simdsize
+                        if b_r>m:
+                            b_r=m
+                        if b_c>m:
+                            b_c=m
+                        if b_c%simdsize!=0:
+                            b_c=b_c+simdsize-b_c%simdsize
+                        equalshare1=math.ceil(m/b_r)
+                        equalshare2=math.ceil(m/b_c)  
+                        chunk_sizes.append(c)
+                        num_blocks=equalshare1*equalshare2
+                        num_elements_uncomplete=0
+                        if b_c<m:
+                            num_elements_uncomplete=(m%b_c)*b_r
+                        mflop=0
+                        if benchmark=='dmatdmatadd':                            
+                            mflop=b_r*b_c                            
+                        elif benchmark=='dmatdmatdmatadd':
+                            mflop=b_r*b_c*2
+                        else:
+                            mflop=b_r*b_c*(2*m)
+                        num_elements=[mflop]*num_blocks
+                        if num_elements_uncomplete:
+                            for j in range(1,equalshare1+1):
+                                num_elements[j*equalshare2-1]=num_elements_uncomplete
+                        data_type=8
+                        grain_size=sum(num_elements[0:c])
+                        num_mat=3
+                        if benchmark=='dmatdmatdmatadd':
+                            num_mat=4
+                        cost=c*mflop*num_mat/data_type
+                        grain_sizes.append(grain_size)
+                        results.append(d_hpx[node][benchmark][th][b][c]['mflops'][k])
+                        l2_cm.append(d_hpx[node][benchmark][th][b][c]['counters'][k]['avg']['papi_tcm'])
+                        l2_ch.append([d_hpx[node][benchmark][th][b][c]['counters'][k]['avg']['papi_tca'][l]-d_hpx[node][benchmark][th][b][c]['counters'][k]['avg']['papi_tcm'][l] for l in range(int(th))])
+                        l2_miss_rate.append([d_hpx[node][benchmark][th][b][c]['counters'][k]['avg']['papi_tcm'][j]/d_hpx[node][benchmark][th][b][c]['counters'][k]['avg']['papi_tca'][j] for j in range(int(th))])
+                        block_sizes.append(b)
+            t0=[l[0] for l in l2_miss_rate]
+            t1=[l[1] for l in l2_miss_rate]
+            t2=[l[2] for l in l2_miss_rate]
+            t3=[l[3] for l in l2_miss_rate]
+            plt.figure(i)
+            plt.axes([0, 0, 2, 1])
+            plt.scatter(grain_sizes, t0, label=str(th)+' threads  matrix_size:'+str(m)+' core 0')
+            plt.ylabel('l2_cache_misse rate')
+            plt.xlabel('Grain size')
+            plt.xscale('log')
+            plt.title(benchmark)
+            plt.grid(True, 'both')
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.figure(i+1)
+
+            plt.plot(chunk_sizes, t1, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2)+' block size '+str(b_r)+'-'+str(b_c)+' core 1')
+            plt.ylabel('l2_cache_misse rate')
+            plt.xscale('log')
+            plt.title(benchmark)
+            plt.grid(True, 'both')
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.figure(i+2)
+
+            plt.plot(chunk_sizes, t2, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2)+' block size '+str(b_r)+'-'+str(b_c)+' core 2')
+            plt.ylabel('l2_cache_misse rate')
+            plt.xscale('log')
+            plt.title(benchmark)
+            plt.grid(True, 'both')
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.figure(i+3)
+
+            plt.plot(chunk_sizes, t3, label=str(th)+' threads  matrix_size:'+str(m)+'  block_size:'+str(b)+'  num_blocks:'+str(equalshare1*equalshare2)+' block size '+str(b_r)+'-'+str(b_c)+' core 3')
+            plt.ylabel('l2_cache_misse rate')
+            plt.xscale('log')
+            plt.title(benchmark)
+            plt.grid(True, 'both')
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+            print('')     
+            plt.savefig(pp, format='pdf',bbox_inches='tight')
+            i=i+1
+
 
 (d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat_counters_onebyone(papi_directory)                 
 perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/matrix/08-07-2019/performance_counters'
@@ -1119,7 +1228,7 @@ import math
 import csv
 f=open('/home/shahrzad/repos/Blazemark/data/data_perf_all.csv','w')
 f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-f_writer.writerow(['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','num_elements_uncomplete','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops'])
+f_writer.writerow(['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops'])
 node_type=0
 for node in d_hpx.keys():
     if node=='marvin':
@@ -1152,11 +1261,12 @@ for node in d_hpx.keys():
                     for m in mat_sizes[benchmark]:
                         k=d_hpx[node][benchmark][th][b][c]['size'].index(m)
                         if 'mflops' in d_hpx[node][benchmark][th][b][c].keys() and d_hpx[node][benchmark][th][b][c]['mflops'][k]:
-                            if not(benchmark=='dmatdmatadd' and (b=='64-64' or b=='8-1024')):                                
+                            if not(benchmark=='dmatdmatadd' and (b=='64-64' or b=='8-1024' or b=='4-64')):  
+                                r=d_hpx[node][benchmark][th][b][c]['mflops'][k]
+
                                 b_r=int(b.split('-')[0])
                                 b_c=int(b.split('-')[1])
-                                rest1=b_r%simdsize
-                                rest2=b_c%simdsize
+
                                 if b_r>m:
                                     b_r=m
                                 if b_c>m:
@@ -1167,11 +1277,7 @@ for node in d_hpx.keys():
                                 equalshare1=math.ceil(m/b_r)
                                 equalshare2=math.ceil(m/b_c)  
                                 num_blocks=equalshare1*equalshare2
-    
-                                num_elements_uncomplete=0
-                                if b_c<m:
-                                    num_elements_uncomplete=(m%b_c)*b_r
-                                    
+                                                                        
                                 if th==1:
                                     ratio=0
                                 else:
@@ -1185,30 +1291,38 @@ for node in d_hpx.keys():
                                     mflop=b_r*b_c*(2*m)
                                     
                                 num_elements=[mflop]*num_blocks
-                                if num_elements_uncomplete:
+
+                                if m%b_c!=0:
                                     for j in range(1,equalshare1+1):
-                                        num_elements[j*equalshare2-1]=num_elements_uncomplete
+                                        num_elements[j*equalshare2-1]=(m%b_c)*b_r
+                                if m%b_r!=0:
+                                    for j in range(1,equalshare2+1):
+                                        num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c
+                                if m%b_c!=0 and m%b_r!=0:
+                                    num_elements[-1]=(m%b_r)*(m%b_c)
                                 data_type=8
                                 grain_size=sum(num_elements[0:c])
                                 num_mat=3
                                 if benchmark=='dmatdmatdmatadd':
                                     num_mat=4
                                 cost=c*mflop*num_mat/data_type
-                                r=d_hpx[node][benchmark][th][b][c]['mflops'][k]
                                 aligned_m=m
                                 if m%simdsize!=0:
                                     aligned_m=m+simdsize-m%simdsize
                                 if benchmark=='dmatdmatadd':                            
-                                    mflop=(aligned_m)**2                           
+                                    mflop=(aligned_m)*m                          
                                 elif benchmark=='dmatdmatdmatadd':
-                                    mflop=2*(aligned_m)**2
+                                    mflop=2*(aligned_m)*m
                                 else:
                                     mflop=2*(aligned_m)**3        
-                    
                                 exec_time=mflop/r
                                 num_tasks=np.ceil(num_blocks/c)
+                                task_sizes=[0.]*int(num_tasks)
+                                for i in range(int(num_tasks)):
+                                    task_sizes[i]=sum(num_elements[i*c:(i+1)*c])
+                                work_per_core=sum([task_sizes[i] for i in range(int(num_tasks)) if i%th==0])
                                 f_writer.writerow(['hpx',node,benchmark,str(m),str(th),b.split('-')[0], 
-                                                   b.split('-')[1], str(b_r * b_c), str(num_elements_uncomplete),str(c),
+                                                   b.split('-')[1], str(b_r * b_c), str(work_per_core),str(c),
                                                    str(grain_size),str(num_blocks), str(num_blocks/c),
                                                    str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),str(exec_time),str(num_tasks),r])
         benchmark_type+=1
@@ -1256,11 +1370,11 @@ for node in d_openmp.keys():
                     for m in mat_sizes[benchmark]:
                         k=d_openmp[node][benchmark][th][b][c]['size'].index(m)
                         if 'mflops' in d_openmp[node][benchmark][th][b][c].keys() and d_openmp[node][benchmark][th][b][c]['mflops'][k]:
-                            if not(benchmark=='dmatdmatadd' and (b=='64-64' or b=='8-1024')):                                
+                            if not(benchmark=='dmatdmatadd' and (b=='64-64' or b=='8-1024' or b=='4-64')):  
+                                r=d_openmp[node][benchmark][th][b][c]['mflops'][k]
+
                                 b_r=int(b.split('-')[0])
                                 b_c=int(b.split('-')[1])
-                                rest1=b_r%simdsize
-                                rest2=b_c%simdsize
                                 if b_r>m:
                                     b_r=m
                                 if b_c>m:
@@ -1271,10 +1385,7 @@ for node in d_openmp.keys():
                                 equalshare1=math.ceil(m/b_r)
                                 equalshare2=math.ceil(m/b_c)  
                                 num_blocks=equalshare1*equalshare2
-    
-                                num_elements_uncomplete=0
-                                if b_c<m:
-                                    num_elements_uncomplete=(m%b_c)*b_r
+
                                     
                                 if th==1:
                                     ratio=0
@@ -1289,30 +1400,39 @@ for node in d_openmp.keys():
                                     mflop=b_r*b_c*(2*m)
                                     
                                 num_elements=[mflop]*num_blocks
-                                if num_elements_uncomplete:
+                                if m%b_c!=0:
                                     for j in range(1,equalshare1+1):
-                                        num_elements[j*equalshare2-1]=num_elements_uncomplete
+                                        num_elements[j*equalshare2-1]=(m%b_c)*b_r
+                                if m%b_r!=0:
+                                    for j in range(1,equalshare2+1):
+                                        num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c
+                                if m%b_c!=0 and m%b_r!=0:
+                                    num_elements[-1]=(m%b_r)*(m%b_c)
+                                    
                                 data_type=8
                                 grain_size=sum(num_elements[0:c])
+                                
                                 num_mat=3
                                 if benchmark=='dmatdmatdmatadd':
                                     num_mat=4
                                 cost=c*mflop*num_mat/data_type
-                                r=d_openmp[node][benchmark][th][b][c]['mflops'][k]
                                 aligned_m=m
                                 if m%simdsize!=0:
                                     aligned_m=m+simdsize-m%simdsize
                                 if benchmark=='dmatdmatadd':                            
-                                    mflop=(aligned_m)**2                           
+                                    mflop=(aligned_m)*m                           
                                 elif benchmark=='dmatdmatdmatadd':
-                                    mflop=2*(aligned_m)**2
+                                    mflop=2*(aligned_m)*m
                                 else:
-                                    mflop=2*(aligned_m)**3        
-                    
+                                    mflop=2*(aligned_m)**3                
                                 exec_time=mflop/r
                                 num_tasks=np.ceil(num_blocks/c)
+                                task_sizes=[0.]*int(num_tasks)
+                                for i in range(int(num_tasks)):
+                                    task_sizes[i]=sum(num_elements[i*c:(i+1)*c])
+                                work_per_core=sum([task_sizes[i] for i in range(int(num_tasks)) if i%th==0])
                                 f_writer.writerow(['openmp',node,benchmark,str(m),str(th),b.split('-')[0], 
-                                                   b.split('-')[1], str(b_r * b_c), str(num_elements_uncomplete),str(c),
+                                                   b.split('-')[1], str(b_r * b_c), str(work_per_core),str(c),
                                                    str(grain_size),str(num_blocks), str(num_blocks/c),
                                                    str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),str(exec_time),str(num_tasks),r])
         benchmark_type+=1
