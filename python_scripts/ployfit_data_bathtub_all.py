@@ -11,8 +11,10 @@ from scipy.optimize import curve_fit
 from collections import Counter
 from scipy.optimize import nnls
 
+filename_ws='/home/shahrzad/repos/Blazemark/data/data_perf_all_ws.csv'
 filename='/home/shahrzad/repos/Blazemark/data/data_perf_all.csv'
-perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/bathtub'
+
+perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/bathtub3d'
 benchmarks=['dmatdmatadd']
 plot=True
 error=False
@@ -66,11 +68,32 @@ def remove_duplicates(array):
         array[:,3]=p
     return array
 
+def grain_dict(array,avg=False):
+    g_dict={}
+    
+    g=array[:,-2]
+    p=array[:,-1]
+    t=array[:,1]
+    nt=array[:,0]
+    
+    for i in range(len(g)):
+        if g[i] not in g_dict.keys():
+            g_dict[g[i]]={}
+        if t[i] not in g_dict[g[i]].keys():
+            g_dict[g[i]][t[i]]=[[],[]]
+        g_dict[g[i]][t[i]][0].append(p[i])
+        g_dict[g[i]][t[i]][1].append(nt[i])
 
+    if avg:
+        for gd in g_dict.keys():
+            for td in g_dict[gd].keys():
+                g_dict[gd][td][0]=sum(g_dict[gd][td][0])/len(g_dict[gd][td][0])
+                g_dict[gd][td][1]=np.ceil(sum(g_dict[gd][td][1])/len(g_dict[gd][td][1]))
+    return g_dict
 
 def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,perf_directory='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/polynomial'
 ,plot_type='perf_curves',collect_3d_data=False,build_model=False):
-    titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
+    titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops']
 
     ranges={}
     deg=2
@@ -88,6 +111,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
     m_data={}
     threads={}
     all_data={}
+    seq_m={}
     for node in nodes:
         node_selected=dataframe['node']==node
         df_n_selected=dataframe[node_selected]
@@ -100,6 +124,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             benchmarks=df_n_selected['benchmark'].drop_duplicates().values
         benchmarks.sort()
         threads[node]={}
+        seq_m[node]={}
         for benchmark in benchmarks:             
             modeled_params[node][benchmark]={}
             g_params[node][benchmark]={}
@@ -122,33 +147,32 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
             m_data[node][benchmark]['params']={}
             m_data[node][benchmark]['params_bfit']={}
             m_data[node][benchmark]['params_final_fit']={}
-            if save:
-                perf_filename=perf_directory+'/'+node+'_'+benchmark+'_'+plot_type+'.pdf'
-            else:
-                perf_filename=perf_directory+'/'+node+'_'+benchmark+'.pdf'
-            pp=''
-            if plot and save:
-                pp = PdfPages(perf_filename)
+           
             popts=[]
+            seq_m[node][benchmark]={}
             q=1
             for m in matrix_sizes:
                 simdsize=4.
+
+                if node=='medusa':
+                    simdsize=8.
+
                 aligned_m=m
                 if m%simdsize!=0:
                     aligned_m=m+simdsize-m%simdsize
 #                    benchmark='dmatdmatadd'
                 if benchmark=='dmatdmatadd':                            
-                    mflop=(aligned_m)**2                           
+                    mflop=(aligned_m)*m                           
                 elif benchmark=='dmatdmatdmatadd':
-                    mflop=2*(aligned_m)**2
+                    mflop=2*(aligned_m)*m
                 else:
                     mflop=2*(aligned_m)**3        
                 
                 m_selected=df_nb_selected['matrix_size']==m
-#                block_selected_r=df_nb_selected['block_size_row']!=4
+#                block_selected_r=df_nb_selected['block_size_row']==4
 #                block_selected_c=df_nb_selected['block_size_col']!=64
-#                df_nb_selected=df_nb_selected[ block_selected_r | block_selected_c]
-                features=['num_tasks','num_threads','work_per_core','chunk_size','num_blocks','grain_size','execution_time']
+#                df_nb_selected=df_nb_selected[ block_selected_r]# | block_selected_c]
+                features=['num_tasks','num_threads','work_per_core','chunk_size','num_blocks','w1','w2','w3','w4','w5','w6','w7','w8','grain_size','execution_time']
 #                features=['num_tasks','num_threads','execution_time']
 
 #                    features=['grain_size','mflops']
@@ -165,7 +189,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 a_s=np.argsort(array[:,0])
                 
                 array=array[a_s]
-
+                g_params[node][benchmark]=grain_dict(array,1)
 #                array=remove_duplicates(array)
                     
                 data_size=np.shape(array)[0]
@@ -186,169 +210,375 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                 test_items=[item for item in np.arange((data_size)) if item not in per]
                 test_set=array[test_items,:-1]  
                 test_labels=array[test_items,-1] 
-                def my_func_3d_1(data,ts,alpha,q,gamma):
-                    N=data[:,1]
-                    n_t=data[:,0]
-                    n_b=data[:,3]
-                    c=data[:,2]
-                    M=np.minimum(n_t,N) 
-#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
-#                    return alpha*d/M+ts*(1-q)+ts*q/M
-                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)
-                def my_func_3d_2(data,ts,alpha,q,gamma,w):
-                    N=data[:,1]
-                    n_t=data[:,0]
-                    n_b=data[:,3]
-                    c=data[:,2]
-                    M=np.minimum(n_t,N) 
-#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
-#                    return alpha*d/M+ts*(1-q)+ts*q/M
-                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(n_b%c)/c
-
-                def my_func_3d_3(data,ts,alpha):
-                    N=data[:,1]
-                    n_t=data[:,0]
-                    n_b=data[:,4]
-                    w_c=data[:,2]
-                    c=data[:,3]
-                    g=data[:,5]
-                    M=np.minimum(n_t,N) 
-                    L=np.ceil(n_t/(N))
-#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
-#                    return alpha*d/M+ts*(1-q)+ts*q/M
-#                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c/(n_b%c+0.01))*g
-                    return alpha*L+ts*(w_c)/mflop
-
-
-                def my_func_3d_4(data,ts,alpha,gamma,kappa,q):                    
-                    N=data[:,1]
-                    n_t=data[:,0]
-                    n_b=data[:,4]
-                    w_c=data[:,2]
-                    c=data[:,3]
-                    g=data[:,5]
-                    M=np.minimum(n_t,N) 
-                    L=np.ceil(n_t/(N))
-#                    ts=476.
-#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
-#                    return alpha*d/M+ts*(1-q)+ts*q/M
-#                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c/(n_b%c+0.01))*g
-                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q#+q*n_t/N**2
                 
-                def my_func_3d_4(data,alpha,q):
-                    gamma=0.02464182
-                    kappa=0.
-                    ts=476.6765787752942
-                    N=data[:,1]
-                    n_t=data[:,0]
-                    n_b=data[:,4]
-                    w_c=data[:,2]
-                    c=data[:,3]
-                    g=data[:,5]
-                    M=np.minimum(n_t,N) 
-                    L=np.ceil(n_t/(N))
-#                    ts=476.
-#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
-#                    return alpha*d/M+ts*(1-q)+ts*q/M
-#                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c/(n_b%c+0.01))*g
-                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/(mflop)+q#+q*n_t/N**2
-                i=1
-                popt1, pcov=curve_fit(my_func_3d_1,train_set,train_labels,method='lm')
-                popt2, pcov=curve_fit(my_func_3d_2,train_set,train_labels,method='lm')
-
-                popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='lm')
-                popt4, pcov=curve_fit(my_func_3d_4,train_set,train_labels,method='lm')
-
-                #based on number of tasks
-                for th in thr:                                
-                    new_array=test_set[test_set[:,1]==th]
-                    z1=my_func_3d_1(new_array,*popt1)
-                    z2=my_func_3d_2(new_array,*popt2)
-                    z3=my_func_3d_3(new_array,*popt3)
-                    z4=my_func_3d_4(new_array,*popt4)
-
-                    plt.figure(i)
-                    plt.axes([0, 0, 2, 1])
-                    plt.scatter(new_array[:,0],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
-#                    plt.scatter(new_array[:,0],z1,label='pred1',marker='.')
-#                    plt.scatter(new_array[:,0],z2,label='pred2',marker='.')
-#       cd ~             plt.scatter(new_array[:,0],z3,label='pred3',marker='.')
-                    plt.scatter(new_array[:,0],z4,label='pred4',marker='.')
-
-                    plt.xscale('log')
-                    plt.xlabel('Number of tasks')
-                    plt.ylabel('Execution time')
-                    plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
-                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    i=i+1
-                    
-                    
-                for th in thr:                                
-                    new_array=test_set[test_set[:,1]==th]
-                    z1=my_func_3d_1(new_array,*popt1)
-                    z2=my_func_3d_2(new_array,*popt2)
-                    z3=my_func_3d_3(new_array,*popt3)
-                    z4=my_func_3d_4(new_array,*popt4)
-
-                    plt.figure(i)
-                    plt.axes([0, 0, 2, 1])
-                    plt.scatter(new_array[:,-1],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
-#                    plt.scatter(new_array[:,-1],z1,label='pred1',marker='.')
-#                    plt.scatter(new_array[:,-1],z2,label='pred2',marker='.')
-                    plt.scatter(new_array[:,-1],z4,label='pred4',marker='.')
-
-                    plt.xscale('log')
-                    plt.xlabel('Grain size')
-                    plt.ylabel('Execution time')
-                    plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
-                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    i=i+1
+                
                 seq=[0.]*(len(thr)+1)
                 
                 for th in range(1,9):   
                     seq[int(th)-1]=np.mean(train_labels[np.logical_and(train_set[:,1]==th,train_set[:,0]==1)])
-                    
-                def uslfit(n, t):           
-                    Q = np.zeros((t.size, 2))
-                    Q[:,0]=(n-1)
-                    Q[:,1]=n*(n-1)
-                    m,_ = nnls(Q, (t/ts)-1)
-                    return m            
-                
-                def uslvalue(x, m):           
-                    y=ts*(1+m[0]*(x-1)+m[1]*x*(x-1))
-                    return y
                 
                 ts=seq[0]
-                M=np.arange(2,9)
-                seq=np.asarray(seq[1:])
-                model=uslfit(M,seq)
-                uslvalue(M,model)
-                seq
-                
-            for th in range(1,9):          
-                new_array=test_set[test_set[:,1]==th]
-                z1=mflop/my_func_3d_1(new_array,*popt1)
-                z2=mflop/my_func_3d_2(new_array,*popt2)
-                z3=mflop/my_func_3d_3(new_array,*popt3)
-                z4=mflop/my_func_3d_4(new_array,*popt4)
+#                seq_m[node][benchmark][m]=ts
 
-                plt.figure(i)
-                plt.axes([0, 0, 2, 1])
-                plt.scatter(new_array[:,-1],mflop/test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
+                M=np.arange(1,9)
+                seq=np.asarray(seq)
                 
-#                    plt.scatter(new_array[:,-1],z1,label='pred1',marker='.')
-#                    plt.scatter(new_array[:,-1],z2,label='pred2',marker='.')
-                plt.scatter(new_array[:,-1],z3,label='pred3',marker='.',color='red')
-                plt.scatter(new_array[:,-1],z4,label='pred4',marker='.',color='orange')
-                plt.grid(True,'both')
-                plt.xscale('log')
-                plt.xlabel('Grain size')
-                plt.ylabel('MFlops')
-                plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
-                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                i=i+1
+#                plt.scatter(np.arange(2,9),[seq[0]/seq[i] for i in range(1,len(seq))])
+                
+#                gd=[1024,2048,3792,4096,4816,5536,6560,7584,8304,6932,9328,10352,11072,13120,13840,15168,16608,18656]
+                results=[[],[],[],[],[]]
+                for gd in g_params[node][benchmark].keys():
+                    M=np.arange(1,9)
 
+                    if len(g_params[node][benchmark][gd].keys())==8:                        
+                        seq=np.asarray([g_params[node][benchmark][gd][th][0] for th in M])
+#                        for i in range(1,9):
+#                            if g_params[node][benchmark][gd][i][1]<i:
+#                                M[i-1]=g_params[node][benchmark][gd][i][1]
+                                
+                        model=uslfit(M,seq)
+                        results[0].append(gd)
+                        results[1].append(model[0])
+                        results[2].append(model[1][0])
+                        results[3].append(model[1][1])
+                        results[4].append(M.tolist())
+                        
+                tm=g_params[node][benchmark][mflop][1][0] 
+                def my_func_3d_6(data,alpha):   
+                    tm=g_params[node][benchmark][mflop][1][0]
+                    kappa=0.
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,4]
+                    w_c=data[:,2]
+                    c=data[:,3]
+                    g=data[:,5]
+                    M=np.minimum(n_t,N) 
+                    L=np.ceil(n_t/(N))
+                    return (tm-alpha)*(w_c/mflop)+alpha*L
+#                popt6, pcov=curve_fit(my_func_3d_6,train_set,train_labels,method='lm')
+#                j=1
+#                for gd in g_params[node][benchmark].keys():
+#                    plt.figure(j)
+#                    for i in g_params[node][benchmark][gd]:
+#                        plt.scatter(i,mflop/g_params[node][benchmark][gd][i][0])
+#                        plt.xlabel('threads')
+#                        plt.ylabel('Mflops')
+#                        plt.title('grain size:'+str(int(gd)))
+#                    j=j+1
+#                plt.scatter(results[0],results[1],label='ts')
+#                plt.grid(True,'both')
+#                plt.xscale('log')
+#                plt.xlabel('Grain size')
+#                plt.ylabel('ts')
+#                
+#                plt.scatter(results[0],results[2],label='m[0]')
+#                plt.grid(True,'both')
+#
+#                plt.xscale('log')
+#                plt.xlabel('Grain size')
+#                plt.ylabel('Contention')
+##                plt.scatter(results[0],[np.exp((x-mflop)/mflop) for x in results[0]],label='exp-m[0]')
+##                plt.xscale('log')
+#
+#                plt.scatter(results[0],results[3],label='m[0]')
+#                plt.grid(True,'both')
+#                plt.xlabel('Grain size')
+#                plt.ylabel('Crosstalk')
+#                plt.xscale('log')
+#
+#
+#                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#
+#                gd=1024.
+#                seq2=np.asarray([g_params[node][benchmark][gd][th] for th in range(1,9)])
+#                model2=uslfit(M,seq2)
+
+                def uslfit(n, t):  
+                    ts=t[0]
+                    Q = np.zeros((t.size, 2))
+                    Q[:,0]=(n-1)/n
+                    Q[:,1]=(n-1)
+#                    m,_ = nnls(Q, (t/ts)-1)
+                    m,_ = nnls(Q, (t/ts)-1/n)
+
+#                    m,_,_,_= np.linalg.lstsq(Q, (t/ts)-1/n)
+                    return (ts,m)            
+                
+                def uslvalue(x, m): 
+                    ts=m[0]
+                    model=m[1]
+                    y=ts*(1+model[0]*(x-1)+model[1]*x*(x-1))/x
+                    return y
+                
+#                model=uslfit(M,seq)
+#                uslvalue(M,model)
+#                plt.scatter(matrix_sizes, seq_m,label='dmatdmatadd')
+#                plt.plot(matrix_sizes,y(matrix_sizes))
+##                plt.plot(matrix_sizes, seq_m_3,label='dmatdmatdmatadd')
+##                plt.plot(matrix_sizes, [3/2*s for s in seq_m],label='3/2dmatdmatadd')
+#
+#                plt.title('Sequential execution time')
+#                plt.xlabel('Matrix sizes')
+#                plt.ylabel('Execution time')
+#                plt.grid(True,'both')
+#                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#                
+#                def m2fit(x,y):
+#                    Q = np.zeros((x.size, 2))
+#                    Q[:,0]=1
+#                    Q[:,1]=x**2
+#                    m,_,_,_= np.linalg.lstsq(Q, y)
+#                    return m 
+#                def m2val(x,m):
+#                    return m[1]*x**2+m[0]
+#                matrix_sizes=np.asarray(matrix_sizes)
+#                model=m2fit(np.asarray(matrix_sizes),np.asarray(seq_m))
+#                y=m2val(np.asarray(matrix_sizes),model)
+#                plt.plot(matrix_sizes,y)
+#                plt.scatter(matrix_sizes, seq_m,label='dmatdmatadd')
+#                
+#                l1=4*1024
+#                l2=32*1024
+#                l3=20*(2**10)/8
+#                def matrix_func(x,a,b):
+#                    point=853.33
+#                    return a*x*x+b#+c*(x-point)*np.heaviside(x-point,1)#+d*(x-point)*np.heaviside(x-point,1)
+#                popt_m, pcov=curve_fit(matrix_func,np.asarray(matrix_sizes),np.asarray(seq_m[node][benchmark][m]),method='lm')
+#                
+#                plt.scatter(matrix_sizes,matrix_func(matrix_sizes,*popt_m))
+#                plt.scatter(matrix_sizes, [seq_m[node][benchmark][m] for m in matrix_sizes],label='dmatdmatadd')
+
+                
+#                    return alpha*L+ts*(w_c)/mflop
+                def my_func_3d_3_no_ws(data,alpha,gamma,q): 
+                    ts=g_params[node][benchmark][mflop][1][0]
+                    kappa=0.
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,4]
+                    w_c=data[:,2]
+                    c=data[:,3]
+                    g=data[:,-1]
+                    M=np.minimum(n_t,N) 
+                    L=np.ceil(n_t/(N))
+                    w_all=data[:,5:13].copy()
+                    for j in range(np.shape(data)[0]):
+                        for i in range(int(N[j])):
+                            if n_t[j]<=N[j]:
+                                w_all[j,i]=abs(g[j]-w_all[j,i])
+                            else:
+                                w_all[j,i]=0
+                    ws=np.sum(w_all[:,],axis=1)/g
+#                    ts=476.
+#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
+#                    return alpha*d/M+ts*(1-q)+ts*q/M
+#                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c/(n_b%c+0.01))*g
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q+(d*(M))*np.heaviside(N-n_t,1)+h*n_t*np.heaviside(n_t-N,1)
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)+(d1/N)*((n_t-1)%N)*np.heaviside(n_t-N-1,1)
+                    return q+alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop#+h*n_t*np.heaviside(n_t-N,1)+p*np.heaviside(n_t-N,0)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+                    
+
+                def my_func_3d_3(data,alpha,gamma,d,h,q,ts): 
+#                    ts=g_params[node][benchmark][mflop][1][0]
+                    kappa=0.
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,4]
+                    w_c=data[:,2]
+                    c=data[:,3]
+                    g=data[:,-1]
+                    M=np.minimum(n_t,N) 
+                    L=np.ceil(n_t/(N))
+                    w_all=data[:,5:13].copy()
+                    for j in range(np.shape(data)[0]):
+                        for i in range(int(N[j])):
+                            if n_t[j]<=N[j]:
+                                w_all[j,i]=abs(g[j]-w_all[j,i])
+                            else:
+                                w_all[j,i]=0
+                    ws=np.sum(w_all[:,],axis=1)/g
+#                    ts=476.
+#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
+#                    return alpha*d/M+ts*(1-q)+ts*q/M
+#                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c/(n_b%c+0.01))*g
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q+(d*(M))*np.heaviside(N-n_t,1)+h*n_t*np.heaviside(n_t-N,1)
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)+(d1/N)*((n_t-1)%N)*np.heaviside(n_t-N-1,1)
+                    return q*N+alpha*L+(ts+ts*(gamma)*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+                    
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+h*n_t*np.heaviside(n_t-N,1)+d*(1-ws)/N#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+
+                
+    
+                i=1
+                #alpha,gamma,d,h,q,ts
+#                popt1, pcov=curve_fit(my_func_3d_1,train_set,train_labels,method='lm')
+#                popt2, pcov=curve_fit(my_func_3d_2,train_set,train_labels,method='lm')
+                param_bounds=([0,0,0,0,-np.inf,0],[np.inf,1,np.inf,np.inf,np.inf,np.inf])
+                popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='trf',bounds=param_bounds)
+#                popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='lm')
+
+#                popt3, pcov=curve_fit(my_func_3d_3_no_ws,train_set,train_labels,method='lm')
+                popts.append(popt3)
+#                popt4, pcov=curve_fit(my_func_3d_4,train_set,train_labels,method='lm')
+
+                ts=g_params[node][benchmark][mflop][1][0]
+#                popt5, pcov=curve_fit(my_func_3d_5,train_set,train_labels/ts,method='lm')
+
+
+#                #based on number of tasks
+#                for th in thr:                                
+#                    new_array=test_set[test_set[:,1]==th]
+##                    z1=my_func_3d_1(new_array,*popt1)
+##                    z2=my_func_3d_2(new_array,*popt2)
+##                    z3=my_func_3d_3(new_array,*popt3)
+#                    z3=my_func_3d_3_no_ws(new_array,*popt3)
+#
+##                    z4=my_func_3d_4(new_array,*popt4)
+##                    z5=my_func_3d_5(new_array,*popt5)
+#
+#                    plt.figure(i)
+#                    plt.axes([0, 0, 2, 1])
+#                    plt.scatter(new_array[:,0],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
+##                    plt.scatter(new_array[:,0],z1,label='pred1',marker='.')
+###                    plt.scatter(new_array[:,0],z2,label='pred2',marker='.')
+#                    plt.scatter(new_array[:,0],z3,label='pred3',marker='.',color='red')
+###                    plt.scatter(new_array[:,0],z4,label='pred4',marker='.')
+##                    plt.scatter(new_array[:,0],ts*z5,label='pred5',marker='.',color='green')
+#
+#                    plt.xscale('log')
+#                    plt.xlabel('Number of tasks')
+#                    plt.ylabel('Execution time')
+#                    plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+#                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+##                    i=i+1
+#                    
+                    
+#                for th in thr:                                
+#                    new_array=test_set[test_set[:,1]==th]
+#                    z1=my_func_3d_1(new_array,*popt1)
+#                    z2=my_func_3d_2(new_array,*popt2)
+#                    z3=my_func_3d_3(new_array,*popt3)
+#                    z4=my_func_3d_4(new_array,*popt4)
+#
+#                    plt.figure(i)
+#                    plt.axes([0, 0, 2, 1])
+#                    plt.scatter(new_array[:,-1],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
+##                    plt.scatter(new_array[:,-1],z1,label='pred1',marker='.')
+#                    plt.scatter(new_array[:,-1],z3,label='pred2',marker='.',color='red')
+##                    plt.scatter(new_array[:,-1],z4,label='pred4',marker='.')
+#
+#                    plt.xscale('log')
+#                    plt.xlabel('Grain size')
+#                    plt.ylabel('Execution time')
+#                    plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+#                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#                    i=i+1
+#                    plt.savefig(pp,format='pdf',bbox_inches='tight')
+#                plt.show()
+#                pp.close()
+#
+#                
+#                def softplus(x,a,b):
+#                    return np.log(1+np.exp(-np.abs(a*(x-b))))+np.maximum(a*(x-b),0)
+##                    return np.log(1+np.exp(a*(x-b)))
+#                ms=np.asarray(matrix_sizes)
+#                plt.plot(ms,softplus(ms,p[0],948))
+#                
+##                
+#                def uslfit(n, t):           
+#                    Q = np.zeros((t.size, 2))
+#                    Q[:,0]=(n-1)
+#                    Q[:,1]=n*(n-1)
+#                    m,_ = nnls(Q, (t/ts)-1)
+#                    return m            
+#                
+#                def uslvalue(x, m):           
+#                    y=ts*(1+m[0]*(x-1)+m[1]*x*(x-1))
+#                    return y
+#                
+                version=5
+#                pp = PdfPages(perf_directory+'/'+str(version)+'/'+runtime+'_'+node+'_'+benchmark+'_'+str(int(m))+'_bathtub3d_mflops.pdf')
+
+                for th in range(1,9):          
+                    new_array=test_set[test_set[:,1]==th]
+#                    z1=mflop/my_func_3d_1(new_array,*popt1)
+#                    z2=mflop/my_func_3d_2(new_array,*popt2)
+                    z3=mflop/my_func_3d_3(new_array,*popt3)
+#                    z6=mflop/my_func_3d_3(new_array,*popt_i)
+
+#                    z6=mflop/my_func_3d_6(new_array,*popt6)
+
+##                    z5=mflop/my_func_3d_3(new_array,*[2*ts,alpha,gamma,q,d,h,d1])
+#                    z4=mflop/my_func_3d_4(new_array,*popt4)
+#                    z5=mflop/(ts*my_func_3d_5(new_array,*popt5))
+
+                    plt.figure(i)
+                    plt.axes([0, 0, 2, 1])
+                    plt.scatter(new_array[:,-1],mflop/test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
+                    
+    #                    plt.scatter(new_array[:,-1],z1,label='pred1',marker='.')
+    #                    plt.scatter(new_array[:,-1],z2,label='pred2',marker='.')
+                    plt.scatter(new_array[:,-1],z3,label='pred3',marker='.',color='red')
+#                    plt.scatter(new_array[:,-1],z6,label='pred6',marker='.',color='gray')
+
+#                    plt.scatter(new_array[:,-1],z5,label='pred5',marker='.',color='red')
+#                    plt.scatter(new_array[:,-1],z3,label='pred from dmatdmatadd',marker='.',color='green')
+                    plt.axvline(mflop/th,color='green',linestyle='dotted')    
+
+    #                plt.scatter(new_array[:,-1],z4,label='pred4',marker='.',color='orange')
+                    plt.grid(True,'both')
+                    plt.xscale('log')
+                    plt.xlabel('Grain size')
+                    plt.ylabel('MFlops')
+                    plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                    i=i+1
+#                    plt.savefig(pp,format='pdf',bbox_inches='tight')
+                plt.show()
+                pp.close()
+
+            np.save(perf_directory+'/'+str(version)+'/'+runtime+'_'+node+'_'+benchmark+'_popts_'+str(version)+'.npy',popts)
+
+index=9
+popt_i=popts[0]
+m=912
+aligned_m=m
+if m%simdsize!=0:
+    aligned_m=m+simdsize-m%simdsize
+#                    benchmark='dmatdmatadd'
+if benchmark=='dmatdmatadd':                            
+    mflop=(aligned_m)*m                           
+elif benchmark=='dmatdmatdmatadd':
+    mflop=2*(aligned_m)*m
+else:
+    mflop=2*(aligned_m)**3  
+
+[alpha,gamma,q,d,h,ts]=popt_i
+ts=my_func_t_seq(m,*popt_seq)
+z6=mflop/my_func_3d_3(new_array,alpha,gamma,q,d,h,ts)
+
+
+plt.plot(matrix_sizes[:12],[ts*(m**2)/(690*692) for m in matrix_sizes[:12]])
+popts_k=np.load(perf_directory+'/'+str(version)+'/'+node+'/'+runtime+'_'+node+'_'+benchmark+'_popts_'+str(version)+'.npy') 
+labels=['alpha','gamma','d','h','q','ts']
+for j in range(len(labels)):
+    plt.figure(j)
+    plt.scatter(matrix_sizes[:],[popts[i][j] for i in range(len(matrix_sizes[:]))],label=labels[j])
+#    plt.plot(matrix_sizes[:12],[ts*(m**2)/(690*692) for m in matrix_sizes[:12]])
+
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)    
+
+plt.scatter(matrix_sizes[:],[popts[i][5]/popts[i][4] for i in range(len(matrix_sizes[:]))],label=labels[j])
+
+def my_func_t_seq(x,a,b,c):
+    return a*x**2+b*x+c
+popt_seq, pcov=curve_fit(my_func_t_seq,matrix_sizes[:12],[popts[i][j] for i in range(len(matrix_sizes[:12]))],method='lm')
+plt.scatter(matrix_sizes[:12],[popts[i][j] for i in range(len(matrix_sizes[:12]))],label=labels[j])
+plt.scatter(matrix_sizes[:12],my_func_t_seq(matrix_sizes[:12],*popt_seq),label=labels[j])
+
+
+############################################################################################
             fig = plt.figure(i)
             ax = fig.gca(projection='3d')
 
