@@ -1,4 +1,5 @@
 #!/bin/bash
+node="marvin"
 saved_path=$LD_LIBRARY_PATH
 #blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 blaze_dir="/home/sshirzad/src/blaze"
@@ -6,14 +7,14 @@ repo_dir="/home/sshirzad/repos/Blazemark"
 results_dir="$repo_dir/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${repo_dir}/configurations"
-#thr=(6 7 8)
+thr=(1 4 8 16)
 #thr=(16)
 #th=$1
 rm -rf ${results_dir}/*
 #benchmarks=('dmatdvecmult')
 #benchmarks=('dmatdmatmult')
-benchmarks=('dvecdvecadd' 'dmatdmatadd')
-#benchmarks=('dmatdmatadd')
+#benchmarks=('dvecdvecadd' 'dmatdmatadd')
+benchmarks=('dmatdmatadd')
 #benchmarks=('dvecdvecadd')
 r=openmp
 mkdir -p ${results_dir}/info
@@ -52,15 +53,16 @@ sed -i "${end_line}s/*/\//" $param_filename
 
 $repo_dir/scripts/generate_benchmarks.sh ${b} ${r} "${blaze_dir}/blazemark/"
 
-for th in $(seq 16)
+#for th in $(seq 1 9)
+for th in ${thr[@]}
 do
 #for i in $(seq 11)
 #do
 export OMP_NUM_THREADS=${th} 
 export OMP_PLACES=cores
 #export HPX_COMMANDLINE_OPTIONS="--hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead"
-#LD_PRELOAD=/home/sshirzad/src/hpxMP/build_release/libhpxmp.so ${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${b}-${th}-hpxmp.dat
-${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${b}-${th}-${r}.dat
+#LD_PRELOAD=/home/sshirzad/src/hpxMP/build_release/libhpxmp.so ${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${node}-${b}-${th}-hpxmp.dat
+${benchmarks_dir}/${b}_${r} -only-blaze>>${results_dir}/${node}-${b}-${th}-${r}.dat
 
 echo "finished for ${th} threads"
 #done

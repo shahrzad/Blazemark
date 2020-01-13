@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#blazemark_dir="/home/sshirzad/src/blaze_shahrzad/blazemark"
-blazemark_dir="/home/sshirzad/src/blaze/blazemark"
+blazemark_dir="/home/sshirzad/src/blaze_shahrzad/blazemark"
+#blazemark_dir="/home/sshirzad/src/blaze/blazemark"
 config_dir="/home/sshirzad/repos/Blazemark/configurations"
 
 if [ $# -eq 4 ]

@@ -5,7 +5,7 @@ echo "node not specified, marvin by default"
 node="marvin"
 else
 node=$1
-echo "Running on $node"
+echo "Running on ${node}"
 fi
 papi=1
 steps=0
@@ -14,17 +14,17 @@ saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/home/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 #hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
-hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_$node/lib"
+hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/lib"
 hpx_source_dir="/home/sshirzad/src/hpx"
-hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_$node/info/"
+hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
-thr=(1 4 8)
-chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1200 1380 1587 1800 2000 3000 4000 5000 6000 7000)
-block_sizes_row=(4 8)
-block_sizes_col=(64 128 256 512 1024)
+thr=(1 2 3 4 5 6 7 8)
+chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1200 1380 1587 1800 2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 30000 40000 50000 60000 70000 80000 90000 100000)
+block_sizes_row=(6)
+block_sizes_col=(128 256 512 1024)
 rm -rf ${results_dir}/*.dat
 benchmarks=('dmatdmatadd')
 r='hpx'
@@ -35,9 +35,9 @@ i=1
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
 	do
-	rm -rf ${results_dir}/info_$node_$benchmark
-	mkdir -p ${results_dir}/info_$node_$benchmark/hpx_info
-	cp -r $hpx_log_dir/* ${results_dir}/info_$node_$benchmark/hpx_info
+	rm -rf ${results_dir}/info_${node}_${b}
+	mkdir -p ${results_dir}/info_${node}_${b}/hpx_info
+	cp -r $hpx_log_dir/* ${results_dir}/info_${node}_${b}/hpx_info
 	#hpx_source_dir="/home/sshirzad/src/hpx"
 	#cd $hpx_source_dir
 	#BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -45,21 +45,21 @@ for b in ${benchmarks[@]}
 	#
 	#git --git-dir $hpx_source_dir/.git log>>${results_dir}/info/hpx_git.txt
 	
-	cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info_$node_$benchmark
-	date>> ${results_dir}/info_$node_$benchmark/date.txt
+	cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info_${node}_${b}
+	date>> ${results_dir}/info_${node}_${b}/date.txt
 	#cp ${hpx_log_file} ${results_dir}/info/
-	cp ${config_dir}/Configfile_hpx_$node ${results_dir}/info_$node_$benchmark/
-	cp ${blazemark_dir}/scripts/mat_hpx_chunks.sh ${results_dir}/info_$node_$benchmark/
-	cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_$node/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_$node_$benchmark/
-	git --git-dir $blaze_dir/.git log>>${results_dir}/info_$node_$benchmark/blaze_git.txt
+	cp ${config_dir}/Configfile_hpx_${node} ${results_dir}/info_${node}_${b}/
+	cp ${blazemark_dir}/scripts/mat_hpx_chunks.sh ${results_dir}/info_${node}_${b}/
+	cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/
+	git --git-dir $blaze_dir/.git log>>${results_dir}/info_${node}_${b}/blaze_git.txt
 	cd ${blaze_dir}
 	BRANCH=$(git rev-parse --abbrev-ref HEAD)
 	#if [[ "$BRANCH" != "master" ]]; then
 	#        git checkout master
 	#fi
 	#BRANCH=$(git rev-parse --abbrev-ref HEAD)
-	echo "$BRANCH branch">>${results_dir}/info_$node_$benchmark/blaze_git.txt
-	git --git-dir $blaze_dir/.git log>>${results_dir}/info_$node_$benchmark/blaze_git.txt
+	echo "$BRANCH branch">>${results_dir}/info_${node}_${b}/blaze_git.txt
+	git --git-dir $blaze_dir/.git log>>${results_dir}/info_${node}_${b}/blaze_git.txt
 
 	if [ $b == 'dvecdvecadd' ] || [ $b == 'daxpy' ]
 	then 
@@ -77,8 +77,13 @@ for b in ${benchmarks[@]}
 	elif [ $b == 'dmatdmatadd' ] || [ $b == 'dmattdmatadd' ] || [ $b == 'dmatdmatdmatadd' ]
         then
                 start_line=91
-                length=16
+                #length=16
+		#length=10
+		length=2
                 end_line=119
+		start_line=100
+		#start_line=117
+		
         else
 		echo "benchmark not specified"
 	fi
@@ -141,7 +146,7 @@ for b in ${benchmarks[@]}
 							#./change_hpx_parameters.sh reset HPX.h
 						        cd ${blazemark_dir}/scripts
 						        ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_CHUNK_SIZE "${c}"
-				                        ./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" $node
+				                        ./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" ${node}
 							chunk_size=$(sed -n '49 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
 							echo "chunk size:" ${chunk_size}	
 		
@@ -166,7 +171,7 @@ for b in ${benchmarks[@]}
 				c=$num_chunks
 			        cd ${blazemark_dir}/scripts
 		                ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_CHUNK_SIZE "${c}"
-                       		./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" $node
+                       		./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" ${node}
 				chunk_size=$(sed -n '49 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
 		                echo "chunk size:" ${chunk_size}	
 		                block_size_value_row=$(sed -n '53 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
