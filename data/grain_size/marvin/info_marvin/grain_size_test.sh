@@ -18,10 +18,13 @@ export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_L
 
 thr=(1 2 3 4 5 6 7 8)
 #thr=(1)
+#num_iterations=()
 num_iterations=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 30000 40000 50000 60000 70000 80000 90000 100000)
-iter_lengths=(100 200 300 400)
-# 500 600 700 800 900 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 30000 40000 50000 60000 70000 80000 90000 100000)
-chunk_size=1
+iter_lengths=(50)
+chunk_sizes=(1)
+# 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 30000 40000 50000 60000 70000 80000 90000 100000)
+#chunk_sizes=(1)
+#(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 30000 40000 50000 60000 70000 80000 90000 100000)
 
 mkdir -p ${results_dir}
 rm -rf ${results_dir}/*.dat
@@ -37,14 +40,21 @@ do
 	for il in ${iter_lengths[@]}
 		do
 	        echo " task length ${il}"
-		for th in ${thr[@]}
-			do
-			echo "${th} threads"
+		for c in ${chunk_sizes[@]}
+		do
+			if [ $c -le $ni ]
+			then
+	                        echo " chunk size ${c}"
+				for th in ${thr[@]}
+					do
+					echo "${th} threads"
 
-			export OMP_NUM_THREADS=1
+					export OMP_NUM_THREADS=1
 	
-			${hpx_bin_dir}/grain_size_test  -Ihpx.stacks.use_guard_pages=0 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --chunk_size=1 ${chunk_size} --repetitions=6>>${results_dir}/${node}_grain_size_${th}_${il}_${ni}.dat
-			echo "Run for ${ni} iterations, iter length of ${il}, on ${th} threads finished"
+					${hpx_bin_dir}/grain_size_test  -Ihpx.stacks.use_guard_pages=0 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --chunk_size=1 ${chunk_size} --repetitions=6>>${results_dir}/${node}_grain_size_${th}_${c}_${il}_${ni}.dat
+					echo "Run for ${ni} iterations, iter length of ${il}, chunk size ${c} on ${th} threads finished"			
+				done
+			fi
 		done		
 	done
 done
