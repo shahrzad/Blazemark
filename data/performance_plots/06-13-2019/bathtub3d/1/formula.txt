@@ -1,0 +1,12 @@
+def my_func_3d_3(data,alpha,gamma,d,h,q,p): 
+                    ts=g_params[node][benchmark][mflop][1][0]
+                    kappa=0.
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,4]
+                    w_c=data[:,2]
+                    c=data[:,3]
+                    g=data[:,-1]
+                    M=np.minimum(n_t,N) 
+                    L=np.ceil(n_t/(N))
+                    return q+alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)+p*np.heaviside(n_t-N,0)

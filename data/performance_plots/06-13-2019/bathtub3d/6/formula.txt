@@ -1,0 +1,18 @@
+ def my_func_3d_3(data,alpha,gamma,d,h,q,ts): 
+
+                    kappa=0.
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,4]
+                    w_c=data[:,2]
+                    c=data[:,3]
+                    g=data[:,-1]
+                    M=np.minimum(n_t,N) 
+                    L=np.ceil(n_t/(N))
+
+  return q*N*np.heaviside(n_t-N,1)+alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+                  
+
+param_bounds=([0,0,0,0,-np.inf,0],[np.inf,1,np.inf,np.inf,np.inf,np.inf])
+popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='trf',bounds=param_bounds)
+
