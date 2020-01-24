@@ -113,7 +113,7 @@ def create_dict(directories,to_csv=False):
             L=np.ceil(num_tasks/th)
             w_c=L*grain_size
             if th==1:
-                w_c=ps
+                w_c=problem_size
             if num_tasks%th==1 and num_iteration%chunk_size!=0:
                 w_c=(L-1)*grain_size+(num_iteration%chunk_size)*iter_length
             f_writer.writerow([node,problem_size,num_iteration,th,chunk_size,iter_length,grain_size,w_c,num_tasks,avg])
@@ -123,7 +123,9 @@ def create_dict(directories,to_csv=False):
 #    return (data, d, thr, iter_lengths, num_iterations)  
 
 marvin_dir='/home/shahrzad/repos/Blazemark/data/grain_size/marvin'
-create_dict([marvin_dir],1)
+medusa_dir='/home/shahrzad/repos/Blazemark/data/grain_size/medusa'
+results_dir='/home/shahrzad/repos/Blazemark/results/grain_size'
+create_dict([marvin_dir,medusa_dir,results_dir],1)
 
 
 def my_func_g(ndata,alpha,gamma,d,h,q): 
@@ -146,6 +148,16 @@ def my_func_g(ndata,alpha,q):
     ts=ndata[:,0]
     return q+alpha*L+(w_c)
 
+
+def my_func_g(ndata,alpha,gamma,d,h,q): 
+    kappa=0.
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    ts=ndata[:,0]
+    return alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*np.heaviside(n_t-N,1)+(d*(N-1)/N)*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
 
 
 titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
@@ -200,7 +212,7 @@ for node in nodes:
             new_array=train_set[train_set[:,2]==th]
 
             plt.figure(i)
-#            z=my_func_g(train_data[:,:-1],*popt)
+#            z=my_func_g(new_array,*popt)
 
             plt.scatter(new_array[:,5],train_labels[train_set[:,2]==th],marker='.',label='true')
             plt.xlabel('grain size')
@@ -221,7 +233,7 @@ for node in nodes:
             z=my_func_g(new_array,*popt)
 
             plt.scatter(new_array[:,5],test_labels[test_set[:,2]==th]/1e6,marker='.',label='true')
-            plt.scatter(new_array[:,5],z/1e6,marker='.',label='pred')
+            plt.scatter(new_array[:,5],z/ps,marker='.',label='pred')
 
             plt.xlabel('grain size')
             plt.ylabel('execution time')
@@ -313,7 +325,7 @@ for th in thr:
     
 ###################################################################################################
 # taking number of threads out
-def find_fit(ndata, labels, params=None,ncols=5):
+def find_fit(ndata, labels, params=None,ncols=4,step=0):
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
@@ -321,27 +333,36 @@ def find_fit(ndata, labels, params=None,ncols=5):
     w_c=ndata[:,-2]
     
 
-    if params is None:
+    if step==0:
         Q=np.zeros((np.shape(ndata)[0],ncols))
         Q[:,0]=L
-        Q[:,1]=(M-1)*w_c
-        Q[:,2]=(1)*((n_t-1))*np.heaviside(N-n_t,1)
-        Q[:,3]=n_t*np.heaviside(n_t-N,1)
-        Q[:,4]=N
-        print('None')
+        Q[:,1]=w_c*np.heaviside(N-1,0)
+        Q[:,2]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+        Q[:,3]=n_t
+#        Q[:,4]=1
+#        Q[:,5]=1
         m,_ = nnls(Q, labels-w_c)
         return m
     else:
-        Q=np.zeros((np.shape(ndata)[0],ncols-2))
-        Q[:,0]=(M-1)*w_c
-        Q[:,1]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
-        Q[:,2]=n_t*np.heaviside(n_t-N,1)
-        print('not None')
-        m,_ = nnls(Q, labels-w_c-N*params[-1]-L*params[0])
-        print(m)
-        print([params[0],m[0],m[1],m[2],params[-1]])
-        return np.asarray([params[0],m[0],m[1],m[2],params[-1]])
-    
+        if step==1:
+            Q=np.zeros((np.shape(ndata)[0],ncols-1))
+            Q[:,0]=w_c*np.heaviside(N-1,0)
+            Q[:,1]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+            Q[:,2]=n_t
+    #        Q[:,3]=N-1
+            m,_ = nnls(Q, labels-w_c-L*params[0])
+    #        return np.asarray([params[0],m[0],m[1],m[2],m[3],params[-1]])
+            return np.asarray([params[0],m[0],m[1],m[2]])
+        else:
+            Q=np.zeros((np.shape(ndata)[0],ncols-2))
+            Q[:,0]=w_c*np.heaviside(N-1,0)
+            Q[:,1]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+#            Q[:,2]=1
+    #        Q[:,3]=N-1
+            m,_ = nnls(Q, labels-w_c-L*params[0]-n_t*params[-1])
+    #        return np.asarray([params[0],m[0],m[1],m[2],m[3],params[-1]])
+            return np.asarray([params[0],m[0],m[1],params[-1]])
+
 def find_val(ndata, model):
     ncols=model.size
     Q=np.zeros((np.shape(ndata)[0],ncols))
@@ -351,12 +372,19 @@ def find_val(ndata, model):
     L=np.ceil(n_t/(N))
     w_c=ndata[:,-2]
     Q[:,0]=L
-    Q[:,1]=(M-1)*w_c
+    Q[:,1]=w_c*np.heaviside(N-1,0)
     Q[:,2]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
-    Q[:,3]=n_t*np.heaviside(n_t-N,1)
-    Q[:,4]=N
+    Q[:,3]=n_t
+#    Q[:,4]=1
+#    Q[:,5]=1
     return np.dot(Q,model)+w_c
 
+ps_selected=dataframe['problem_size']==ps
+df_n_selected=dataframe[node_selected][titles[1:]]
+df_nps_selected=df_n_selected[ps_selected]
+
+array=df_nps_selected.values
+array=array.astype(float)
 
 i=1
 th=1
@@ -418,8 +446,9 @@ for th in thr[1:]:
     train_labels=array_th[per[0:train_size],-1]  
     test_set=array_th[per[train_size:],:-1]  
     test_labels=array_th[per[train_size:],-1]  
+    model=find_fit(train_set,train_labels,params[int(th-2)],step=int(th)-1)        
 
-    model=find_fit(train_set,train_labels,params[0])        
+#    model=find_fit(train_set,train_labels,params[1],step=2)        
     params.append(model)
     
     new_array=train_set
@@ -442,7 +471,7 @@ for th in thr[1:]:
     plt.figure(i)
     z1=find_val(new_array,model)
     z2=my_func_g(new_array,*popt)
-    plt.scatter(new_array[:,5],ps/test_labels,marker='.',label='true')
+    plt.scatter(new_array[:,5],ps/train_labels,marker='.',label='true')
     plt.scatter(new_array[:,5],ps/z1,marker='.',label='pred')
 #    plt.scatter(new_array[:,5],z2/ps,marker='.',label='curve_fit')
 
@@ -457,7 +486,7 @@ for th in thr[1:]:
     
     
 labels=['alpha','gamma','d','h','q']
-for i in range(5):    
+for i in range(len(params[0])):    
     plt.figure(i+1)
     plt.scatter(thr,[p[i] for p in params],label=labels[i])    
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
@@ -465,12 +494,65 @@ for i in range(5):
 plt.scatter(thr,[p[0]+p[-2] for p in params],label=labels[i])    
 
 #############################################################
+
+
+
+def find_fit(ndata, labels, params=None,ncols=4,step=0):
+    ps=ndata[:,0]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    
+
+    if step==0:
+        Q=np.zeros((np.shape(ndata)[0],ncols))
+        Q[:,0]=L
+        Q[:,1]=w_c*np.heaviside(N-1,0)
+        Q[:,2]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+        Q[:,3]=n_t*np.heaviside(n_t-N,1)
+#        Q[:,4]=N-1
+#        Q[:,5]=1
+        m,_ = nnls(Q, labels-w_c)
+        return m
+
+def find_val(ndata, model):
+    ps=ndata[:,0]
+
+    ncols=model.size
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    Q[:,0]=L
+    Q[:,1]=w_c*np.heaviside(N-1,0)
+    Q[:,2]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+    Q[:,3]=n_t*np.heaviside(n_t-N,1)
+#    Q[:,4]=N-1
+#    Q[:,5]=1
+    return np.dot(Q,model)+w_c
+
+node_selected=dataframe['node']==node
+df_n_selected=dataframe[node_selected][titles[1:]]
+
+thr=df_n_selected['num_threads'].drop_duplicates().values
+thr.sort()
+
+array=df_n_selected.values
+array=array.astype(float)
+
 th=1
 array_th=array[array[:,2]==th]
-data_size=int(np.shape(array_th)[0])
-print(int(ps),data_size)
+a_s=np.argsort(array_th[:,5])
+array_th=array_th[a_s]
 
-train_size=int(np.ceil(data_size*0.6))
+data_size=int(np.shape(array_th)[0])
+print(data_size)
+
+train_size=data_size#int(np.ceil(data_size*0.6))
 tes_size=data_size-train_size
 
 per = np.random.permutation(data_size)
@@ -479,10 +561,428 @@ train_labels=array_th[per[0:train_size],-1]
 test_set=array_th[per[train_size:],:-1]  
 test_labels=array_th[per[train_size:],-1]  
 
-#remove outliers
-np.abs(train_labels-ps)/1e6
-indices=train_set[tra]
+model=find_fit(train_set,train_labels)   
 
-model=find_fit(train_set,train_labels)      
-model
+for ps in problem_sizes:
+    new_array=array_th[array_th[:,0]==ps][:,:-1]
+    plt.figure(i)
+    z1=find_val(new_array,model)
+#    z2=my_func_g(new_array,*popt)
+    plt.scatter(new_array[:,5],array_th[array_th[:,0]==ps][:,-1]/ps,marker='.',label='true')
+    plt.scatter(new_array[:,5],z1/ps,marker='.',label='pred')
+#    plt.scatter(new_array[:,5],z2/ps,marker='.',label='curve_fit')
 
+    plt.xlabel('grain size')
+    plt.ylabel('execution time')
+    plt.xscale('log')
+    plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
+    plt.axvline(ps/th,color='gray',linestyle='dotted')  
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+    i=i+1
+
+##########################################################################
+    #data: 1 thread 1 task
+##########################################################################
+def find_fit(ndata, labels, ncols=2,step=0):
+    ps=ndata[:,0]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    chunk_size=ndata[:,3]
+
+    if step==0:
+        Q=np.zeros((np.shape(ndata)[0],ncols))
+        Q[:,0]=L        
+        Q[:,1]=chunk_size
+        m,_ = nnls(Q, labels-w_c)
+        return m
+    else:
+        alpha=31.5456
+        Q=np.zeros((np.shape(ndata)[0],ncols-1))
+        Q[:,0]=chunk_size
+        m,_ = nnls(Q, labels-w_c-L*alpha)
+        return np.asarray([alpha, m[0]])
+
+def find_val(ndata, model):
+    ps=ndata[:,0]
+    chunk_size=ndata[:,3]
+
+    ncols=model.size
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    Q[:,0]=L
+    Q[:,1]=chunk_size
+#    Q[:,5]=1
+    return np.dot(Q,model)+w_c
+
+
+node_selected=dataframe['node']==node
+df_n_selected=dataframe[node_selected][titles[1:]]
+
+
+nt_selected=dataframe['num_tasks']==1
+df_n_selected=dataframe[node_selected & nt_selected][titles[1:]]
+
+thr=df_n_selected['num_threads'].drop_duplicates().values
+thr.sort()
+
+array=df_n_selected.values
+array=array.astype(float)
+
+th=1
+array_th=array[array[:,2]==th]
+
+data_size=int(np.shape(array_th)[0])
+print(data_size)
+
+models={}
+first=1
+for ps in problem_sizes:
+
+#    print(ps)
+    
+    train_set=array_th[array_th[:,0]==ps][:,:-1]
+    train_labels=array_th[array_th[:,0]==ps][:,-1]  
+    
+    #test_set=array_th[per[train_size:],:-1]  
+    #test_labels=array_th[per[train_size:],-1]  
+    if np.shape(train_set)[0]>0:
+        if first:
+            step=0
+            first=0
+        else:
+            step=1
+        model=find_fit(train_set,train_labels,step=0)   
+        if sum(model)!=0:
+            models[ps]=(model)
+#            new_array=array_th[array_th[:,0]==ps][:,:-1]
+#            plt.figure(i)
+#            z1=find_val(new_array,model)
+#        #    z2=my_func_g(new_array,*popt)
+#            plt.scatter(new_array[:,5],array_th[array_th[:,0]==ps][:,-1]/ps,marker='.',label='true')
+#            plt.scatter(new_array[:,5],z1/ps,marker='.',label='pred')
+#        #    plt.scatter(new_array[:,5],z2/ps,marker='.',label='curve_fit')
+#        
+#            plt.xlabel('grain size')
+#            plt.ylabel('execution time')
+#            plt.xscale('log')
+#            plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
+#            plt.axvline(ps/th,color='gray',linestyle='dotted')  
+#            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#        
+#            i=i+1
+    
+    
+plt.scatter([m for m in models.keys()],[models[m][0] for m in models.keys()])
+plt.xscale('log')
+plt.scatter([m for m in models.keys()],[models[m][1] for m in models.keys()])
+
+
+#y=np.asarray([models[m][1] for m in models.keys()])
+#x=np.asarray([m for m in models.keys()])
+#
+#n=np.polyfit(x,y,1)
+#p=np.poly1d(n)
+#p(1e7)
+
+##########################################################################
+ #1-new   #data: 1 thread 1 task
+##########################################################################
+from scipy.optimize import lsq_linear
+def find_fit(ndata, labels, alpha=0, step=1):
+    ncols=2
+    ps=ndata[:,0]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    chunk_size=ndata[:,3]
+
+    if step==0:
+        Q=np.zeros((np.shape(ndata)[0],ncols))
+        Q[:,0]=L        
+        Q[:,1]=chunk_size
+        m,_ = nnls(Q, labels-w_c)
+        return m
+    else:
+        Q=np.zeros((np.shape(ndata)[0],ncols-1))
+        Q[:,0]=chunk_size
+        m,_ = nnls(Q, labels-w_c-L*alpha)
+        return np.asarray([alpha, m[0]])
+
+def find_val(ndata, model):
+    ps=ndata[:,0]
+    chunk_size=ndata[:,3]
+
+    ncols=model.size
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    Q[:,0]=L
+    Q[:,1]=chunk_size
+#    Q[:,5]=1
+    return np.dot(Q,model)+w_c
+
+
+node_selected=dataframe['node']==node
+nt_selected=dataframe['num_tasks']==1
+df_n_selected=dataframe[node_selected & nt_selected][titles[1:]]
+
+df_n_selected=dataframe[node_selected][titles[1:]]
+
+thr=df_n_selected['num_threads'].drop_duplicates().values
+thr.sort()
+
+array=df_n_selected.values
+array=array.astype(float)
+
+th=1
+array_th=array[array[:,2]==th]
+
+a_s=np.argsort(array_th[:,0])
+array_th=array_th[a_s]
+
+alpha=array_th[0,-1]-array_th[0,0]
+
+data_size=int(np.shape(array_th)[0])
+print(data_size)
+
+train_set=array_th[:,:-1]
+train_labels=array_th[:,-1]  
+model=find_fit(train_set,train_labels,alpha=alpha,step=1)   
+##########################################################################
+#2-data: 1 thread >1 task
+##########################################################################    
+def find_fit(ndata, labels, model):
+    ncols=2
+    ps=ndata[:,0]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    chunk_size=ndata[:,3]
+
+    Q=np.zeros((np.shape(ndata)[0],ncols-1))
+    Q[:,0]=n_t
+    m, _, _, _ = np.linalg.lstsq(Q, labels-w_c-L*model[0]-chunk_size*model[1])
+    return np.asarray([model[0],model[1],m[0]])
+
+def find_val(ndata, model):
+    ps=ndata[:,0]
+    chunk_size=ndata[:,3]
+
+    ncols=model.size
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    Q[:,0]=L
+    Q[:,1]=chunk_size
+    Q[:,2]=n_t
+    return np.dot(Q,model)+w_c
+
+
+node_selected=dataframe['node']==node
+df_n_selected=dataframe[node_selected][titles[1:]]
+
+array=df_n_selected.values
+array=array.astype(float)
+
+th=1
+array_th=array[array[:,2]==th]
+
+a_s=np.argsort(array_th[:,0])
+array_th=array_th[a_s]
+
+data_size=int(np.shape(array_th)[0])
+
+train_set=array_th[:,:-1]
+train_labels=array_th[:,-1]  
+m=find_fit(train_set,train_labels,model)   
+
+i=1
+for ps in problem_sizes:
+    train_set=array_th[array_th[:,0]==ps][:,:-1]
+    train_labels=array_th[array_th[:,0]==ps][:,-1]  
+    if np.shape(train_set)[0]>20:
+        plt.figure(i)
+        z1=find_val(train_set,m)
+        plt.scatter(array_th[array_th[:,0]==ps][:,5],array_th[array_th[:,0]==ps][:,-1]/ps,marker='.',label='true')
+        plt.scatter(array_th[array_th[:,0]==ps][:,5],z1/ps,marker='.',label='pred')
+    
+        plt.xlabel('grain size')
+        plt.ylabel('execution time')
+        plt.xscale('log')
+        plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
+        plt.axvline(ps/th,color='gray',linestyle='dotted')  
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    
+        i=i+1 
+      
+    
+##########################################################################
+#3-data: 1> thread 1 task
+##########################################################################    
+def find_fit(ndata, labels, model):
+    ncols=2
+    ps=ndata[:,0]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    chunk_size=ndata[:,3]
+
+    Q=np.zeros((np.shape(ndata)[0],ncols-1))
+    Q[:,0]=w_c
+    m, _, _, _ = np.linalg.lstsq(Q, labels-w_c-L*model[0]-chunk_size*model[1]-n_t*model[2])
+    return np.asarray([model[0],model[1],model[2],m[0]])
+
+def find_val(ndata, model):
+    ps=ndata[:,0]
+    chunk_size=ndata[:,3]
+
+    ncols=model.size
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    Q[:,0]=L
+    Q[:,1]=chunk_size
+    Q[:,2]=n_t
+    Q[:,3]=w_c
+    return np.dot(Q,model)+w_c
+
+
+node_selected=dataframe['node']==node
+nt_selected=dataframe['num_tasks']==1
+df_n_selected=dataframe[node_selected & nt_selected][titles[1:]]
+
+array=df_n_selected.values
+array=array.astype(float)
+
+data_size=int(np.shape(array)[0])
+
+train_set=array[:,:-1]
+train_labels=array[:,-1]  
+m=find_fit(train_set,train_labels,model)   
+
+i=1
+for ps in problem_sizes:
+    train_set=array[array[:,0]==ps][:,:-1]
+    train_labels=array[array[:,0]==ps][:,-1]  
+    if np.shape(train_set)[0]>2:
+        plt.figure(i)
+        z1=find_val(train_set,m)
+        plt.scatter(array[array[:,0]==ps][:,2],array[array[:,0]==ps][:,-1]/ps,marker='.',label='true')
+        plt.scatter(array[array[:,0]==ps][:,2],z1/ps,marker='.',label='pred')
+    
+        plt.xlabel('num threads')
+        plt.ylabel('execution time')
+        plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    
+        i=i+1 
+
+
+
+##########################################
+#n_t=1
+def find_fit(ndata, labels, params=None,ncols=5,step=0):
+    ps=ndata[:,0]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    
+
+    if step==0:
+        Q=np.zeros((np.shape(ndata)[0],ncols))
+        Q[:,0]=L
+        Q[:,1]=w_c*np.heaviside(N-1,0)
+        Q[:,2]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+        Q[:,3]=n_t
+        Q[:,4]=ps
+#        Q[:,5]=1
+        m,_ = nnls(Q, labels-w_c)
+        return m
+
+def find_val(ndata, model):
+    ps=ndata[:,0]
+
+    ncols=model.size
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    Q[:,0]=L
+    Q[:,1]=w_c*np.heaviside(N-1,0)
+    Q[:,2]=(1-1/N)*((n_t-1))*np.heaviside(N-n_t,1)
+    Q[:,3]=n_t
+    Q[:,4]=ps
+#    Q[:,5]=1
+    return np.dot(Q,model)+w_c
+
+node_selected=dataframe['node']==node
+nt_selected=dataframe['num_tasks']==1
+df_n_selected=dataframe[node_selected & nt_selected][titles[1:]]
+
+thr=df_n_selected['num_threads'].drop_duplicates().values
+thr.sort()
+
+array=df_n_selected.values
+array=array.astype(float)
+
+th=1
+array_th=array[array[:,2]==th]
+
+data_size=int(np.shape(array_th)[0])
+print(data_size)
+
+models={}
+
+#    print(ps)
+    
+train_set=array_th[:,:-1]
+train_labels=array_th[:,-1]  
+
+#test_set=array_th[per[train_size:],:-1]  
+#test_labels=array_th[per[train_size:],-1]  
+#model=find_fit(train_set,train_labels)   
+
+plt.figure(i)
+z1=find_val(train_set,model)
+#    z2=my_func_g(new_array,*popt)
+plt.scatter(array_th[:,0],array_th[:,-1],marker='.',label='true')
+plt.scatter(array_th[:,0],z1,marker='.',label='pred')
+#    plt.scatter(new_array[:,5],z2/ps,marker='.',label='curve_fit')
+
+plt.xlabel('problem size(microseconds)')
+plt.ylabel('overhead(microseconds)')
+plt.xscale('log')
+plt.title('1 thread, 1 task')
+#plt.axvline(ps/th,color='gray',linestyle='dotted')  
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+i=i+1
+
+alpha=0.28351467169523786
