@@ -5,12 +5,12 @@
 #if [[ $string != *",1"* ]]; then
 #  echo "It's there!"
 #fi
-cd ../data/hpxmp/CCGRID20-Nov/
+cd ../data/grain_size/marvin/
 for filename in *
 do
 echo $filename
 #mv "$filename" "${filename/marvin-/}"
-mv "$filename" "marvin-${filename}"
+#mv "$filename" "marvin-${filename}"
 
 #echo $filename
 done
