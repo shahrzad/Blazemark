@@ -1,0 +1,17 @@
+def my_func_g_3(ndata,alpha,gamma,d,h,q): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(N))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+
+
+all:
+2.66396
+0.0109073
+1081.56
+0.0542149
+5.51663
+
