@@ -181,7 +181,7 @@ for node in nodes:
         
     i=1
 
-    for ps in grid_points:
+    for ps in grid_points[-4:]:
         
         array_ps=test_set[test_set[:,0]==ps]
         labels_ps=test_labels[test_set[:,0]==ps]
@@ -193,13 +193,13 @@ for node in nodes:
                 plt.figure(i)
 #                z_1=my_func_g_1(new_array,*popt_1)
 #                z_2=my_func_g_2(new_array,*popt_2)
-                z_3=my_func_g_3(new_array,*popt_3)
+#                z_3=my_func_g_3(new_array,*popt_3)
 #                z_4=my_func_g_4(new_array,*popt_4)
         
                 plt.scatter(new_array[:,4],new_labels,marker='.',label='true')
 #                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
 #                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
-                plt.scatter(new_array[:,4],z_3,marker='.',label='pred3')
+#                plt.scatter(new_array[:,4],z_3,marker='.',label='pred3')
 #                plt.scatter(new_array[:,5],z_4,marker='.',label='pred4')
         
                 plt.xlabel('grain size')

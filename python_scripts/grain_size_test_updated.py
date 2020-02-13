@@ -35,7 +35,7 @@ def create_dict(directories,to_csv=False):
     nodes=[]
     
     if to_csv:
-        f_csv=open('/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv','w')
+        f_csv=open('/home/shahrzad/repos/Blazemark/data/grain_data_perf_all_test.csv','w')
         f_writer=csv.writer(f_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         f_writer.writerow(['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time'])
 
@@ -140,6 +140,8 @@ def create_dict(directories,to_csv=False):
 marvin_dir='/home/shahrzad/repos/Blazemark/data/grain_size/marvin'
 medusa_dir='/home/shahrzad/repos/Blazemark/data/grain_size/medusa'
 results_dir='/home/shahrzad/repos/Blazemark/results/grain_size'
+create_dict([results_dir],1)
+
 create_dict([marvin_dir,medusa_dir],1)
 
 
@@ -168,21 +170,33 @@ def my_func_g_3(ndata,alpha,gamma,d,h,q):
     L=np.ceil(n_t/(N))
     w_c=ndata[:,-2]
     ps=ndata[:,0]
-    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)
+#
+#def my_func_g_3(ndata,alpha,q):
+#    N=ndata[:,2]
+#    n_t=ndata[:,-1]
+#    M=np.minimum(n_t,N) 
+#    L=np.ceil(n_t/(N))
+#    w_c=ndata[:,-2]
+#    ps=ndata[:,0]
+#    [gamma,d,h]=[1.08978362e-02, 5.40650289e+02, 5.42282886e-02]
+#    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+#
 
 def my_func_g_4(ndata,alpha,gamma,d,h,q,p,w): 
     N=ndata[:,2]
-    num_iter=ndata[:,1]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
     L=np.ceil(n_t/(N))
     w_c=ndata[:,-2]
-    chunk_size=ndata[:,3]
-    return q+w*chunk_size+p*num_iter+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d*(N-1)/N)*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+    ps=ndata[:,0]
+
+    return q*(N-1)*(N-2)/ps+alpha*L/ps+(1+(gamma)*(M-1))*(w_c)+(h/ps)*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
 
 
 titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
-filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv'
+filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all_test.csv'
+perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hxp_for_loop/1/all/'
 
 
 dataframe = pandas.read_csv(filename, header=0,index_col=False,dtype=str,names=titles)
@@ -195,95 +209,11 @@ nodes.sort()
 problem_sizes=dataframe['problem_size'].drop_duplicates().values
 problem_sizes.sort()
 
-
+i=1   
+popt={}                
 for node in nodes:
-    node_selected=dataframe['node']==node
-    df_n_selected=dataframe[node_selected][titles[1:]]
-    
-    thr=df_n_selected['num_threads'].drop_duplicates().values
-    thr.sort()
+    np.random.seed(0)                
 
-    for ps in problem_sizes:
-        ps_selected=dataframe['problem_size']==ps
-        df_nps_selected=df_n_selected[ps_selected]
-        
-        ps_selected=dataframe['problem_size']==ps
-        df_nps_selected=df_n_selected[ps_selected]
-        
-        array=df_nps_selected.values
-        array=array.astype(float)
-        
-        data_size=int(np.shape(array)[0])
-        print(int(ps),data_size)
-        
-        train_size=int(0.6*np.ceil(data_size*0.6))
-        tes_size=data_size-train_size
-        
-        per = np.random.permutation(data_size)
-        train_set=array[per[0:train_size],:-1] 
-        train_labels=array[per[0:train_size],-1]  
-        test_set=array[per[train_size:],:-1]  
-        test_labels=array[per[train_size:],-1]  
-        
-        param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
-#        param_bounds=([0,-np.inf],[np.inf,np.inf])
-
-        popt_1, pcov=curve_fit(my_func_g_1,train_set,train_labels,method='trf',bounds=param_bounds)
-        popt_2, pcov=curve_fit(my_func_g_2,train_set,train_labels,method='trf',bounds=param_bounds)
-        popt_3, pcov=curve_fit(my_func_g_3,train_set,train_labels,method='trf',bounds=param_bounds)
-        param_bounds=([0,0,0,0,-np.inf,-np.inf,-np.inf],[np.inf,1,np.inf,np.inf,np.inf,np.inf,np.inf])
-
-        popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
-
-        
-        i=1
-        for th in thr:
-            new_array=train_set[train_set[:,2]==th]
-
-            plt.figure(i)
-#            z=my_func_g(new_array,*popt)
-
-            plt.scatter(new_array[:,5],train_labels[train_set[:,2]==th],marker='.',label='true')
-            plt.xlabel('grain size')
-            plt.ylabel('execution time')
-            plt.xscale('log')
-            plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
-            plt.axvline(ps/th,color='gray',linestyle='dotted')  
-            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-
-            i=i+1
-            
-            
-        i=1
-        plt.figure(i)
-        plt.axes([0, 0, 3, 1])
-        
-        for th in thr:
-            new_array=test_set[test_set[:,2]==th]
-
-            plt.figure(i)
-            z_1=my_func_g_1(new_array,*popt_1)
-            z_2=my_func_g_2(new_array,*popt_2)
-            z_3=my_func_g_3(new_array,*popt_3)
-            z_4=my_func_g_4(new_array,*popt_4)
-
-            plt.scatter(new_array[:,5],test_labels[test_set[:,2]==th],marker='.',label='true')
-            plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
-            plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
-            plt.scatter(new_array[:,5],z_3,marker='.',label='pred3')
-            plt.scatter(new_array[:,5],z_4,marker='.',label='pred4')
-
-            plt.xlabel('grain size')
-            plt.ylabel('execution time')
-            plt.xscale('log')
-            plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
-            plt.axvline(ps/th,color='gray',linestyle='dotted')  
-            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-
-            i=i+1
-            
-            
-for node in nodes:
     node_selected=dataframe['node']==node
     df_n_selected=dataframe[node_selected][titles[1:]]
     
@@ -296,48 +226,42 @@ for node in nodes:
     array=df_n_selected.values
     array=array.astype(float)
     
-    data_size=int(np.shape(array)[0])
-    print(data_size)
+    per=np.array([])
+    for th in thr:
+        ind_th=np.where(array[:,2]==th)[0]
+        data_size=int(0.6*np.shape(ind_th)[0])
+        per = np.concatenate((ind_th[np.random.permutation(data_size)],per),axis=0)
+    train_indices=per.astype(int)
+                     
+    train_size=np.shape(train_indices)[0]
+    print(train_size)
     
-    train_size=int(0.6*np.ceil(data_size*0.6))
-    tes_size=data_size-train_size
+    train_set=array[train_indices,:-1] 
+    train_labels=array[train_indices,-1]  
     
-    per = np.random.permutation(data_size)
-    train_set=array[per[0:train_size],:-1] 
-    train_labels=array[per[0:train_size],-1]  
-    test_set=array[per[train_size:],:-1]  
-    test_labels=array[per[train_size:],-1]  
+    all_indices=np.arange(np.shape(array)[0])
     
+    test_indices=[ind for ind in all_indices if ind not in train_indices]
+    test_set=array[test_indices,:-1]  
+    test_labels=array[test_indices,-1]  
+    print(np.shape(test_set)[0])
+
+
     param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
+#    param_bounds=([0,-np.inf],[np.inf,np.inf])
+
 #        param_bounds=([0,-np.inf],[np.inf,np.inf])
 
-    popt_1, pcov=curve_fit(my_func_g_1,train_set,train_labels,method='trf',bounds=param_bounds)
-    popt_2, pcov=curve_fit(my_func_g_2,train_set,train_labels,method='trf',bounds=param_bounds)
+#    popt_1, pcov=curve_fit(my_func_g_1,train_set,train_labels,method='trf',bounds=param_bounds)
+#    popt_2, pcov=curve_fit(my_func_g_2,train_set,train_labels,method='trf',bounds=param_bounds)
     popt_3, pcov=curve_fit(my_func_g_3,train_set,train_labels,method='trf',bounds=param_bounds)
-    param_bounds=([0,0,0,0,-np.inf,-np.inf,-np.inf],[np.inf,1,np.inf,np.inf,np.inf,np.inf,np.inf])
+#    param_bounds=([0,0,0,0,-np.inf,-np.inf,-np.inf],[np.inf,1,np.inf,np.inf,np.inf,np.inf,np.inf])
 
-    popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
-
+#    popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
+    popt[node]=popt_3
     
-    i=1
-    for th in thr:
-        new_array=train_set[train_set[:,2]==th]
-
-        plt.figure(i)
-#            z=my_func_g(new_array,*popt)
-
-        plt.scatter(new_array[:,5],train_labels[train_set[:,2]==th],marker='.',label='true')
-        plt.xlabel('grain size')
-        plt.ylabel('execution time')
-        plt.xscale('log')
-        plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
-        plt.axvline(ps/th,color='gray',linestyle='dotted')  
-        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-
-        i=i+1
         
-        
-    i=1
+    
 
     for ps in problem_sizes[-20:]:
         
@@ -347,16 +271,16 @@ for node in nodes:
         for th in thr:
             new_array=array_ps[array_ps[:,2]==th]
             new_labels=labels_ps[array_ps[:,2]==th]
-            if np.shape(new_array[new_array[:,3]>0])[0]>30:
+            if np.shape(new_array[new_array[:,3]>0])[0]>10:
                 plt.figure(i)
 #                z_1=my_func_g_1(new_array,*popt_1)
-                z_2=my_func_g_2(new_array,*popt_2)
+#                z_2=my_func_g_2(new_array,*popt_2)
                 z_3=my_func_g_3(new_array,*popt_3)
 #                z_4=my_func_g_4(new_array,*popt_4)
         
                 plt.scatter(new_array[:,5],new_labels,marker='.',label='true')
 #                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
-                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
+#                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
                 plt.scatter(new_array[:,5],z_3,marker='.',label='pred3')
 #                plt.scatter(new_array[:,5],z_4,marker='.',label='pred4')
         
@@ -366,5 +290,130 @@ for node in nodes:
                 plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
                 plt.axvline(ps/th,color='gray',linestyle='dotted')  
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        
+#                plt.savefig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+
                 i=i+1        
+                
+                
+#################################
+#all the data together
+#################################
+
+i=1   
+            
+np.random.seed(0)                
+
+dataframe = pandas.read_csv(filename, header=0,index_col=False,dtype=str,names=titles)
+for col in titles[1:]:
+    dataframe[col] = dataframe[col].astype(float)
+
+nodes=dataframe['node'].drop_duplicates().values
+nodes.sort()
+
+problem_sizes=dataframe['problem_size'].drop_duplicates().values
+problem_sizes.sort()
+
+i=1   
+popt={}       
+
+
+train_set_all=np.empty(shape=(0,8))
+train_labels_all=np.array([])
+
+test_set_all={}
+test_labels_all={}
+ 
+train_lengths={}
+test_lengths={}
+
+for node in nodes:
+    np.random.seed(0)                
+
+    node_selected=dataframe['node']==node
+    df_n_selected=dataframe[node_selected][titles[1:]]
+    
+    thr=df_n_selected['num_threads'].drop_duplicates().values
+    thr.sort()
+
+    problem_sizes=df_n_selected['problem_size'].drop_duplicates().values
+    problem_sizes.sort()
+
+    array=df_n_selected.values
+    array=array.astype(float)
+    
+    per=np.array([])
+
+    for th in thr:
+        ind_th=np.where(array[:,2]==th)[0]
+        data_size=int(0.6*np.shape(ind_th)[0])
+        per = np.concatenate((ind_th[np.random.permutation(data_size)],per),axis=0)
+    train_indices=per.astype(int)
+                     
+    train_size=np.shape(train_indices)[0]
+
+    train_set=array[train_indices,:-1] 
+    train_label=array[train_indices,-1]  
+    
+    all_indices=np.arange(np.shape(array)[0])
+    
+    test_indices=[ind for ind in all_indices if ind not in train_indices]
+    test_set=array[test_indices,:-1]  
+    test_label=array[test_indices,-1]  
+    test_size=np.shape(test_set)[0]
+
+    train_set_all=np.concatenate((train_set_all,train_set),0)
+    train_labels_all=np.concatenate((train_labels_all,train_label))
+
+    test_set_all[node]=test_set
+    test_labels_all[node]=test_label
+    
+    train_lengths[node]=train_size
+    test_lengths[node]=test_size
+    
+
+
+param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
+#    param_bounds=([0,-np.inf],[np.inf,np.inf])
+
+#        param_bounds=([0,-np.inf],[np.inf,np.inf])
+
+#    popt_1, pcov=curve_fit(my_func_g_1,train_set,train_labels,method='trf',bounds=param_bounds)
+#    popt_2, pcov=curve_fit(my_func_g_2,train_set,train_labels,method='trf',bounds=param_bounds)
+popt_3, pcov=curve_fit(my_func_g_3,train_set_all,train_labels_all,method='trf',bounds=param_bounds)
+#    param_bounds=([0,0,0,0,-np.inf,-np.inf,-np.inf],[np.inf,1,np.inf,np.inf,np.inf,np.inf,np.inf])
+
+#    popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
+popt[node]=popt_3
+
+    
+
+for node in nodes:    
+    for ps in problem_sizes:        
+        array_ps=test_set_all[node][test_set_all[node][:,0]==ps]
+        labels_ps=test_labels_all[node][test_set_all[node][:,0]==ps]
+        if np.shape(array_ps)[0]>0:
+            for th in thr:
+                new_array=array_ps[array_ps[:,2]==th]
+                new_labels=labels_ps[array_ps[:,2]==th]
+                if np.shape(new_array[new_array[:,3]>0])[0]>10:
+                    plt.figure(i)
+    #                z_1=my_func_g_1(new_array,*popt_1)
+    #                z_2=my_func_g_2(new_array,*popt_2)
+                    z_3=my_func_g_3(new_array,*popt_3)
+    #                z_4=my_func_g_4(new_array,*popt_4)
+            
+                    plt.scatter(new_array[:,5],new_labels,marker='.',label='true')
+    #                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
+    #                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
+                    plt.scatter(new_array[:,5],z_3,marker='.',label='pred')
+    #                plt.scatter(new_array[:,5],z_4,marker='.',label='pred4')
+            
+                    plt.xlabel('grain size')
+                    plt.ylabel('execution time')
+                    plt.xscale('log')
+                    plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
+                    plt.axvline(ps/th,color='gray',linestyle='dotted')  
+                    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                    plt.savefig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+    
+                    i=i+1                    

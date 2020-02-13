@@ -1436,7 +1436,7 @@ import math
 import csv
 f=open('/home/shahrzad/repos/Blazemark/data/data_perf_all.csv','w')
 f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-f_writer.writerow(['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops'])
+f_writer.writerow(['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops','include'])
 node_type=0
 for node in d_hpx.keys():
     if node=='marvin':
@@ -1552,12 +1552,16 @@ for node in d_hpx.keys():
                                 for i in range(th):
                                     wc[i]=sum([task_sizes[j] for j in range(len(task_sizes)) if j%th==i])
                                 work_per_core=max(wc)
+                                
+                                include=1
+                                if num_mat*b_r*b_c*8>int(L2cache):
+                                    include=0
                                 f_writer.writerow(['hpx',node,benchmark,str(m),str(th),b.split('-')[0], 
                                                    b.split('-')[1], str(b_r * b_c), str(work_per_core),
                                                    str(wc[0]),str(wc[1]),str(wc[2]),str(wc[3]),
                                                    str(wc[4]),str(wc[5]),str(wc[6]),str(wc[7]),
                                                    str(c),str(grain_size),str(num_blocks), str(num_blocks/c),
-                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),str(exec_time),str(num_tasks),r])
+                                                   str(b_r * b_c*c),str(num_blocks/th),ratio,L1cache,L2cache,L3cache,cache_line,set_associativity,str(data_type),str(cost),str(simdsize),str(exec_time),str(num_tasks),r,str(include)])
         benchmark_type+=1
     node_type+=1        
 f.close()                    
