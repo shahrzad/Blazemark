@@ -35,7 +35,7 @@ def create_dict(directories,to_csv=False):
     nodes=[]
     
     if to_csv:
-        f_csv=open('/home/shahrzad/repos/Blazemark/data/grain_data_perf_all_test.csv','w')
+        f_csv=open('/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv','w')
         f_writer=csv.writer(f_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         f_writer.writerow(['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time'])
 
@@ -195,7 +195,7 @@ def my_func_g_4(ndata,alpha,gamma,d,h,q,p,w):
 
 
 titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
-filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all_test.csv'
+filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv'
 perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hxp_for_loop/1/all/'
 
 
@@ -229,7 +229,7 @@ for node in nodes:
     per=np.array([])
     for th in thr:
         ind_th=np.where(array[:,2]==th)[0]
-        data_size=int(0.6*np.shape(ind_th)[0])
+        data_size=int(1*np.shape(ind_th)[0])
         per = np.concatenate((ind_th[np.random.permutation(data_size)],per),axis=0)
     train_indices=per.astype(int)
                      
@@ -265,8 +265,8 @@ for node in nodes:
 
     for ps in problem_sizes[-20:]:
         
-        array_ps=test_set[test_set[:,0]==ps]
-        labels_ps=test_labels[test_set[:,0]==ps]
+        array_ps=train_set[train_set[:,0]==ps]
+        labels_ps=train_labels[train_set[:,0]==ps]
         
         for th in thr:
             new_array=array_ps[array_ps[:,2]==th]
@@ -290,7 +290,7 @@ for node in nodes:
                 plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
                 plt.axvline(ps/th,color='gray',linestyle='dotted')  
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#                plt.savefig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#               plt.save fig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
 
                 i=i+1        
                 
