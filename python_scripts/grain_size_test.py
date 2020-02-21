@@ -1031,20 +1031,21 @@ for ii in range(np.shape(array_th)[0]):
 ##########################################################################
 #2-data: 1 thread >1 task
 ##########################################################################    
-def find_fit(ndata, labels, model):
+def find_fit(ndata, labels):
     ncols=2
     ps=ndata[:,0]
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
-    L=np.ceil(n_t/(N))
+    L=np.ceil(n_t/(M))
     w_c=ndata[:,-2]
     chunk_size=ndata[:,3]
 
-    Q=np.zeros((np.shape(ndata)[0],ncols-1))
-    Q[:,0]=n_t
-    m,_=nnls(Q, labels-w_c-L*w_c*model[0]-chunk_size*model[1])
-    return np.asarray([model[0],model[1],m[0]])
+    Q=np.zeros((np.shape(ndata)[0],ncols))
+    Q[:,0]=L/ps
+    Q[:,1]=1/ps
+    m,_=nnls(Q, labels-w_c/ps)
+    return m
 
 def find_val(ndata, model):
     ps=ndata[:,0]
@@ -1057,10 +1058,9 @@ def find_val(ndata, model):
     M=np.minimum(n_t,N) 
     L=np.ceil(n_t/(N))
     w_c=ndata[:,-2]
-    Q[:,0]=L*w_c
-    Q[:,1]=chunk_size
-    Q[:,2]=n_t
-    return np.dot(Q,model)+w_c
+    Q[:,0]=L/ps
+    Q[:,1]=1/ps
+    return np.dot(Q,model)+w_c/ps
 
 
 node_selected=dataframe['node']==node
@@ -1078,18 +1078,18 @@ array_th=array_th[a_s]
 data_size=int(np.shape(array_th)[0])
 
 train_set=array_th[:,:-1]
-train_labels=array_th[:,-1]  
-model2=find_fit(train_set,train_labels,model1)   
+train_labels=array_th[:,-1]/array_th[:,0]  
+model2=find_fit(train_set,train_labels)   
 
 i=1
-for ps in problem_sizes:
+for ps in problem_sizes[-100:]:
     train_set=array_th[array_th[:,0]==ps][:,:-1]
     train_labels=array_th[array_th[:,0]==ps][:,-1]  
-    if np.shape(train_set)[0]>20:
+    if np.shape(np.unique(train_set[:,5]))[0]>10 and np.shape(train_set)[0]>20:
         plt.figure(i)
         z1=find_val(train_set,model2)
         plt.scatter(array_th[array_th[:,0]==ps][:,5],array_th[array_th[:,0]==ps][:,-1]/ps,marker='.',label='true')
-        plt.scatter(array_th[array_th[:,0]==ps][:,5],z1/ps,marker='.',label='pred')
+        plt.scatter(array_th[array_th[:,0]==ps][:,5],z1,marker='.',label='pred')
     
         plt.xlabel('grain size')
         plt.ylabel('execution time')

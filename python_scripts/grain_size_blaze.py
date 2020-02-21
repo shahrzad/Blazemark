@@ -100,14 +100,14 @@ for node in nodes:
             prs=array_ps_grain[:,0]
 #            
 #            param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
-#            popt_3, pcov=curve_fit(my_func_g_3,array_ps,labels_ps,method='trf',bounds=param_bounds)
+#            popt_3, pcov=curve_fit(my_func_g_3,array_ps_grain,labels_ps_grain,method='trf',bounds=param_bounds)
 #            [alpha,gamma,d,h,q]=popt_3
 #
-#            plt.plot(array_ps[:,5],(th-1)*(th-2)*q/prs,label='q*(n-1)*(n-2)/ps')
-#            plt.plot(array_ps[:,5],alpha*L,label='alpha*L')
-#            plt.plot(array_ps[:,5],(1+(gamma)*(M-1))*(w_c),label='(1+(gamma)*(M-1))*(w_c)')
-#            plt.plot(array_ps[:,5],h*n_t*(th-1)*np.heaviside(n_t-th,1),label='h*n_t*(N-1)*np.heaviside(n_t-N,1)')
-#            plt.plot(array_ps[:,5],(d/(ps*th))*((n_t-1))*np.heaviside(th-n_t,1),label='q*(n-1)*(n-2)/ps')
+#            plt.plot(array_ps_grain[:,5],(th-1)*(th-2)*q/prs,label='q*(n-1)*(n-2)/ps')
+#            plt.plot(array_ps_grain[:,5],alpha*L,label='alpha*L')
+#            plt.plot(array_ps_grain[:,5],(1+(gamma)*(M-1))*(w_c),label='(1+(gamma)*(M-1))*(w_c)')
+#            plt.plot(array_ps_grain[:,5],h*n_t*(th-1)*np.heaviside(n_t-th,1),label='h*n_t*(N-1)*np.heaviside(n_t-N,1)')
+#            plt.plot(array_ps_grain[:,5],(d/(ps*th))*((n_t-1))*np.heaviside(th-n_t,1),label='q*(n-1)*(n-2)/ps')
 #            plt.xscale('log')
 #            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #
@@ -137,20 +137,54 @@ for node in nodes:
             if np.shape(np.unique(array_ps_grain[:,5]))[0]>10 and np.shape(array_ps_grain)[0]>10:
 #                print(ps)
                 plt.figure(i)
-                plt.axes([0, 0, 2, 1])
-#                plt.scatter(array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label='problem size:'+str(int(ps)))   
+                plt.axes([0, 0, 4, 1])
+                ll=np.sqrt(0.05*ps*2.85/th)
+                lambda_s=0.1
+                k_s=(1/lambda_s)+1
+                lr=ps*lambda_s/th-1
 
-                plt.scatter(ps/array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label='problem size:'+str(int(ps)))   
+#                plt.scatter(array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label='problem size:'+str(int(ps)))   
+                plt.scatter(array_ps_grain[:,5], (w_c-ps/M)/(ps/M),marker='.')   
+
+#                plt.scatter(array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label=str(int(th))+' threads')   
 #                plt.scatter(array_ps[:,5]*100/ps, my_func_g_3(array_ps,*popt_3),marker='.',label='fit')   
 #                plt.axvline((ps/(th*(th+1)))+(0.01/(th+1)),color='green')
 #                plt.axvline(np.sqrt(alpha*ps/(0.1*th)),color='purple')
                 plt.xlabel('problem_size/grain_size')
+                plt.xlabel('Grain size')
+#                plt.axvline(ll,color='green') 
+#                plt.axvline(lr,color='green') 
                 plt.ylabel('1/speedup')
+                plt.ylabel('Execution Time(microseconds)')
+                plt.ylabel('Imbalance Ratio')
+
                 plt.xscale('log')
-                plt.title(str(int(th))+' threads')
-                plt.grid(True,'both')
+#                plt.title('Problem size: '+str(int(ps)))
+                plt.title('Problem size: '+str(int(ps))+'  '+str(int(th))+' threads')
+#                plt.grid(True,'both')
+                for j in range(np.shape(np.unique(L))[0]):  
+                    k=np.unique(L)[j]
+                    if j>np.shape(np.unique(L))[0]-5 or (j<3 and j!=0):
+                        plt.annotate('k='+str(int(k)), ((1+0.1/j)*ps/(k*th),0.5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
+                    if k>1:    
+                        plt.axvline(ps/(k*th),color='green',linestyle='dashed')
+                        plt.axvline(ps/((k-1)*th),color='green',linestyle='dashed')
+
+
+
+                for j in range(1,th):
+                    plt.axvline(np.ceil(ps/j),color='purple',linestyle='dashed')
+                    plt.annotate('k=1', (ps/j/1.3,0.5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90) 
+                             
+                    
+                plt.savefig(perf_dir+'w_c.png',bbox_inches='tight')
+
 #                plt.axvline(ps/th,color='gray',linestyle='dotted')  
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#            plt.figure(i)
+#
+#            plt.savefig(perf_dir+str(int(ps))+'_'+str(int(th))+'_all.png',bbox_inches='tight')
+
                 i=i+1
 #                all_regions[ps]=find_flat(array_ps[:,-1], labels_ps)
 #                plt.axvline(all_regions[ps][0][0],color='green')

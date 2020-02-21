@@ -312,11 +312,11 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     ts=g_params[node][benchmark][mflop][1][0]
                     plt.figure(i)
                     plt.axes([0, 0, 2, 1])
-                    plt.scatter(new_array[:,-1],test_labels[test_set[:,1]==th]/ts,color='blue',label='true',marker='.')
+                    plt.scatter(new_array[:,-1],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
                     
     #                    plt.scatter(new_array[:,-1],z1,label='pred1',marker='.')
     #                    plt.scatter(new_array[:,-1],z2,label='pred2',marker='.')
-#                    plt.scatter(mflop/new_array[:,-1],z3/ts,label='pred3',marker='.',color='red')
+                    plt.scatter(new_array[:,-1],z3,label='pred3',marker='.',color='red')
 #                    plt.scatter(new_array[:,-1],z6,label='pred6',marker='.',color='gray')
 #                    plt.scatter(mflop/new_array[:,-1],z4/ts,label='pred4',marker='.',color='green')
 
@@ -332,6 +332,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     plt.xlabel('problem_size/grain_size')
                     plt.ylabel('1/speedup')
                     plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+            
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #                    plt.savefig(perf_dir+node+'/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
 
