@@ -124,6 +124,7 @@ def create_dict(directories,to_csv=False):
                 if th==1:
                     w_c=num_iteration*(iter_length)
                 if num_tasks%th==1 and num_iteration%chunk_size!=0:
+#                    w_c_1=problem_size+(1-th)*(L-1)*grain_size
                     w_c=(L-1)*grain_size+(num_iteration%chunk_size)*(iter_length)
             else:
                 num_tasks=0

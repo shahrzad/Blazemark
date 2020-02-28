@@ -143,8 +143,22 @@ for node in nodes:
                 k_s=(1/lambda_s)+1
                 lr=ps*lambda_s/th-1
 
-#                plt.scatter(array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label='problem size:'+str(int(ps)))   
-                plt.scatter(array_ps_grain[:,5], (w_c-ps/M)/(ps/M),marker='.')   
+#                plt.scatter(array_ps_grain[:,5], ps/labels_ps_grain,marker='.',label='speed-up')   
+                plt.scatter(array_ps_grain[:,5], (w_c-ps/th)/(ps/th),marker='.',label='imbalance ratio')   
+#                plt.scatter(array_ps_grain[:,5], (w_c-ps/M)/(ps/M),marker='.',label='imbalance ratio')   
+#                plt.scatter(1, 1/(np.arange(1,th)-1),marker='.',label='M=1')  
+                
+#                g=np.arange(1,ps)
+#                k=np.arange(2,np.ceil(ps/th))
+#                plt.scatter(k, 1/(k-1),marker='.',label='M='+str(int(t)))   
+
+#                for t in range(2,th+1):    
+#                    plt.figure(i)
+#
+#                    plt.scatter(t, 1/(t-1),marker='.',label='M='+str(int(t)))   
+#                plt.scatter(np.arange(2,np.ceil(ps/th)), -0.0001+1/(np.arange(2,ps/th)-1),marker='.',label='k>1',color='blue')   
+#                x=np.arange(np.ceil(ps/th),ps+1)
+#                plt.scatter(x, (x-ps/th)/(ps/th),marker='.',label='1/speed-up')   
 
 #                plt.scatter(array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label=str(int(th))+' threads')   
 #                plt.scatter(array_ps[:,5]*100/ps, my_func_g_3(array_ps,*popt_3),marker='.',label='fit')   
@@ -152,35 +166,39 @@ for node in nodes:
 #                plt.axvline(np.sqrt(alpha*ps/(0.1*th)),color='purple')
                 plt.xlabel('problem_size/grain_size')
                 plt.xlabel('Grain size')
+                plt.xlabel(r'$k=\left\lceil{\frac{num\_{tasks}}{N}}\right \rceil$')
+                plt.scatter(ps/th,0,marker='.',c='C0')
 #                plt.axvline(ll,color='green') 
 #                plt.axvline(lr,color='green') 
-                plt.ylabel('1/speedup')
-                plt.ylabel('Execution Time(microseconds)')
+#                plt.ylabel('1/speedup')
+#                plt.ylabel('Execution Time(microseconds)')
                 plt.ylabel('Imbalance Ratio')
-
                 plt.xscale('log')
+
 #                plt.title('Problem size: '+str(int(ps)))
                 plt.title('Problem size: '+str(int(ps))+'  '+str(int(th))+' threads')
-#                plt.grid(True,'both')
+                plt.grid(True,'both')
                 for j in range(np.shape(np.unique(L))[0]):  
                     k=np.unique(L)[j]
                     if j>np.shape(np.unique(L))[0]-5 or (j<3 and j!=0):
-                        plt.annotate('k='+str(int(k)), ((1+0.1/j)*ps/(k*th),0.5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
+                        plt.annotate('k='+str(int(k)), ((1+0.1/j)*ps/(k*th),5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
                     if k>1:    
                         plt.axvline(ps/(k*th),color='green',linestyle='dashed')
                         plt.axvline(ps/((k-1)*th),color='green',linestyle='dashed')
 
+                plt.annotate('k=1', ((1+0.1)*ps/(th),5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
 
-
-                for j in range(1,th):
-                    plt.axvline(np.ceil(ps/j),color='purple',linestyle='dashed')
-                    plt.annotate('k=1', (ps/j/1.3,0.5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90) 
-                             
-                    
-                plt.savefig(perf_dir+'w_c.png',bbox_inches='tight')
+##
+#                for j in range(1,th):
+#                    plt.axvline(np.ceil(ps/j),color='purple',linestyle='dashed')
+#                    plt.annotate('M='+str(j+1), (ps/j/1.3,0.5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90) 
+#                             
+#                    
 
 #                plt.axvline(ps/th,color='gray',linestyle='dotted')  
-                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.savefig(perf_dir+'w_c_all.png',bbox_inches='tight')
+
 #            plt.figure(i)
 #
 #            plt.savefig(perf_dir+str(int(ps))+'_'+str(int(th))+'_all.png',bbox_inches='tight')
