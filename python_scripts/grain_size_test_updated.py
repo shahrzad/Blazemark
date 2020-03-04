@@ -168,7 +168,7 @@ def my_func_g_3(ndata,alpha,gamma,d,h,q):
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
-    L=np.ceil(n_t/(N))
+    L=np.ceil(n_t/(M))
     w_c=ndata[:,-2]
     ps=ndata[:,0]
     return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)
@@ -184,15 +184,65 @@ def my_func_g_3(ndata,alpha,gamma,d,h,q):
 #    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
 #
 
-def my_func_g_4(ndata,alpha,gamma,d,h,q,p,w): 
+def my_func_g_4(ndata,alpha,gamma,d,h,q): 
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
-    L=np.ceil(n_t/(N))
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)+(d/ps)*(n_t-1)*np.heaviside(N-n_t,1)
+
+#    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)+(d*ps)*(n_t**2-1)*np.heaviside(N-n_t,1)
+
+
+def my_func_g_4_part1(ndata,alpha,gamma,d,h,q): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
     w_c=ndata[:,-2]
     ps=ndata[:,0]
 
-    return q*(N-1)*(N-2)/ps+alpha*L/ps+(1+(gamma)*(M-1))*(w_c)+(h/ps)*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+    return d*((ps%w_c)*(n_t)+(w_c-ps%w_c)*(n_t-1))*np.heaviside(N-n_t,0)
+
+def my_func_g_4_part2(ndata,alpha,gamma,d,h,q): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)
+
+def my_func_g_5(ndata,alpha,gamma,d,h,q): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(M)+d*((ps%w_c)*(n_t)+(w_c-ps%w_c)*(n_t-1))*np.heaviside(N-n_t,0)
+
+def my_func_g_6(ndata,alpha,gamma,h,q): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+#    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/n_t)*(N-n_t)*((N-n_t-1))*np.heaviside(N-n_t,1)
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)
+def my_func_g_7(ndata,alpha,gamma,h,q): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+#    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/n_t)*(N-n_t)*((N-n_t-1))*np.heaviside(N-n_t,1)
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*np.heaviside(n_t-N,1)+h*(w_c-ps/M)/(ps/M)#(h)*(N-n_t)*(n_t)*np.heaviside(N-n_t,1)
 
 
 titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
@@ -216,13 +266,18 @@ for node in nodes:
     np.random.seed(0)                
 
     node_selected=dataframe['node']==node
-    df_n_selected=dataframe[node_selected][titles[1:]]
+    nt_selected=dataframe['num_tasks']!=0
+    iter_selected=dataframe['iter_length']==1
+
+    df_n_selected=dataframe[node_selected & nt_selected & iter_selected][titles[1:]]
     
     thr=df_n_selected['num_threads'].drop_duplicates().values
     thr.sort()
 
     problem_sizes=df_n_selected['problem_size'].drop_duplicates().values
     problem_sizes.sort()
+
+
 
     array=df_n_selected.values
     array=array.astype(float)
@@ -248,7 +303,7 @@ for node in nodes:
     print(np.shape(test_set)[0])
 
 
-    param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
+    param_bounds=([0,0,0,0,0],[np.inf,1,np.inf,np.inf,np.inf])
 #    param_bounds=([0,-np.inf],[np.inf,np.inf])
 
 #        param_bounds=([0,-np.inf],[np.inf,np.inf])
@@ -257,18 +312,36 @@ for node in nodes:
 #    popt_2, pcov=curve_fit(my_func_g_2,train_set,train_labels,method='trf',bounds=param_bounds)
     popt_3, pcov=curve_fit(my_func_g_3,train_set,train_labels,method='trf',bounds=param_bounds)
 #    param_bounds=([0,0,0,0,-np.inf,-np.inf,-np.inf],[np.inf,1,np.inf,np.inf,np.inf,np.inf,np.inf])
+    popt_5, pcov=curve_fit(my_func_g_5,train_set,train_labels,method='trf',bounds=param_bounds)
+    popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
 
-#    popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
+    param_bounds=([0,0,0,-np.inf],[np.inf,1,np.inf,np.inf])
+
+    popt_6, pcov=curve_fit(my_func_g_6,train_set,train_labels,method='trf',bounds=param_bounds)
+    popt_7, pcov=curve_fit(my_func_g_7,train_set,train_labels,method='trf',bounds=param_bounds)
+
     popt[node]=popt_3
     
         
     
 
-    for ps in problem_sizes[-20:]:
+    for ps in [1e4,2e5,5e6,1e7]:#problem_sizes[-200:]:
         
         array_ps=train_set[train_set[:,0]==ps]
         labels_ps=train_labels[train_set[:,0]==ps]
         
+        a_s=np.argsort(array_ps[:,5])
+        for ir in range(np.shape(array_ps)[1]):
+            array_ps[:,ir]=array_ps[a_s,ir]
+        labels_ps=labels_ps[a_s] 
+
+#        param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
+#        popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
+#        param_bounds=([0,0,0,-np.inf],[np.inf,1,np.inf,np.inf])
+#
+#        popt_6, pcov=curve_fit(my_func_g_6,array_ps,labels_ps,method='trf',bounds=param_bounds)
+#        popt_7, pcov=curve_fit(my_func_g_7,array_ps,labels_ps,method='trf',bounds=param_bounds)
+
         for th in thr:
             new_array=array_ps[array_ps[:,2]==th]
             new_labels=labels_ps[array_ps[:,2]==th]
@@ -277,12 +350,27 @@ for node in nodes:
 #                z_1=my_func_g_1(new_array,*popt_1)
 #                z_2=my_func_g_2(new_array,*popt_2)
                 z_3=my_func_g_3(new_array,*popt_3)
-#                z_4=my_func_g_4(new_array,*popt_4)
-        
+                z_5=my_func_g_5(new_array,*popt_5)
+                z_6=my_func_g_6(new_array,*popt_6)
+                z_7=my_func_g_7(new_array,*popt_7)
+
+                z_4=my_func_g_4(new_array,*popt_4)
+                z_4_1=my_func_g_4_part1(new_array,*popt_5)
+                z_4_2=my_func_g_4_part2(new_array,*popt_4)
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],(new_labels/1000-z_4_2/1000)[new_array[:,5]>=ps/th],marker='.',label='true')
+
                 plt.scatter(new_array[:,5],new_labels,marker='.',label='true')
-#                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
-#                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
+##                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
+##                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
                 plt.scatter(new_array[:,5],z_3,marker='.',label='pred3')
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],new_array[:,-1][new_array[:,5]>=ps/th],marker='.',label='pred4')
+
+                plt.scatter(new_array[:,5],z_4_1,marker='.',label='part1')
+#                plt.scatter(new_array[:,5],z_4_2,marker='.',label='part2')
+
+#                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
+#                plt.scatter(new_array[:,5],z_7,marker='.',label='pred7')
+
 #                plt.scatter(new_array[:,5],z_4,marker='.',label='pred4')
         
                 plt.xlabel('grain size')

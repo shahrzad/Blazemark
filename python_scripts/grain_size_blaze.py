@@ -83,7 +83,7 @@ for node in nodes:
         new_array_grain=array_grain[array_grain[:,2]==th]
         new_labels_grain=array_grain[array_grain[:,2]==th]
             
-        for ps in problem_sizes[200:]:    
+        for ps in problem_sizes[-20:]:    
             
             array_ps_grain=new_array_grain[new_array_grain[:,0]==ps][:,:-1]
             labels_ps_grain=new_labels_grain[new_labels_grain[:,0]==ps][:,-1]
@@ -143,9 +143,11 @@ for node in nodes:
                 k_s=(1/lambda_s)+1
                 lr=ps*lambda_s/th-1
 
-#                plt.scatter(array_ps_grain[:,5], ps/labels_ps_grain,marker='.',label='speed-up')   
+                plt.scatter(array_ps_grain[:,5], labels_ps_grain/ps,marker='.',label='speed-up')   
+#                plt.scatter(array_ps_grain[:,5], (w_c-ps/th)/(ps/th),marker='.',label='imbalance ratio')   
+                plt.scatter(array_ps_grain[:,5], (w_c-ps/M)/(ps/M),marker='.',label='imbalance ratio') 
                 plt.scatter(array_ps_grain[:,5], (w_c-ps/th)/(ps/th),marker='.',label='imbalance ratio')   
-#                plt.scatter(array_ps_grain[:,5], (w_c-ps/M)/(ps/M),marker='.',label='imbalance ratio')   
+
 #                plt.scatter(1, 1/(np.arange(1,th)-1),marker='.',label='M=1')  
                 
 #                g=np.arange(1,ps)
@@ -166,7 +168,7 @@ for node in nodes:
 #                plt.axvline(np.sqrt(alpha*ps/(0.1*th)),color='purple')
                 plt.xlabel('problem_size/grain_size')
                 plt.xlabel('Grain size')
-                plt.xlabel(r'$k=\left\lceil{\frac{num\_{tasks}}{N}}\right \rceil$')
+#                plt.xlabel(r'$k=\left\lceil{\frac{num\_{tasks}}{N}}\right \rceil$')
                 plt.scatter(ps/th,0,marker='.',c='C0')
 #                plt.axvline(ll,color='green') 
 #                plt.axvline(lr,color='green') 
@@ -178,26 +180,27 @@ for node in nodes:
 #                plt.title('Problem size: '+str(int(ps)))
                 plt.title('Problem size: '+str(int(ps))+'  '+str(int(th))+' threads')
                 plt.grid(True,'both')
-                for j in range(np.shape(np.unique(L))[0]):  
-                    k=np.unique(L)[j]
-                    if j>np.shape(np.unique(L))[0]-5 or (j<3 and j!=0):
-                        plt.annotate('k='+str(int(k)), ((1+0.1/j)*ps/(k*th),5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
-                    if k>1:    
-                        plt.axvline(ps/(k*th),color='green',linestyle='dashed')
-                        plt.axvline(ps/((k-1)*th),color='green',linestyle='dashed')
-
-                plt.annotate('k=1', ((1+0.1)*ps/(th),5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
-
-##
+#                for j in range(np.shape(np.unique(L))[0]):  
+#                    k=np.unique(L)[j]
+#                    if j>np.shape(np.unique(L))[0]-5 or (j<3 and j!=0):
+#                        plt.annotate('k='+str(int(k)), ((1+0.1/j)*ps/(k*th),5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
+#                    if k>1:    
+#                        plt.axvline(ps/(k*th),color='green',linestyle='dashed')
+#                        plt.axvline(ps/((k-1)*th),color='green',linestyle='dashed')
+#
+#                plt.annotate('k=1', ((1+0.1)*ps/(th),5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90)  
+#
+###
 #                for j in range(1,th):
 #                    plt.axvline(np.ceil(ps/j),color='purple',linestyle='dashed')
 #                    plt.annotate('M='+str(j+1), (ps/j/1.3,0.5),textcoords="offset points", xytext=(20,0), ha='center',rotation=90) 
 #                             
 #                    
+                plt.axvline(ps/(th*(1+np.ceil(1/0.2))),color='green',linestyle='dotted')  
 
 #                plt.axvline(ps/th,color='gray',linestyle='dotted')  
 #                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                plt.savefig(perf_dir+'w_c_all.png',bbox_inches='tight')
+#                plt.savefig(perf_dir+'w_c_all.png',bbox_inches='tight')
 
 #            plt.figure(i)
 #
