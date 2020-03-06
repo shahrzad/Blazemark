@@ -188,10 +188,12 @@ def my_func_g_4(ndata,alpha,gamma,d,h,q):
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
-    L=np.ceil(n_t/(M))
-    w_c=ndata[:,-2]
+    L=np.ceil(n_t/(N))
+    g=ndata[:,5]
+#    w_c=ndata[:,-2]
+    w_c=g*L
     ps=ndata[:,0]
-    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)+(d/ps)*(n_t-1)*np.heaviside(N-n_t,1)
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t-1,1)
 
 #    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)+(d*ps)*(n_t**2-1)*np.heaviside(N-n_t,1)
 
@@ -204,17 +206,19 @@ def my_func_g_4_part1(ndata,alpha,gamma,d,h,q):
     w_c=ndata[:,-2]
     ps=ndata[:,0]
 
-    return d*((ps%w_c)*(n_t)+(w_c-ps%w_c)*(n_t-1))*np.heaviside(N-n_t,0)
+    return (d/(ps*N))*((n_t-1))*np.heaviside(N-n_t-1,1)
 
 def my_func_g_4_part2(ndata,alpha,gamma,d,h,q): 
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
     L=np.ceil(n_t/(M))
-    w_c=ndata[:,-2]
+    g=ndata[:,5]
+#    w_c=ndata[:,-2]
+    w_c=g*L    
     ps=ndata[:,0]
 
-    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)
+    return (w_c)#+h*n_t*(N-1)*np.heaviside(n_t-N,1)
 
 def my_func_g_5(ndata,alpha,gamma,d,h,q): 
     N=ndata[:,2]
@@ -223,7 +227,8 @@ def my_func_g_5(ndata,alpha,gamma,d,h,q):
     L=np.ceil(n_t/(M))
     w_c=ndata[:,-2]
     ps=ndata[:,0]
-    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(M)+d*((ps%w_c)*(n_t)+(w_c-ps%w_c)*(n_t-1))*np.heaviside(N-n_t,0)
+    return q*(N-1)*(N-2)/ps+alpha*L+(1)*(w_c)+(d)*(ps%g)*(N-2)+2*d+(w_c-ps%g)
+
 
 def my_func_g_6(ndata,alpha,gamma,h,q): 
     N=ndata[:,2]
@@ -338,7 +343,8 @@ for node in nodes:
 #        param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
 #        popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
 #        param_bounds=([0,0,0,-np.inf],[np.inf,1,np.inf,np.inf])
-#
+#        popt_5, pcov=curve_fit(my_func_g_5,array_ps[array_ps[:,5]>=ps/th],labels_ps[array_ps[:,5]>=ps/th],method='trf',bounds=param_bounds)
+
 #        popt_6, pcov=curve_fit(my_func_g_6,array_ps,labels_ps,method='trf',bounds=param_bounds)
 #        popt_7, pcov=curve_fit(my_func_g_7,array_ps,labels_ps,method='trf',bounds=param_bounds)
 
@@ -347,6 +353,8 @@ for node in nodes:
             new_labels=labels_ps[array_ps[:,2]==th]
             if np.shape(new_array[new_array[:,3]>0])[0]>10:
                 plt.figure(i)
+                plt.axes([0, 0, 3, 1])
+
 #                z_1=my_func_g_1(new_array,*popt_1)
 #                z_2=my_func_g_2(new_array,*popt_2)
                 z_3=my_func_g_3(new_array,*popt_3)
@@ -355,29 +363,48 @@ for node in nodes:
                 z_7=my_func_g_7(new_array,*popt_7)
 
                 z_4=my_func_g_4(new_array,*popt_4)
-                z_4_1=my_func_g_4_part1(new_array,*popt_5)
+                z_4_1=my_func_g_4_part1(new_array,*popt_4)
                 z_4_2=my_func_g_4_part2(new_array,*popt_4)
-#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],(new_labels/1000-z_4_2/1000)[new_array[:,5]>=ps/th],marker='.',label='true')
+                M=np.minimum(new_array[:,-1],th) 
+                im_ratio=(new_array[:,-2]-ps/M)/(ps/M)
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],im_ratio[new_array[:,5]>=ps/th],marker='.',label='im_ratio')
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],(new_labels[new_array[:,5]>=ps/th]-z_4_2[new_array[:,5]>=ps/th]),marker='.',label='true')
 
                 plt.scatter(new_array[:,5],new_labels,marker='.',label='true')
 ##                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
 ##                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
                 plt.scatter(new_array[:,5],z_3,marker='.',label='pred3')
 #                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],new_array[:,-1][new_array[:,5]>=ps/th],marker='.',label='pred4')
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],z_4_1[new_array[:,5]>=ps/th],marker='.',label='part1')
 
-                plt.scatter(new_array[:,5],z_4_1,marker='.',label='part1')
-#                plt.scatter(new_array[:,5],z_4_2,marker='.',label='part2')
-
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],z_4_2[new_array[:,5]>=ps/th],marker='.',label='part2')
+#                plt.scatter(new_array[:,5],z_4_2,marker='.',label='pred4')
 #                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
+
+#                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],z_5[new_array[:,5]>=ps/th],marker='.',label='pred5')
 #                plt.scatter(new_array[:,5],z_7,marker='.',label='pred7')
 
-#                plt.scatter(new_array[:,5],z_4,marker='.',label='pred4')
-        
+                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
+#                for j in range(np.shape(new_array[:,5][new_array[:,5]>=ps/th])[0]):
+#                    g=(new_array[:,5][new_array[:,5]>=ps/th])[j]
+#                    t=(new_array[:,-1][new_array[:,5]>=ps/th])[j]
+#                    p=((new_labels[new_array[:,5]>=ps/th])[j])
+##                    p=z_4_2[new_array[:,5]>=ps/th][j]
+#                    plt.annotate(int(t), (g,p),textcoords="offset points", xytext=(1,0), ha='center') 
+                
+                for j in range(np.shape(new_array[:,5])[0]):
+                    g=(new_array[:,5])[j]
+                    t=(new_array[:,-1])[j]
+                    p=((new_labels)[j])
+#                    p=z_4_2[new_array[:,5]>=ps/th][j]
+                    plt.annotate(int(t), (g,p),textcoords="offset points", xytext=(5,0), ha='center') 
+
+
                 plt.xlabel('grain size')
                 plt.ylabel('execution time')
                 plt.xscale('log')
                 plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
-                plt.axvline(ps/th,color='gray',linestyle='dotted')  
+                plt.axvline(ps/(th-1),color='gray',linestyle='dotted')  
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #               plt.save fig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
 
