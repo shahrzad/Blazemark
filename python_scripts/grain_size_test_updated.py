@@ -23,6 +23,7 @@ from scipy.optimize import nnls
 
 
 def create_dict(directories,to_csv=False):
+    data_filename='/home/shahrzad/repos/Blazemark/data/numa_grain_data_perf_all.csv'
     thr=[]
     data_files=[]
     
@@ -35,7 +36,7 @@ def create_dict(directories,to_csv=False):
     nodes=[]
     
     if to_csv:
-        f_csv=open('/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv','w')
+        f_csv=open(data_filename,'w')
         f_writer=csv.writer(f_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         f_writer.writerow(['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time'])
 
@@ -83,9 +84,9 @@ def create_dict(directories,to_csv=False):
                                                            
     data_files.sort()   
     problem_sizes=[]
-    marvin_dir='/home/shahrzad/repos/Blazemark/data/grain_size/marvin'
-    excludes=[marvin_dir+'/marvin_grain_size_1_1_2000_50000.dat',marvin_dir+'/marvin_grain_size_1_1_1000_100000.dat']
-    
+#    marvin_dir='/home/shahrzad/repos/Blazemark/data/grain_size/marvin'
+#    excludes=[marvin_dir+'/marvin_grain_size_1_1_2000_50000.dat',marvin_dir+'/marvin_grain_size_1_1_1000_100000.dat']
+    excludes=[] 
     for filename in data_files:   
         if filename not in excludes:             
             f=open(filename, 'r')
@@ -205,8 +206,13 @@ def my_func_g_4_part1(ndata,alpha,gamma,d,h,q):
     L=np.ceil(n_t/(M))
     w_c=ndata[:,-2]
     ps=ndata[:,0]
+    ic=L*N%n_t
+    g=ndata[:,5]
+    k=ps/(N*(N-1))
+#    return w_c+(ic)*np.ceil((ps%g)/(N-ic-1+0.000001))+(ic+1)*np.ceil((w_c-ps%g)/(N-ic+0.000001))
+    return (d*ps)*np.exp(-((g-ps/N)/(k))**2)
 
-    return (d/(ps*N))*((n_t-1))*np.heaviside(N-n_t-1,1)
+
 
 def my_func_g_4_part2(ndata,alpha,gamma,d,h,q): 
     N=ndata[:,2]
@@ -227,10 +233,16 @@ def my_func_g_5(ndata,alpha,gamma,d,h,q):
     L=np.ceil(n_t/(M))
     w_c=ndata[:,-2]
     ps=ndata[:,0]
-    return q*(N-1)*(N-2)/ps+alpha*L+(1)*(w_c)+(d)*(ps%g)*(N-2)+2*d+(w_c-ps%g)
+    ic=L*N%n_t
+    g=ndata[:,5]
+#    k=ps/(N*(N-1))
+#    return alpha*L+(1)*(w_c)+(w_c-ps%g)/(np.ceil((N-2)/(N-n_t))-1)           
+#    return alpha*L+(1)*w_c+(ic)*np.ceil((ps%g)/(N-ic-1+0.000001))+(ic+np.ceil(ps%g/g))*np.ceil((g-ps%g)/(N-ic+0.000001))
+#    return alpha*L+(1)*w_c+ic*(ps%g)/((N-ic))+(ic!=N-1)*(g-ps%g)*(ic+np.ceil((ps%g)/g))/((N-ic-np.ceil((ps%g)/g)+0.00001))
+    return alpha*L+(1+(gamma)*(M-1))*(w_c)#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
 
-
-def my_func_g_6(ndata,alpha,gamma,h,q): 
+plt.plot(ndata[:,5],(1)*(ps*N/(2*np.pi*k))*np.exp(-((g-ps/N)/(k))**2))
+def my_func_g_6(ndata,alpha,gamma,d,h,q): 
     N=ndata[:,2]
     n_t=ndata[:,-1]
     M=np.minimum(n_t,N) 
@@ -238,7 +250,7 @@ def my_func_g_6(ndata,alpha,gamma,h,q):
     w_c=ndata[:,-2]
     ps=ndata[:,0]
 #    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/n_t)*(N-n_t)*((N-n_t-1))*np.heaviside(N-n_t,1)
-    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t/(ps*M)
+    return q*(N-1)*(N-2)/ps+alpha*L+(1+(gamma)*(M-1))*(w_c)+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)
 def my_func_g_7(ndata,alpha,gamma,h,q): 
     N=ndata[:,2]
     n_t=ndata[:,-1]
@@ -271,10 +283,10 @@ for node in nodes:
     np.random.seed(0)                
 
     node_selected=dataframe['node']==node
-    nt_selected=dataframe['num_tasks']!=0
+    nt_selected=dataframe['num_tasks']>=1
     iter_selected=dataframe['iter_length']==1
-
-    df_n_selected=dataframe[node_selected & nt_selected & iter_selected][titles[1:]]
+    th_selected=dataframe['num_threads']>=1
+    df_n_selected=dataframe[node_selected & nt_selected & iter_selected & th_selected][titles[1:]]
     
     thr=df_n_selected['num_threads'].drop_duplicates().values
     thr.sort()
@@ -327,11 +339,18 @@ for node in nodes:
 
     popt[node]=popt_3
     
-        
+    ps=1e6
+    array_ps=train_set[train_set[:,0]==ps]
+    labels_ps=train_labels[train_set[:,0]==ps]
     
+    a_s=np.argsort(array_ps[:,5])
+    for ir in range(np.shape(array_ps)[1]):
+        array_ps[:,ir]=array_ps[a_s,ir]
+    labels_ps=labels_ps[a_s]        
+    popt_5, pcov=curve_fit(my_func_g_5,array_ps,labels_ps,method='trf',bounds=param_bounds)
+       
 
-    for ps in [1e4,2e5,5e6,1e7]:#problem_sizes[-200:]:
-        
+    for ps in [ps for ps in problem_sizes[-200:] if ps!=1e6]:
         array_ps=train_set[train_set[:,0]==ps]
         labels_ps=train_labels[train_set[:,0]==ps]
         
@@ -339,38 +358,86 @@ for node in nodes:
         for ir in range(np.shape(array_ps)[1]):
             array_ps[:,ir]=array_ps[a_s,ir]
         labels_ps=labels_ps[a_s] 
-
+#        array_ps=train_set[train_set[:,0]==ps]
+#        labels_ps=train_labels[train_set[:,0]==ps]
+#        
+#        a_s=np.argsort(array_ps[:,5])
+#        for ir in range(np.shape(array_ps)[1]):
+#            array_ps[:,ir]=array_ps[a_s,ir]
+#        labels_ps=labels_ps[a_s] 
+        
+        
+#        array_ps_agg=train_set[train_set[:,0]==ps]
+#        labels_ps_agg=train_labels[train_set[:,0]==ps]
+#        
+#        a_s=np.argsort(array_ps_agg[:,5])
+#        for ir in range(np.shape(array_ps_agg)[1]):
+#            array_ps_agg[:,ir]=array_ps_agg[a_s,ir]
+#        labels_ps_agg=labels_ps_agg[a_s] 
+#        
+#        
+#        array_ps_nows=train_set[train_set[:,0]==ps]
+#        labels_ps_nows=train_labels[train_set[:,0]==ps]
+#        
+#        a_s=np.argsort(array_ps_nows[:,5])
+#        for ir in range(np.shape(array_ps_nows)[1]):
+#            array_ps_nows[:,ir]=array_ps_nows[a_s,ir]
+#        labels_ps_nows=labels_ps_nows[a_s] 
+#        
+#        array_ps_numa=train_set[train_set[:,0]==ps]
+#        labels_ps_numa=train_labels[train_set[:,0]==ps]
+#        a_s=np.argsort(array_ps_numa[:,5])
+#        for ir in range(np.shape(array_ps_numa)[1]):
+#            array_ps_numa[:,ir]=array_ps_numa[a_s,ir]
+#        labels_ps_numa=labels_ps_numa[a_s] 
 #        param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
 #        popt_4, pcov=curve_fit(my_func_g_4,train_set,train_labels,method='trf',bounds=param_bounds)
 #        param_bounds=([0,0,0,-np.inf],[np.inf,1,np.inf,np.inf])
-#        popt_5, pcov=curve_fit(my_func_g_5,array_ps[array_ps[:,5]>=ps/th],labels_ps[array_ps[:,5]>=ps/th],method='trf',bounds=param_bounds)
-
+#        if np.shape(array_ps)[0]>20:
+#            popt_5, pcov=curve_fit(my_func_g_5,array_ps,labels_ps,method='trf',bounds=param_bounds)
+#            print(ps,popt_5[0:2])
 #        popt_6, pcov=curve_fit(my_func_g_6,array_ps,labels_ps,method='trf',bounds=param_bounds)
 #        popt_7, pcov=curve_fit(my_func_g_7,array_ps,labels_ps,method='trf',bounds=param_bounds)
 
         for th in thr:
             new_array=array_ps[array_ps[:,2]==th]
             new_labels=labels_ps[array_ps[:,2]==th]
+            
+#            new_array_agg=array_ps_agg[array_ps_agg[:,2]==th]
+#            new_labels_agg=labels_ps_agg[array_ps_agg[:,2]==th]
+#            
+#            new_array_nows=array_ps_nows[array_ps_nows[:,2]==th]
+#            new_labels_nows=labels_ps_nows[array_ps_nows[:,2]==th]
+#            
+#            
+#            new_array_numa=array_ps_numa[array_ps_numa[:,2]==th]
+#            new_labels_numa=labels_ps_numa[array_ps_numa[:,2]==th]
+#            popt_5, pcov=curve_fit(my_func_g_5,new_array,new_labels,method='trf',bounds=param_bounds)
+
             if np.shape(new_array[new_array[:,3]>0])[0]>10:
                 plt.figure(i)
-                plt.axes([0, 0, 3, 1])
+                plt.axes([0, 0, 1.5, 1])
 
 #                z_1=my_func_g_1(new_array,*popt_1)
 #                z_2=my_func_g_2(new_array,*popt_2)
                 z_3=my_func_g_3(new_array,*popt_3)
                 z_5=my_func_g_5(new_array,*popt_5)
-                z_6=my_func_g_6(new_array,*popt_6)
-                z_7=my_func_g_7(new_array,*popt_7)
-
-                z_4=my_func_g_4(new_array,*popt_4)
-                z_4_1=my_func_g_4_part1(new_array,*popt_4)
-                z_4_2=my_func_g_4_part2(new_array,*popt_4)
-                M=np.minimum(new_array[:,-1],th) 
-                im_ratio=(new_array[:,-2]-ps/M)/(ps/M)
+#                z_6=my_func_g_6(new_array,*popt_6)
+#                z_7=my_func_g_7(new_array,*popt_7)
+#
+#                z_4=my_func_g_4(new_array,*popt_4)
+                z_4_1=my_func_g_4_part1(new_array,*popt_5)
+#                z_4_2=my_func_g_4_part2(new_array,*popt_5)
+#                M=np.minimum(new_array[:,-1],th) 
+#                im_ratio=(new_array[:,-2]-ps/M)/(ps/M)
 #                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],im_ratio[new_array[:,5]>=ps/th],marker='.',label='im_ratio')
 #                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],(new_labels[new_array[:,5]>=ps/th]-z_4_2[new_array[:,5]>=ps/th]),marker='.',label='true')
 
-                plt.scatter(new_array[:,5],new_labels,marker='.',label='true')
+                plt.scatter(new_array[:,5],new_labels,marker='.',label='work stealing on')
+#                plt.scatter(new_array_agg[:,5],new_labels_agg,marker='.',label='aggregated')
+#                plt.scatter(new_array_nows[:,5],new_labels_nows,marker='.',label='work stealing off')
+#                plt.scatter(new_array_numa[:,5],new_labels_numa,marker='.',label='numa')
+
 ##                plt.scatter(new_array[:,5],z_1,marker='.',label='pred1')
 ##                plt.scatter(new_array[:,5],z_2,marker='.',label='pred2')
                 plt.scatter(new_array[:,5],z_3,marker='.',label='pred3')
@@ -378,13 +445,14 @@ for node in nodes:
 #                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],z_4_1[new_array[:,5]>=ps/th],marker='.',label='part1')
 
 #                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],z_4_2[new_array[:,5]>=ps/th],marker='.',label='part2')
-#                plt.scatter(new_array[:,5],z_4_2,marker='.',label='pred4')
-#                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
+
+#                plt.scatter(new_array[:,5],z_4_2,marker='.',label='pred4_2')
+                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
 
 #                plt.scatter(new_array[:,5][new_array[:,5]>=ps/th],z_5[new_array[:,5]>=ps/th],marker='.',label='pred5')
 #                plt.scatter(new_array[:,5],z_7,marker='.',label='pred7')
 
-                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
+#                plt.scatter(new_array[:,5],z_5,marker='.',label='pred5')
 #                for j in range(np.shape(new_array[:,5][new_array[:,5]>=ps/th])[0]):
 #                    g=(new_array[:,5][new_array[:,5]>=ps/th])[j]
 #                    t=(new_array[:,-1][new_array[:,5]>=ps/th])[j]
@@ -392,24 +460,52 @@ for node in nodes:
 ##                    p=z_4_2[new_array[:,5]>=ps/th][j]
 #                    plt.annotate(int(t), (g,p),textcoords="offset points", xytext=(1,0), ha='center') 
                 
-                for j in range(np.shape(new_array[:,5])[0]):
-                    g=(new_array[:,5])[j]
-                    t=(new_array[:,-1])[j]
-                    p=((new_labels)[j])
-#                    p=z_4_2[new_array[:,5]>=ps/th][j]
-                    plt.annotate(int(t), (g,p),textcoords="offset points", xytext=(5,0), ha='center') 
-
+#                for j in range(np.shape(new_array[:,5])[0]):
+#                    gj=(new_array[:,5])[j]
+#                    tj=(new_array[:,-1])[j]
+#                    pj=((new_labels)[j]-z_5[j])
+##                    p=z_4_2[new_array[:,5]>=ps/th][j]
+#                    plt.annotate(int(tj), (gj,pj),textcoords="offset points", xytext=(15,0), ha='center') 
+#
 
                 plt.xlabel('grain size')
                 plt.ylabel('execution time')
                 plt.xscale('log')
-                plt.title('problem size:'+str(ps)+'  '+str(th)+' threads')
-                plt.axvline(ps/(th-1),color='gray',linestyle='dotted')  
+                plt.title('problem size:'+str(int(ps))+'  '+str(int(th))+' threads')
+                plt.axvline(ps/(th),color='gray',linestyle='dotted')  
                 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #               plt.save fig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#                plt.savefig(perf_dir+'nows_new_rostam/'+str(int(ps))+'_'+str(int(th))+'_1_all.png',bbox_inches='tight')
 
-                i=i+1        
-                
+                i=i+1    
+                plt.figure(i)
+                plt.axes([0, 0, 1.5, 1])
+                all_g=np.linspace(1,ps,1000)
+                plt.scatter(new_array[:,5],z_4_1,marker='*',label='pred4_1')
+#                plt.scatter(all_g,(popt_5[2]*ps*th/(ps/(th*(th-1))))*np.exp(-((all_g-ps/th)/(ps/(th*(th-1))))**2),label='aa1',marker='.')
+                j=0
+                for alpha in [ps/(th*(th-1)), ps/(0.5*th*(th-1)), ps/(2*th*(th-1))]:
+                    plt.scatter(all_g,(np.exp(-((all_g-ps/th)/(alpha))**2)),label='aa'+str(j),marker='.')
+                    j=j+1
+
+                def my_func_g_4_1(g,N,d):  
+                    k=ps/(N*(N-1))
+                #    return w_c+(ic)*np.ceil((ps%g)/(N-ic-1+0.000001))+(ic+1)*np.ceil((w_c-ps%g)/(N-ic+0.000001))
+                    return (d*ps)*np.exp(-((g-ps/N)/(k))**2)
+
+                plt.scatter(all_g,my_func_g_4_1(all_g,th,popt_5[2]),label='aa2',marker='.')
+                plt.scatter(np.array([1000,1500]),my_func_g_4_1(np.array([1000,1500]),th,popt_5[2]),label='aa4',marker='*')
+
+                plt.xlabel('grain size')
+                plt.ylabel('execution time')
+                plt.xscale('log')
+                plt.title('problem size:'+str(int(ps))+'  '+str(int(th))+' threads')
+                plt.axvline(ps/(th),color='gray',linestyle='dotted')  
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#               plt.save fig(perf_dir+node+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#                plt.savefig(perf_dir+'nows_new_rostam/'+str(int(ps))+'_'+str(int(th))+'_1_all.png',bbox_inches='tight')
+
+                i=i+1    
                 
 #################################
 #all the data together

@@ -204,7 +204,7 @@ for node in nodes:
 
 #            plt.figure(i)
 #
-#            plt.savefig(perf_dir+str(int(ps))+'_'+str(int(th))+'_all.png',bbox_inches='tight')
+            plt.savefig(perf_dir+str(int(ps))+'_'+str(int(th))+'_all.png',bbox_inches='tight')
 
                 i=i+1
 #                all_regions[ps]=find_flat(array_ps[:,-1], labels_ps)
