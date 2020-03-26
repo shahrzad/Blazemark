@@ -246,16 +246,45 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 #                    return q*N+alpha*L+(ts+ts*(gamma)*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
                     ts=g_params[node][benchmark][mflop][1][0]
                     ps=ts
-                    return q*(N-1)*(N-2)/(ps)+alpha*L+(ts+ts*gamma*(M-1))*(w_c)/mflop+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(ps*N))*((n_t-1))*np.heaviside(N-n_t,1)#+h*n_t*np.heaviside(n_t-N,1)+p*np.heaviside(n_t-N,0)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+                    return q*(N-1)*(N-2)/(mflop)+alpha*L+(ts+ts*gamma*(M-1))*(w_c)/mflop+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(mflop*N))*((n_t-1))*np.heaviside(N-n_t,1)#+h*n_t*np.heaviside(n_t-N,1)+p*np.heaviside(n_t-N,0)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
                     
 
-                
+                def my_func_3d_4(data,alpha,gamma,d,h,q): 
+#                    ts=g_params[node][benchmark][mflop][1][0]
+                    kappa=0.
+                    N=data[:,1]
+                    n_t=data[:,0]
+                    n_b=data[:,4]
+                    w_c=data[:,2]
+                    c=data[:,3]
+                    g=data[:,-1]
+                    M=np.minimum(n_t,N) 
+                    L=np.ceil(n_t/(M))
+                    w_all=data[:,5:13].copy()
+                    for j in range(np.shape(data)[0]):
+                        for i in range(int(N[j])):
+                            if n_t[j]<=N[j]:
+                                w_all[j,i]=abs(g[j]-w_all[j,i])
+                            else:
+                                w_all[j,i]=0
+                    ws=np.sum(w_all[:,],axis=1)/g
+#                    ts=476.
+#                    M=np.ceil(N-np.log(1+(np.exp(N)-1)*np.exp(-n_t)))
+#                    return alpha*d/M+ts*(1-q)+ts*q/M
+#                    return alpha*n_t/M+ts/M+ts*q*(M-1)/M+ts*gamma*(M-1)+w*(c/(n_b%c+0.01))*g
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q+(d*(M))*np.heaviside(N-n_t,1)+h*n_t*np.heaviside(n_t-N,1)
+#                    return alpha*L+(ts+ts*gamma*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+q+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)+(d1/N)*((n_t-1)%N)*np.heaviside(n_t-N-1,1)
+#                    return q*N+alpha*L+(ts+ts*(gamma)*(M-1)+ts*kappa*M*(M-1))*(w_c)/mflop+h*n_t*np.heaviside(n_t-N,1)+(d/N)*((n_t-1)%N)*np.heaviside(N-n_t,1)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+                    ts=g_params[node][benchmark][mflop][1][0]
+                    return q*(N-1)*(N-2)/(mflop)+alpha*L+(ts+ts*gamma*(M-1))*(w_c)/mflop+h*n_t*(N-1)*np.heaviside(n_t-N,1)+(d/(mflop*N))*((n_t-1))*np.heaviside(N-n_t,1)#+h*n_t*np.heaviside(n_t-N,1)+p*np.heaviside(n_t-N,0)#+q*(n_t-1)*(g-mflop%g)/g*np.heaviside(N-n_t,1)#+d1*(ts)*(g-(mflop%g))*(1/mflop)
+                    
     
                 
  
-#                param_bounds=([0,0,0,0,-np.inf,0],[np.inf,1,np.inf,np.inf,np.inf,np.inf])
-#                popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='trf',bounds=param_bounds)
-## 
+                param_bounds=([0,0,0,0,-np.inf],[np.inf,1,np.inf,np.inf,np.inf])
+                popt3, pcov=curve_fit(my_func_3d_3,train_set,train_labels,method='trf',bounds=param_bounds)
+                popt4, pcov=curve_fit(my_func_3d_4,train_set,train_labels,method='trf',bounds=param_bounds)
+#
 #                popts.append(popt3)
 #
 #                ts=g_params[node][benchmark][mflop][1][0]
@@ -268,7 +297,11 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
                     new_array=test_set[test_set[:,1]==th]
 #                    z1=mflop/my_func_3d_1(new_array,*popt1)
 #                    z2=mflop/my_func_3d_2(new_array,*popt2)
-                    z3=my_func_3d_3(new_array,*popt_3)
+                    z3=my_func_3d_3(new_array,*popt3)
+                    [alpha,gamma,d,h,q]=popt3
+                    popt4=[alpha,0,0,0,0]
+#                    z4=my_func_3d_4(new_array,*popt4)
+
 #                    z6=mflop/my_func_3d_3(new_array,*popt_i)
 
 #                    z6=mflop/my_func_3d_6(new_array,*popt6)
@@ -276,7 +309,7 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
 ##                    z5=mflop/my_func_3d_3(new_array,*[2*ts,alpha,gamma,q,d,h,d1])
 #                    z4=mflop/my_func_3d_4(new_array,*popt4)
 #                    z5=mflop/(ts*my_func_3d_5(new_array,*popt5))
-
+                    ts=g_params[node][benchmark][mflop][1][0]
                     plt.figure(i)
                     plt.axes([0, 0, 2, 1])
                     plt.scatter(new_array[:,-1],test_labels[test_set[:,1]==th],color='blue',label='true',marker='.')
@@ -285,19 +318,23 @@ def find_max_range(filename,benchmarks=None,plot=True,error=False,save=False,per
     #                    plt.scatter(new_array[:,-1],z2,label='pred2',marker='.')
                     plt.scatter(new_array[:,-1],z3,label='pred3',marker='.',color='red')
 #                    plt.scatter(new_array[:,-1],z6,label='pred6',marker='.',color='gray')
+#                    plt.scatter(mflop/new_array[:,-1],z4/ts,label='pred4',marker='.',color='green')
+
 
 #                    plt.scatter(new_array[:,-1],z5,label='pred5',marker='.',color='red')
 #                    plt.scatter(new_array[:,-1],z3,label='pred from dmatdmatadd',marker='.',color='green')
-                    plt.axvline(mflop/th,color='green',linestyle='dotted')    
-
+#                    plt.axvline(mflop/th,color='gray',linestyle='dotted')    
+#                    plt.axvline((mflop/(th*(th+1)))+(0.01/(th+1)),color='green')
+#                    plt.axvline(np.sqrt(popt_3[0]*mflop/(0.1*th)),color='purple')
     #                plt.scatter(new_array[:,-1],z4,label='pred4',marker='.',color='orange')
                     plt.grid(True,'both')
                     plt.xscale('log')
-                    plt.xlabel('Grain size')
-                    plt.ylabel('Execution time')
+                    plt.xlabel('problem_size/grain_size')
+                    plt.ylabel('1/speedup')
                     plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+            
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    plt.savefig(perf_dir+node+'/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#                    plt.savefig(perf_dir+node+'/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
 
                     i=i+1
 #                    plt.savefig(pp,format='pdf',bbox_inches='tight')
