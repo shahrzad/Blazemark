@@ -1,0 +1,16 @@
+#!/bin/bash
+module purge
+module load cmake/3.10.2
+module load clang/8.0.0
+module load boost/1.70.0-clang8.0.0-release
+module load gperftools/2.7
+
+hpxmp_dir="/home/sshirzad/src/hpxMP"
+hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_marvin_hpxmp/lib64/cmake/HPX"
+rm -rf "$hpxmp_dir/build_release"
+mkdir "$hpxmp_dir/build_release"
+cd "$hpxmp_dir/build_release"
+touch "$hpxmp_dir/build_release/hpxmp_log.txt"
+
+cmake -DCMAKE_BUILD_TYPE='Release' -DCMAKE_C_COMPILER=/opt/mn/clang/8.0.0/bin/clang -DCMAKE_CXX_COMPILER=/opt/mn/clang/8.0.0/bin/clang++ -DCMAKE_CXX_FLAGS=-stdlib=libc++ -DHPX_DIR=$hpx_dir ..| tee hpxmp_cmake_log.txt
+make -j 16
