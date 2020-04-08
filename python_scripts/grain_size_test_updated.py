@@ -259,12 +259,12 @@ for node in nodes:
         for ir in range(np.shape(array_ps)[1]):
             array_ps[:,ir]=array_ps[a_s,ir]
         labels_ps=labels_ps[a_s] 
-        test_errors[ps]={}
-        r2_errors[ps]={}
+        test_errors[node][base_ps][ps]={}
+        r2_errors[node][base_ps][ps]={}
         lb=0.1
         ls=.1
 #        for lb in [0.5,0.6,0.7,0.8]:
-        for th in [8]:#thr:
+        for th in [8]:
             new_array=array_ps[array_ps[:,2]==th]
             new_labels=labels_ps[array_ps[:,2]==th]
             
@@ -283,29 +283,51 @@ for node in nodes:
                 plt.scatter(new_array[:,5],new_labels,marker='.',label='true')
 
 #                plt.scatter(new_array[:,5],z_5,marker='.',label='fitted')
-                test_errors[ps][th]=100*np.mean(np.abs(z_5-new_labels)/new_labels)
-                r2_errors[ps][th]=r2_score(new_labels,z_5)
+
                 g1=np.ceil(np.sqrt(popt_5[0]*ps/(th*lb)))
+                g3=np.ceil(np.sqrt(popt_5[0]*ps/(th*0.8)))
+                g5=np.ceil(np.sqrt(popt_5[0]*ps/(th*0.4)))
+
                 g2=np.floor(ps/(th*(1+np.ceil(1/ls))))
+                g4=np.floor(ps/(th*(1+np.ceil(1/0.8))))
+                g6=np.floor(ps/(th*(1+np.ceil(1/0.4))))
+
+#                    plt.axvspan(1,70,color='red',alpha=0.1)  
+                
+#                plt.axvspan(70,2000,color='red',alpha=0.1)  
+#                    plt.axvspan(1000,100000,color='blue',alpha=0.1)  
+
 #                gg=np.linspace(g1,g2,1000)
 #                for j in range(np.shape(gg)[0]):
 #                    plt.axvline(gg[j],color='lavender')  
                
-                plt.axvline(g1)  
-#                plt.axvline(g2,color='green')  
-#                    plt.axvspan(g1,g2,color='green',alpha=0.5)
+#                plt.axvline(g1)  
+                plt.axvline(g3,color='green',alpha=0.2,label='$\lambda_b=0.8$') 
+                plt.axvline(g5,color='green',alpha=0.6,label='$\lambda_b=0.4$')  
+                plt.axvline(g1,color='green',alpha=1,label='$\lambda_b=0.1$')  
+
+
+                plt.axvline(g2,color='red',alpha=0.2,label='$\lambda_s=0.1$')    
+                plt.axvline(g6,color='red',alpha=0.6,label='$\lambda_s=0.4$')    
+                plt.axvline(g4,color='red',alpha=1,label='$\lambda_s=0.8$')    
+#                plt.axvspan(g1,g2,color='green',alpha=0.5)
+#                plt.axvspan(g3,g2,color='green',alpha=0.4)
+#                plt.axvspan(g2,g4,color='green',alpha=0.4)
+
 #                plt.fill_between(new_array[:,5],where=np.logical_and(new_array[:,5]<=g2,new_array[:,5]>=g1),facecolor='green',alpha=.5)
                 plt.xlabel('Grain size')
                 plt.ylabel('Execution time')
                 plt.xscale('log')
-                print(lb,ls,g1,g2)
+#                    print(lb,ls,g1,g2)
 #                plt.title('problem size:'+str(int(ps))+'  '+str(int(th))+' threads')
 #                plt.axvline(ps/(th),color='gray',linestyle='dotted')  
-#                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#                plt.savefig(perf_dir+'nows_new_rostam/'+str(int(ps))+'_'+str(int(th))+'_1_all.png',bbox_inches='tight')
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#                    plt.savefig(perf_dir+'nows_new_rostam/'+str(int(ps))+'_'+str(int(th))+'_1_all.png',bbox_inches='tight')
+#                plt.savefig(perf_dir+'/fitted/'+str(int(base_ps))+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_'+str(int(base_ps))+'.png',bbox_inches='tight')
+#                    plt.savefig(perf_dir+'/fitted/'+str(int(base_ps))+'/'+node+'_'+str(int(ps))+'.png',bbox_inches='tight')
 
-                i=i+1    
-                plt.savefig(perf_dir+'/fitted/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
+                i=i+1                    
+                plt.savefig(perf_dir+'/fitted/'+str(int(base_ps))+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_range_10_50_80.png',bbox_inches='tight')
 
 #                plt.scatter(new_array[:,5],z_5,marker='.',label='fitted')
 
@@ -373,6 +395,25 @@ for node in nodes:
 #    plt.savefig(perf_dir+'/fitted/'+node+'_relative_error_compared.png',bbox_inches='tight')
     i=i+1
 
+                plt.savefig(perf_dir+'/fitted/'+str(int(base_ps))+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
+
+for node in nodes:
+    for base_ps in test_errors[node].keys():
+        fig=plt.figure(i)
+        ax = fig.add_subplot(111)
+        width=0.25
+        rects1 = ax.bar(threads[node],[test_errors[node][base_ps][base_ps][i] for i in threads[node]], width,label='Base problem size='+str(int(base_ps)))
+        #rects2 = ax.bar(np.array([0,1,2])+width,[param_errors[i][1] for i in range(3)], width, color='seagreen',label='test')
+        plt.xlabel('#cores')
+        plt.ylabel('Relative Error(%)')
+        plt.xticks(threads[node])
+        #ax.set_xticklabels(parameters)
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    #    plt.savefig(perf_dir+'/fitted/'+node+'_relative_error_'+str(int(base_ps))+'.png',bbox_inches='tight')
+    plt.figure(i)
+#    plt.savefig(perf_dir+'/fitted/'+node+'_relative_error_compared.png',bbox_inches='tight')
+    i=i+1
+
 for node in nodes:
     k=0
     for base_ps in test_errors[node].keys():
@@ -388,7 +429,6 @@ for node in nodes:
     fig=plt.figure(i)
     plt.savefig(perf_dir+'/fitted/'+node+'_r2_error_compared_self.png',bbox_inches='tight')
     i=i+1    
-    
     
     
 
@@ -805,7 +845,6 @@ plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_relative_error_l
 r_th={}
 for th in thr:
     r_th[th]=np.mean([r2_errors[m][th] for m in test_errors.keys() if th in test_errors[m].keys() and m<953])
-=======
         #    ic=L*N%n_t
         #    g=ndata[:,5]
         #    k=ps/(N*(N-1))
@@ -817,91 +856,167 @@ for th in thr:
         zb=my_func_g_b(new_array,*popt_5)
 
         
-        test_errors[m][th]=100*np.mean(np.abs(zb-new_labels)/new_labels)
-        r2_errors[m][th]=r2_score(new_labels,zb)
+        array_b=array_b[a_s]
+        g_params[node][benchmark]=grain_dict(array_b,1)
         
-#            test_errors[m][th]=100*np.mean(np.abs(new_labels-zb-(np.median(new_labels)-np.median(zb)))/new_labels)
-#            r2_errors[m][th]=r2_score(new_labels-(np.median(new_labels)-np.median(zb)),zb)
-#        
-#        for lb in [0.001,0.005,0.01,0.05,0.1]:
-#            for ls in [0.1,0.2,0.5]:
-        lb=0.01
-        ls=.5
-        g1=np.ceil(np.sqrt(popt_5[0]*ps/(th*lb)))
-        g2=np.floor(ps/(th*(1+np.ceil(1/ls))))
-        plt.figure(i)
-#        plt.axes([0, 0, 2, 1])
-        plt.scatter(new_array[:,3],new_labels,color='blue',label='true',marker='.')
-        plt.scatter(new_array[:,3],zb,label='pred',marker='.',color='red')
-        plt.axvspan(g1,g2,color='green',alpha=0.5)
-#                plt.scatter(new_array[:,3],new_labels-zb,label='pred',marker='.',color='red')
-
-#        plt.grid(True,'both')
-        plt.xscale('log')
-        plt.xlabel('Grain size')
-        plt.ylabel('Execution time')
-#        plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
-
-        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-#        plt.savefig(perf_dir+'/blazemark/range/'+node+'_pred_'+str(int(m))+'_'+str(int(th))+'_'+str(int(1000*lb))+'_'+str(int(1000*ls))+'.png',bbox_inches='tight')
-        b='4-256'
-        b_r=int(b.split('-')[0])
-        b_c=int(b.split('-')[1])
-        if b_r>m:
-            b_r=m
-        if b_c>m:
-            b_c=m
-        if b_c%simdsize!=0:
-            b_c=b_c+simdsize-b_c%simdsize
-        
-        equalshare1=math.ceil(m/b_r)
-        equalshare2=math.ceil(m/b_c)  
-        num_blocks=equalshare1*equalshare2
-        aligned_m=m
-        if m%simdsize!=0:
-            aligned_m=m+simdsize-m%simdsize
-                   
-        mflop=0
-        if benchmark=='dmatdmatadd':                            
-            mflop=b_r*b_c                            
-        elif benchmark=='dmatdmatdmatadd':
-            mflop=b_r*b_c*2
-        else:
-            mflop=b_r*b_c*(2*m)
+       
+        for th in [8]:#range(1,9):  
+            b='4-256'
+            b_r=int(b.split('-')[0])
+            b_c=int(b.split('-')[1])
+            if b_r>m:
+                b_r=m
+            if b_c>m:
+                b_c=m
+            if b_c%simdsize!=0:
+                b_c=b_c+simdsize-b_c%simdsize
             
-        num_elements=[mflop]*num_blocks
-        if aligned_m%b_c!=0:
-            for j in range(1,equalshare1+1):
-                if benchmark=='dmatdmatadd':                            
-                    num_elements[j*equalshare2-1]=(aligned_m%b_c)*b_r                            
-                elif benchmark=='dmatdmatdmatadd':
-                    num_elements[j*equalshare2-1]=(aligned_m%b_c)*b_r*2
-                else:
-                    num_elements[j*equalshare2-1]=(aligned_m%b_c)*b_r*(2*m)
-            
-        if m%b_r!=0:
-            for j in range(1,equalshare2+1):
-                if benchmark=='dmatdmatadd':                            
-                    num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c                            
-                elif benchmark=='dmatdmatdmatadd':
-                    num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c*2
-                else:
-                    num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c*(2*m)
-                                                                                   
-        if aligned_m%b_c!=0 and m%b_r!=0:
+            equalshare1=math.ceil(m/b_r)
+            equalshare2=math.ceil(m/b_c)  
+            num_blocks=equalshare1*equalshare2
+            aligned_m=m
+            if m%simdsize!=0:
+                aligned_m=m+simdsize-m%simdsize
+                       
+            mflop_c=0
             if benchmark=='dmatdmatadd':                            
-                num_elements[-1]=(m%b_r)*(aligned_m%b_c)                   
+                mflop_c=b_r*b_c                            
             elif benchmark=='dmatdmatdmatadd':
-                num_elements[-1]=(m%b_r)*(aligned_m%b_c)*2
+                mflop_c=b_r*b_c*2
             else:
-                num_elements[-1]=(m%b_r)*(aligned_m%b_c)*(2*m)
-        chunk_sizes[m][str(lb+'_'+ls)]=[]                                      
-        for c in range(1,num_blocks):            
-            grain_size=sum(num_elements[0:c])
-            if grain_size>=g1 and grain_size<=g2:
-                chunk_sizes[m][str(lb+'_'+ls)].append(c)
-        i=i+1
+                mflop_c=b_r*b_c*(2*m)
+                
+            num_elements=[mflop_c]*num_blocks
+            if aligned_m%b_c!=0:
+                for j in range(1,equalshare1+1):
+                    if benchmark=='dmatdmatadd':                            
+                        num_elements[j*equalshare2-1]=(aligned_m%b_c)*b_r                            
+                    elif benchmark=='dmatdmatdmatadd':
+                        num_elements[j*equalshare2-1]=(aligned_m%b_c)*b_r*2
+                    else:
+                        num_elements[j*equalshare2-1]=(aligned_m%b_c)*b_r*(2*m)
+                
+            if m%b_r!=0:
+                for j in range(1,equalshare2+1):
+                    if benchmark=='dmatdmatadd':                            
+                        num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c                            
+                    elif benchmark=='dmatdmatdmatadd':
+                        num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c*2
+                    else:
+                        num_elements[(equalshare1-1)*equalshare2+j-1]=(m%b_r)*b_c*(2*m)
+                                                                                       
+            if aligned_m%b_c!=0 and m%b_r!=0:
+                if benchmark=='dmatdmatadd':                            
+                    num_elements[-1]=(m%b_r)*(aligned_m%b_c)                   
+                elif benchmark=='dmatdmatdmatadd':
+                    num_elements[-1]=(m%b_r)*(aligned_m%b_c)*2
+                else:
+                    num_elements[-1]=(m%b_r)*(aligned_m%b_c)*(2*m)
+                    
+            new_array=array_b[np.logical_and(array_b[:,2]==th,array_b[:,1]==num_blocks)][:,:-1]
+            new_labels=array_b[np.logical_and(array_b[:,2]==th,array_b[:,1]==num_blocks)][:,-1]
+
+#            new_array=array_b[array_b[:,2]==th][:,:-1]
+#            new_labels=array_b[array_b[:,2]==th][:,-1]
         
+            all_chunk_sizes=np.unique(new_array[:,0])
+            all_chunk_sizes.sort()
+    
+            ts=g_params[node][benchmark][mflop][1][0]
+            def my_func_g_b(ndata,alpha,gamma): 
+                N=ndata[:,2]
+                n_t=ndata[:,-1]
+                M=np.minimum(n_t,N) 
+                L=np.ceil(n_t/(M))
+                w_c=ndata[:,-2]
+                ps=mflop
+                return alpha*L+ts*(1+(gamma)*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
+            
+            ps=mflop
+            zb=my_func_g_b(new_array,*popt_5)
+    
+            
+            test_errors[m][th]=np.mean(np.abs(zb-new_labels))#/new_labels)
+            r2_errors[m][th]=r2_score(new_labels,zb)
+            
+    #            test_errors[m][th]=100*np.mean(np.abs(new_labels-zb-(np.median(new_labels)-np.median(zb)))/new_labels)
+    #            r2_errors[m][th]=r2_score(new_labels-(np.median(new_labels)-np.median(zb)),zb)
+    #        
+    #        for lb in [0.001,0.005,0.01,0.05,0.1]:
+    #            for ls in [0.1,0.2,0.5]:
+#            lb=0.01
+#            ls=.5
+            g1=np.ceil(np.sqrt(popt_5[0]*ps/(th*lb)))
+            g2=np.floor(ps/(th*(1+np.ceil(1/ls))))
+            plt.figure(i)
+    ##        plt.axes([0, 0, 2, 1])
+#            plt.scatter(new_array[:,3],new_labels,color='blue',label='true',marker='.')
+#            plt.scatter(new_array[:,3],zb,label='pred',marker='.',color='red')
+##            plt.scatter(new_array[:,3][new_array[:,4]==8],new_labels[new_array[:,4]==8],color='green',label='true',marker='.')
+#            plt.axvline(mflop/th,color='gray',linestyle='dashed')
+#
+#            plt.axvspan(g1,g2,color='green',alpha=0.5)
+    ##                plt.scatter(new_array[:,3],new_labels-zb,label='pred',marker='.',color='red')
+    #
+    ##        plt.grid(True,'both')
+#            plt.xscale('log')
+#            plt.xlabel('Grain size')
+#            plt.ylabel('Execution time')
+#    ##        plt.title('test set  matrix size:'+str(int(m))+'  '+str(int(th))+' threads')
+#    #
+#            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#            plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_pred_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#            i=i+1
+#            plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/range/'+node+'_pred_'+str(int(m))+'_'+str(int(th))+'_'+str(int(1000*lb))+'_'+str(int(1000*ls))+'.png',bbox_inches='tight')
+
+#            plt.savefig(perf_dir+'/blazemark/range/'+node+'_pred_'+str(int(m))+'_'+str(int(th))+'_'+str(int(1000*lb))+'_'+str(int(1000*ls))+'.png',bbox_inches='tight')
+            
+            chunk_sizes[m][str(lb)+'_'+str(ls)][th]=[1,mflop]    
+            first=True      
+            last=True
+            range_c=[1,mflop]   
+            plt.figure(i)  
+            all_values=[new_labels[np.logical_and(new_array[:,0]==c,new_array[:,1]==num_blocks)][0] for c in all_chunk_sizes]
+            plt.scatter(all_chunk_sizes,all_values,color='royalblue')
+    
+            for c in range(1,num_blocks):  
+                grain_size=sum(num_elements[0:c])
+    #            print(grain_size,g1,g2)
+                if grain_size>=g1:
+                    if first:                    
+                        range_c[0]=c
+                        first=False
+                    else:
+                        if grain_size>g2:
+                            range_c[1]=c-1    
+                            break
+                        else:
+                            if c in all_chunk_sizes:
+                                plt.figure(i)
+    
+                                plt.scatter(c,new_labels[np.logical_and(new_array[:,0]==c,new_array[:,1]==num_blocks)][0],color='red')
+                                plt.xlabel('Chunk size')
+                                plt.ylabel('Execution time')       
+                                plt.xscale('log')
+            plt.figure(i)
+            plt.axvspan(range_c[0],range_c[1],color='red',alpha=0.25)
+            if m in d_hpx_ref[node][benchmark][th]['size']:
+                k=d_hpx_ref[node][benchmark][th]['size'].index(m)  
+                v=d_hpx_ref[node][benchmark][th]['mflops'][k]                              
+                plt.axhline(mflop/v,color='green')
+            plt.xlabel('Chunk size')
+            plt.ylabel('Execution time')       
+            plt.xscale('log')
+#            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_compared_'+str(int(m))+'_'+str(int(th))+'_'+str(int(1000*lb))+'_'+str(int(1000*ls))+'_'+str(range_c[0])+'_'+str(range_c[1])+'.png',bbox_inches='tight')
+
+#            plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_pred_'+str(int(m))+'_'+str(int(th))+'_'+str(int(1000*lb))+'_'+str(int(1000*ls))+'_'+str(range_c[0])+'_'+str(range_c[1])+'.png',bbox_inches='tight')
+#            plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+benchmark+'/'+node+'_pred_'+str(int(m))+'_'+str(int(th))+'_'+str(int(1000*lb))+'_'+str(int(1000*ls))+'_'+str(range_c[0])+'_'+str(range_c[1])+'.png',bbox_inches='tight')
+    
+    
+            chunk_sizes[m][str(lb)+'_'+str(ls)][th]=range_c
+            i=i+1
+            
                 
 p_th={}
 for th in thr:
@@ -917,11 +1032,13 @@ plt.ylabel('Relative Error(%)')
 plt.xticks(np.arange(1,9))
 #ax.set_xticklabels(parameters)
 #plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-plt.savefig(perf_dir+'/blazemark/'+node+'_relative_error_less_953.png',bbox_inches='tight')
+#plt.savefig(perf_dir+'/blazemark/'+node+'_relative_error_all.png',bbox_inches='tight')
+
+plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_relative_error_less_953.png',bbox_inches='tight')
 
 r_th={}
 for th in thr:
-    r_th[th]=np.mean([r2_errors[m][th] for m in test_errors.keys() if th in test_errors[m].keys() and m<9530])
+    r_th[th]=np.mean([r2_errors[m][th] for m in test_errors.keys() if th in test_errors[m].keys() and m<953])
     
 fig=plt.figure()
 ax = fig.add_subplot(111)
@@ -936,6 +1053,4 @@ plt.yticks([0.0,0.2,0.4,0.6,0.8,1.0])
 #plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_r2_error_all.png',bbox_inches='tight')
 plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_r2_error_less_953.png',bbox_inches='tight')
-=======
 plt.savefig(perf_dir+'/blazemark/'+node+'_r2_error_all.png',bbox_inches='tight')
->>>>>>> 8aed8bd246... Updating python scripts
