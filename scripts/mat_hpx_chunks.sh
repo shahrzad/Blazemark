@@ -5,6 +5,12 @@ echo "node not specified, marvin by default"
 node="marvin"
 else
 node=$1
+if [ $node = "marvin_old" ]
+then
+        module load clang/6.0.1
+        module load boost/1.68.0-clang6-release
+fi
+
 echo "Running on ${node}"
 fi
 papi=1
@@ -20,13 +26,15 @@ hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
-export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${hpx_dir}:$LD_LIBRARY_PATH
+
 thr=(1 2 3 4 5 6 7 8)
 chunk_sizes=(1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1200 1380 1587 1800 2000 3000 4000 5000 6000 7000 8000 9000 10000 20000 30000 40000 50000 60000 70000 80000 90000 100000)
-block_sizes_row=(6)
+block_sizes_row=(4)
 block_sizes_col=(128 256 512 1024)
 rm -rf ${results_dir}/*.dat
-benchmarks=('dmatdmatadd')
+benchmarks=('dmatdmatdmatadd')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
@@ -81,7 +89,7 @@ for b in ${benchmarks[@]}
 		#length=10
 		length=2
                 end_line=119
-		start_line=100
+		#start_line=100
 		#start_line=117
 		
         else
@@ -121,8 +129,9 @@ for b in ${benchmarks[@]}
 		        cd ${blazemark_dir}/scripts
 			./change_hpx_parameters.sh BLAZE_HPX_MATRIX_BLOCK_SIZE_COLUMN "${block_size_col}"
 
-			for line_number in $(seq $((start_line+1)) $((start_line+length)))
-		        do
+#			for line_number in $(seq $((start_line+1)) $((start_line+length)))
+                        for line_number in $(seq $((start_line+1)) $((end_line-1)))
+			do
 		                s='\/\/('
 		                sed -i "${line_number}s/${s}/(/" $param_filename
 		                l=$(sed -n ${line_number}' p' $param_filename)
@@ -133,11 +142,11 @@ for b in ${benchmarks[@]}
 		                        mat_size=${l:1:-3}
 		                fi                                                                                                                  
 		                mat_size=$(echo -e "${mat_size}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-
-	        		num_chunks_1=$(python -c "from math import ceil;print (ceil($mat_size/$block_size_row))")
-	        		num_chunks_2=$(python -c "from math import ceil;print (ceil($mat_size/$block_size_col))")
-		        	num_chunks=$((num_chunks_1*num_chunks_2))
-		        	echo "matrix size: $mat_size num_chunks: "$((num_chunks_1*num_chunks_2))
+	        		
+				num_chunks_1=$(python -c "from math import ceil;print (int(ceil($mat_size/$block_size_row)))")
+	        		num_chunks_2=$(python -c "from math import ceil;print (int(ceil($mat_size/$block_size_col)))")
+    	                        echo "matrix size: $mat_size num_chunks: "$((num_chunks_1*num_chunks_2))
+				num_chunks=$((num_chunks_1*num_chunks_2))
 				for c in "${chunk_sizes[@]}"
 					do
 						if [ $c -lt $num_chunks ]
