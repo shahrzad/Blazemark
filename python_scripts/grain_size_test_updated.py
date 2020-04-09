@@ -449,7 +449,7 @@ def grain_dict(array,avg=False):
                 g_dict[gd][td][1]=np.ceil(sum(g_dict[gd][td][1])/len(g_dict[gd][td][1]))
     return g_dict
 
-def create_dict_refernce(directory):
+def create_dict_reference(directory):
     thr=[]
     nodes=[]
     data_files=glob.glob(directory+'/*.dat')
@@ -507,7 +507,8 @@ def create_dict_refernce(directory):
     return d_all                           
 
 hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/matrix/09-15-2019/reference-chunk_size_fixed/'         
-d_hpx_ref=create_dict_refernce(hpx_dir_ref)  
+hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/matrix/c7/reference/'
+d_hpx_ref=create_dict_reference(hpx_dir_ref)  
         
 b_filename='/home/shahrzad/repos/Blazemark/data/data_perf_all.csv'
 titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops','include']
@@ -588,7 +589,7 @@ for m in matrix_sizes:#[690,912,1825,3193,4222,4855,6420]:#matrix_sizes:
         g_params[node][benchmark]=grain_dict(array_b,1)
         
        
-        for th in [8]:#range(1,9):  
+        for th in range(1,9):  
             b='4-256'
             b_r=int(b.split('-')[0])
             b_c=int(b.split('-')[1])
@@ -728,9 +729,12 @@ for m in matrix_sizes:#[690,912,1825,3193,4222,4855,6420]:#matrix_sizes:
                                 plt.xscale('log')
             plt.figure(i)
             plt.axvspan(range_c[0],range_c[1],color='red',alpha=0.25)
-            if m in d_hpx_ref[node][benchmark][th]['size']:
-                k=d_hpx_ref[node][benchmark][th]['size'].index(m)  
-                v=d_hpx_ref[node][benchmark][th]['mflops'][k]                              
+            r_node=node
+            if node=='marvin':
+                r_node='marvin_old'
+            if m in d_hpx_ref[r_node][benchmark][th]['size']:
+                k=d_hpx_ref[r_node][benchmark][th]['size'].index(m)  
+                v=d_hpx_ref[r_node][benchmark][th]['mflops'][k]                              
                 plt.axhline(mflop/v,color='green')
             plt.xlabel('Chunk size')
             plt.ylabel('Execution time')       
