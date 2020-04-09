@@ -144,10 +144,17 @@ def create_dict(directories,to_csv=False):
 marvin_dir='/home/shahrzad/repos/Blazemark/data/grain_size/marvin'
 medusa_dir='/home/shahrzad/repos/Blazemark/data/grain_size/medusa'
 tameshk_dir='/home/shahrzad/repos/Blazemark/data/grain_size/tameshk'
+<<<<<<< HEAD
 
 #results_dir='/home/shahrzad/repos/Blazemark/results/grain_size'
 #create_dict([results_dir],1)
 
+=======
+
+#results_dir='/home/shahrzad/repos/Blazemark/results/grain_size'
+#create_dict([results_dir],1)
+
+>>>>>>> 358b65fe629cd2a890bca1682655efafafca5639
 create_dict([marvin_dir,medusa_dir,tameshk_dir],1)
 
 def my_func_g_5(ndata,alpha,gamma): 
@@ -329,6 +336,7 @@ for node in nodes:
                 i=i+1                    
                 plt.savefig(perf_dir+'/fitted/'+str(int(base_ps))+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_range_10_50_80.png',bbox_inches='tight')
 
+<<<<<<< HEAD
 #                plt.scatter(new_array[:,5],z_5,marker='.',label='fitted')
 
                 g1=np.ceil(np.sqrt(popt_5[0]*ps/(th*lb)))
@@ -395,6 +403,8 @@ for node in nodes:
 #    plt.savefig(perf_dir+'/fitted/'+node+'_relative_error_compared.png',bbox_inches='tight')
     i=i+1
 
+=======
+>>>>>>> 358b65fe629cd2a890bca1682655efafafca5639
                 plt.savefig(perf_dir+'/fitted/'+str(int(base_ps))+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
 
 for node in nodes:
@@ -430,6 +440,10 @@ for node in nodes:
     plt.savefig(perf_dir+'/fitted/'+node+'_r2_error_compared_self.png',bbox_inches='tight')
     i=i+1    
     
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 358b65fe629cd2a890bca1682655efafafca5639
     
 
 p_th={}
@@ -725,6 +739,7 @@ for m in matrix_sizes:#[690,912,1825,3193,4222,4855,6420]:#matrix_sizes:
                 ps=mflop
                 return alpha*L+ts*(1+(gamma)*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
             
+<<<<<<< HEAD
    
     for th in range(1,9):          
         new_array=array_b[array_b[:,2]==th][:,:-1]
@@ -738,6 +753,8 @@ for m in matrix_sizes:#[690,912,1825,3193,4222,4855,6420]:#matrix_sizes:
             M=np.minimum(n_t,N) 
             L=np.ceil(n_t/(M))
             w_c=ndata[:,-2]
+=======
+>>>>>>> 358b65fe629cd2a890bca1682655efafafca5639
             ps=mflop
             zb=my_func_g_b(new_array,*popt_5)
     
@@ -839,6 +856,7 @@ plt.xticks(np.arange(1,9))
 #ax.set_xticklabels(parameters)
 #plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #plt.savefig(perf_dir+'/blazemark/'+node+'_relative_error_all.png',bbox_inches='tight')
+<<<<<<< HEAD
 
 plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_relative_error_less_953.png',bbox_inches='tight')
 
@@ -1033,6 +1051,9 @@ plt.xticks(np.arange(1,9))
 #ax.set_xticklabels(parameters)
 #plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #plt.savefig(perf_dir+'/blazemark/'+node+'_relative_error_all.png',bbox_inches='tight')
+
+plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_relative_error_less_953.png',bbox_inches='tight')
+
 
 plt.savefig(perf_dir+'/blazemark/'+str(int(base_ps))+'/'+node+'_relative_error_less_953.png',bbox_inches='tight')
 
