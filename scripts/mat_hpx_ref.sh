@@ -103,7 +103,7 @@ $blazemark_dir/scripts/generate_benchmarks.sh ${b} ${r} "${blaze_dir}/blazemark/
 for th in $(seq 8)
 do
 #export HPX_COMMANDLINE_OPTIONS="--hpx:threads=${th} --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead"
-${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th}>>${results_dir}/${node}-${b}-${th}-${r}.dat
+${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive>>${results_dir}/${node}-${b}-${th}-${r}.dat
     
 #${benchmarks_dir}/${b}_${r} -only-blaze --hpx:threads=${th} --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${i}-${b}-${th}-${r}.dat
     echo ${b} "benchmark for" ${r} "finished for "${th} "threads"

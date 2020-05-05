@@ -1,8 +1,10 @@
 #!/bin/bash
 module purge
-module load cmake/3.10.2
-module load gperftools/2.7
-module load papi/5.7.0
+module load cmake/3.16.4
+
+#module load cmake/3.10.2
+#module load gperftools/2.7
+#module load papi/5.7.0
 
 gcc_version="9.1.0"
 clang_version="6.0.1"
@@ -10,8 +12,10 @@ boost_version="1.68.0"
 #clang_version="8.0.0"
 #boost_version="1.70.0"
 username="sshirzad"
-clang_dir="/opt/mn/clang/${clang_version}/bin/clang"
-clangpp_dir="/opt/mn/clang/${clang_version}/bin/clang++"
+clang_dir="/opt/apps/clang/${clang_version}/bin/clang"
+clangpp_dir="/opt/apps/clang/${clang_version}/bin/clang++"
+#clang_dir="/opt/mn/clang/${clang_version}/bin/clang"
+#clangpp_dir="/opt/mn/clang/${clang_version}/bin/clang++"
 CXX_FLAGS="-DHPX_WITH_PAPI=ON -DHPX_WITH_THREAD_IDLE_RATES=ON -DHPX_WITH_THREAD_LOCAL_STORAGE=ON -DHPX_WITH_DYNAMIC_HPX_MAIN=OFF"
 if [ $# -eq 4 ]
 then
@@ -46,7 +50,8 @@ then
 	if [ ${compiler} == 'clang' ] || [ ${compiler} == 'Clang' ]
 	then
                 module load clang/${clang_version}
-                module load boost/${boost_version}-clang${clang_version}-$build_type
+#                module load boost/${boost_version}-clang${clang_version}-$build_type
+                module load boost/${boost_version}-clang6-$build_type
 
 		build_dir="${build_dir}_clang"
                 install_dir="${install_dir}_clang"
@@ -77,8 +82,8 @@ then
                 exit
         fi
 
-        build_dir="${build_dir}_${node_name}"
-        install_dir="${install_dir}_${node_name}"
+        build_dir="${build_dir}_${node_name}_old"
+        install_dir="${install_dir}_${node_name}_old"
 
 	if [ ${build_dir} != "" ] && [ ${install_dir} != "" ]
 	then 
