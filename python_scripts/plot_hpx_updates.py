@@ -223,6 +223,8 @@ def create_dict_relative_norepeat(directories):
             thr[node].append(int(th))        
         if block_size_row+'-'+block_size_col not in block_sizes[benchmark]:
             block_sizes[benchmark].append(block_size_row+'-'+block_size_col)
+        if chunk_size=='':
+            chunk_size=-1
         if int(chunk_size) not in chunk_sizes:
             chunk_sizes.append(int(chunk_size))
         if node not in nodes:
@@ -260,6 +262,8 @@ def create_dict_relative_norepeat(directories):
         result=f.readlines()[3:]
         (node, benchmark, th, runtime, chunk_size, block_size_row, block_size_col, mat_size) = filename.split('/')[-1].replace('.dat','').split('-')         
         th=int(th)       
+        if chunk_size=='':
+            chunk_size=-1
         chunk_size=int(chunk_size)         
         for r in result:        
             if "N=" in r:
@@ -543,12 +547,12 @@ for benchmark in benchmarks:
     for th in thr:
         plt.figure(i)
         for a in ['4']:        
-            for b in block_sizes:
+            for b in d_hpx[node][benchmark][th].keys():# block_sizes:
                 if b.startswith(a+'-'):
-                    for c in chunk_sizes:   
+                    for c in d_hpx[node][benchmark][th][b].keys():#chunk_sizes:   
                         
-                        if d_hpx[benchmark][th][b][c]['mflops'].count(0)<0.5*len(d_hpx[benchmark][th][b][c]['mflops']):
-                            plt.plot(d_hpx[benchmark][th][b][c]['size'], d_hpx[benchmark][th][b][c]['mflops'],label='chunk_size: '+str(c)+' block_size: '+str(b)+ '  '+str(th)+' threads',marker='*')
+                        if d_hpx[node][benchmark][th][b][c]['mflops'].count(0)<0.5*len(d_hpx[node][benchmark][th][b][c]['mflops']):
+                            plt.plot(d_hpx[node][benchmark][th][b][c]['size'], d_hpx[node][benchmark][th][b][c]['mflops'],label='chunk_size: '+str(c)+' block_size: '+str(b)+ '  '+str(th)+' threads',marker='*')
     #                        plt.plot(d_openmp[benchmark][th]['size'], d_openmp[benchmark][th]['mflops'],label='openmp '+str(th)+' threads')
     
                             plt.xlabel("# matrix size")           
@@ -1427,8 +1431,12 @@ hpx_dir1='/home/shahrzad/repos/Blazemark/data/matrix/09-15-2019/'
 hpx_dir2='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/trillian/'
 hpx_dir3='/home/shahrzad/repos/Blazemark/results/new_threads/'
 hpx_dir4='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/work_stealing_off'
+hpx_dir5='/home/shahrzad/repos/Blazemark/data/matrix/c7/'
+hpx_dir6='/home/shahrzad/repos/Blazemark/data/matrix/c7/spt/'
 
-(d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir,hpx_dir1,hpx_dir2])                 
+(d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir5])                 
+
+(d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir,hpx_dir1,hpx_dir2,hpx_dir5,hpx_dir6])                 
 (d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir4])                 
             
 simdsize=4
@@ -1439,7 +1447,7 @@ f_writer=csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 f_writer.writerow(['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops','include'])
 node_type=0
 for node in d_hpx.keys():
-    if node=='marvin':
+    if node=='marvin' or node=='marvin_old':
         L1cache='32768'
         L2cache='262144'
         L3cache='20971520'
@@ -3031,9 +3039,9 @@ for c in [7]:
         pp.close()         
         
 #####performance  different benchmarks        
-for b in ['4-1024']:
-    for th in d_hpx[benchmark].keys():   
-        pp = PdfPages(perf_directory+'/performance_dmatdmatadd_dmatdmatdmatadd_'+b+'_'+str(th)+'.pdf')
+for th in d_hpx[node][benchmark].keys():   
+    for b in ['4-128', '4-256']:
+#        pp = PdfPages(perf_directory+'/performance_dmatdmatadd_dmatdmatdmatadd_'+b+'_'+str(th)+'.pdf')
         plt.figure(i)
         s=''
         for benchmark in benchmarks:      
@@ -3042,9 +3050,11 @@ for b in ['4-1024']:
 
             for m in mat_sizes[benchmark]:  
                 c=1                     
-                k=d_hpx[benchmark][th][b][c]['size'].index(m)
-                if 'mflops' in d_hpx[benchmark][th][b][c].keys() and d_hpx[benchmark][th][b][c]['mflops'][k]:
-                    results.append(d_hpx[benchmark][th][b][c]['mflops'][k])
+                k=d_hpx[node][benchmark][th][b][c]['size'].index(m)
+                if 'mflops' in d_hpx[node][benchmark][th][b][c].keys() and d_hpx[node][benchmark][th][b][c]['mflops'][k]:
+                    results.append((2*m**2)/d_hpx[node][benchmark][th][b][c]['mflops'][k])
+                else:
+                    results.append(0)
 
             plt.figure(i)
             plt.plot(mat_sizes[benchmark], results, label=benchmark+' '+str(th)+' threads block_size:'+str(b))
@@ -3055,9 +3065,9 @@ for b in ['4-1024']:
             plt.title(s[:-1])
             plt.grid(True, 'both')
             plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-            plt.savefig(pp, format='pdf',bbox_inches='tight')
-        print('')
-        i=i+1
+#            plt.savefig(pp, format='pdf',bbox_inches='tight')
+#        print('')
+    i=i+1
                             
         plt.show()
         pp.close()  
