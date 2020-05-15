@@ -56,7 +56,8 @@ do
 			then
 				${hpx_bin_dir}/grain_size_test --spt --counter -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=1 --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead>>${results_dir}/${node}-sptctr_grain_size_${th}_${c}_${il}_${ni}.dat
 			else
-				${hpx_bin_dir}/grain_size_test --spt  -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=6 --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-spt_grain_size_${th}_${c}_${il}_${ni}.dat
+				${hpx_bin_dir}/grain_size_test --spt  -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=6>>${results_dir}/${node}-spt_grain_size_${th}_${c}_${il}_${ni}.dat
+				#--hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0
 				echo "Run for ${ni} iterations, iter length of ${il}, on ${th} threads finished"			
 			fi
 		done
