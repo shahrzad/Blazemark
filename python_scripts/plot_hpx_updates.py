@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ue#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Fri May 24 18:35:07 2019
@@ -1431,8 +1431,8 @@ hpx_dir1='/home/shahrzad/repos/Blazemark/data/matrix/09-15-2019/'
 hpx_dir2='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/trillian/'
 hpx_dir3='/home/shahrzad/repos/Blazemark/results/new_threads/'
 hpx_dir4='/home/shahrzad/repos/Blazemark/data/matrix/06-13-2019/work_stealing_off'
-hpx_dir5='/home/shahrzad/repos/Blazemark/data/matrix/c7/'
-hpx_dir6='/home/shahrzad/repos/Blazemark/data/matrix/c7/spt/'
+hpx_dir5='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/all_cores/spt_min_0'
+hpx_dir6='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/idle_cores/2'
 
 (d_hpx,  chunk_sizes, block_sizes, thr, benchmarks, mat_sizes)=create_dict_relative_norepeat([hpx_dir5])                 
 
