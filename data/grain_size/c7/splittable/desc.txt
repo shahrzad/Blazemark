@@ -6,4 +6,4 @@
    if idle start from 4*hpx::get_os_thread_count
 4 num_free_=2*hpx::get_os_thread_count;   steps=0
    if remainder>0 & ... split
-
+5 splittable_task branch after changes of Hartmut, cleaning up the code and adding idle_mask
