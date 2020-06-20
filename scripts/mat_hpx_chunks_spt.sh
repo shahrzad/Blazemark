@@ -1,27 +1,41 @@
 #!/bin/bash
-if [ $# -ne 1 ]
+if [ $# -eq 0 ]
 then
-echo "node not specified, marvin by default"
-node="marvin"
+        echo "node not specified, marvin by default"
+        node="marvin"
+        echo "split type= all by default"
+        split_type="all"
+elif [ $# -eq 1 ]
+then
+        node=$1
+        echo "split type= all by default"
+        split_type="all"
 else
-node=$1
+        node=$1
+        split_type=$2
+fi
+
 if [ $node = "marvin_old" ]
 then
         module load clang/6.0.1
         module load boost/1.68.0-clang6-release
 fi
 
-echo "Running on ${node}"
-fi
-papi=1
+echo "Running on ${node} split type ${split_type}"
+papi=0
 steps=0
 counters=0
+
+unters=0
+
+#split_type="idle"
+
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/work/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 #hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
 hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/lib"
-hpx_source_dir="/home/sshirzad/src/hpx"
+hpx_source_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include"
 hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
@@ -41,6 +55,14 @@ r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
 i=1
+cd ${blazemark_dir}/scripts
+
+if [ $split_type == "idle" ]
+then
+        ./change_hpx_parameters.sh BLAZE_HPX_SPLIT_TYPE_IDLE 1
+else
+        ./change_hpx_parameters.sh BLAZE_HPX_SPLIT_TYPE_IDLE 0
+fi
 
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
@@ -51,6 +73,8 @@ for b in ${benchmarks[@]}
 	cp ${hpx_source_dir}/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/hpx_info/
 	cp ${hpx_source_dir}/hpx/parallel/util/detail/splittable_task.hpp ${results_dir}/info_${node}_${b}/hpx_info/
 	cp ${hpx_source_dir}/hpx/parallel/executors/splittable_executor.hpp ${results_dir}/info_${node}_${b}/hpx_info/
+
+	cp ${hpx_source_dir}/hpx/executors/splittable_executor.hpp ${results_dir}/info_${node}_${b}/hpx_info/
 
 	#hpx_source_dir="/home/sshirzad/src/hpx"
 	#cd $hpx_source_dir
@@ -166,9 +190,9 @@ for b in ${benchmarks[@]}
 					do 	
 						if [ $counters == 1 ]
 						then
-						       ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+						       ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0 --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
 						else
-							${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive>>${results_dir}/${node}_spt-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+							${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}_spt_${split_type}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
 						fi
 					    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: $mat_size"
 				done

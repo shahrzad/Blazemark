@@ -32,7 +32,7 @@ hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/lib"
 hpx_bin_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/bin"
 hpx_source_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include"
 hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
-results_dir="${blazemark_dir}/results_grain_size"
+results_dir="${blazemark_dir}/results_grain_size_all"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 
 thr=(1 2 3 4 5 6 7 8)

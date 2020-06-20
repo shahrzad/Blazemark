@@ -5,6 +5,9 @@
 #if [[ $string != *",1"* ]]; then
 #  echo "It's there!"
 #fi
+
+
+
 cd ../data/grain_size/marvin/
 for filename in *
 do
