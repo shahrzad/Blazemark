@@ -5,14 +5,24 @@ then
 	node="marvin"
 	echo "split type= all by default"
 	split_type="all"
+	min_task_size=0
 elif [ $# -eq 1 ]
 then
 	node=$1
         echo "split type= all by default"
         split_type="all"
+	min_task_size=0
+
+elif [ $# -eq 2 ]
+then
+        node=$1
+        echo "min task size=0 by default"
+        split_type=$2
+	min_task_size=0
 else
 	node=$1
 	split_type=$2
+	min_task_size=$3
 fi
 
 
@@ -51,7 +61,8 @@ cp -r $hpx_log_dir/* ${results_dir}/info_$node/hpx_info
 cp ${hpx_source_dir}/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}/hpx_info/
 cp ${hpx_source_dir}/hpx/parallel/util/detail/splittable_task.hpp ${results_dir}/info_${node}/hpx_info/
 cp ${hpx_source_dir}/hpx/parallel/executors/splittable_executor.hpp ${results_dir}/info_${node}/hpx_info/
-
+cp ${hpx_source_dir}/hpx/executors/splittable_executor.hpp ${results_dir}/info_${node}/hpx_info
+cp ${hpx_source_dir}/hpx/executors/detail/splittable_task.hpp ${results_dir}/info_${node}/hpx_info
 
 for ni in ${num_iterations[@]}
 do
@@ -66,9 +77,9 @@ do
 			export OMP_NUM_THREADS=1
 			if [ $counter == 1 ]
 			then
-				${hpx_bin_dir}/grain_size_test --spt --counter -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=1 --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-sptctr_grain_size_${th}_${c}_${il}_${ni}.dat
+				${hpx_bin_dir}/grain_size_test --spt --counter -Ihpx.stacks.use_guard_pages=0 --split_type=${split_type} --min_task_size=${min_task_size} --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=3 --hpx:print-counter=/threads/time/cumulative --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-sptctr_${split_type}_grain_size_${th}_${min_task_size}_${il}_${ni}.dat
 			else
-				${hpx_bin_dir}/grain_size_test --spt --split_type=${split_type}  -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=6 --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-spt_${split_type}_grain_size_${th}_${c}_${il}_${ni}.dat
+				${hpx_bin_dir}/grain_size_test --spt --min_task_size=${min_task_size} --split_type=${split_type}  -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=6 --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-spt_${split_type}_grain_size_${th}_${min_task_size}_${il}_${ni}.dat
 				
 				echo "Run for ${ni} iterations, iter length of ${il}, on ${th} threads finished"			
 			fi
