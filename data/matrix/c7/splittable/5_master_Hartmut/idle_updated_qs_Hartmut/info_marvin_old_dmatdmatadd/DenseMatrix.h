@@ -132,15 +132,17 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
    const size_t equalShare2( (~rhs).columns() / colsPerIter + addon2 );
 
 //   hpx::evaluate_active_counters(true, "Initialization");
-hpx::parallel::execution::splittable_mode spt_mode =
+    hpx::parallel::execution::splittable_mode spt_mode =
                 hpx::parallel::execution::splittable_mode::all; 
-   //std::string split_type = BLAZE_HPX_SPLIT_TYPE_IDLE ? "idle" : "all";
+
+    const size_t min_thresh = BLAZE_HPX_SPLIT_MIN_THRESH;
+    
     if (BLAZE_HPX_SPLIT_TYPE_IDLE == 1 )
     {   
         spt_mode = hpx::parallel::execution::splittable_mode::idle;
     }
 
-    hpx::parallel::execution::splittable_executor spt( spt_mode );
+    hpx::parallel::execution::splittable_executor spt( spt_mode, min_thresh );
 
     for_loop( par.on( spt ), size_t(0), equalShare1 * equalShare2, [&](int i)
    {

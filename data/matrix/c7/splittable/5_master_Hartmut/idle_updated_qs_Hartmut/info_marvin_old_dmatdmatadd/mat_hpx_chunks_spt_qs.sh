@@ -66,7 +66,7 @@ fi
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
 	do
-	rm -rf ${results_dir}/info_${node}_${b}
+#	rm -rf ${results_dir}/info_${node}_${b}
 	mkdir -p ${results_dir}/info_${node}_${b}/hpx_info
 	cp -r $hpx_log_dir/* ${results_dir}/info_${node}_${b}/hpx_info
 	cp ${hpx_source_dir}/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/hpx_info/
@@ -189,9 +189,9 @@ for b in ${benchmarks[@]}
 					do 	
 						if [ $counters == 1 ]
 						then
-						       ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} -qs --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0 --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+						       ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:queuing=static-priority --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0 --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}_sptqs_${split_type}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
 						else
-							${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}_spt_${split_type}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+							${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:queuing=static-priority --hpx:bind=balanced --hpx:numa-sensitive --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}_sptqs_${split_type}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
 						fi
 					    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: $mat_size"
 				done
