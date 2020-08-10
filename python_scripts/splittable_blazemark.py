@@ -1,4 +1,4 @@
-c#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jan 13 14:19:59 2020
@@ -21,88 +21,34 @@ from scipy.optimize import nnls
 import csv
 from scipy.optimize import nnls
 from sklearn.metrics import r2_score
-
+import blaze_funcs as bf
 
 perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
-def grain_dict(array,avg=False):
-    g_dict={}
-    
-    g=array[:,3]
-    p=array[:,-1]
-    t=array[:,2]
-    nt=array[:,-2]
-    
-    for i in range(len(g)):
-        if g[i] not in g_dict.keys():
-            g_dict[g[i]]={}
-        if t[i] not in g_dict[g[i]].keys():
-            g_dict[g[i]][t[i]]=[[],[]]
-        g_dict[g[i]][t[i]][0].append(p[i])
-        g_dict[g[i]][t[i]][1].append(nt[i])
+                
+dir1='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated'
+dir2='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated_Hartmut'
+dir3='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated_qs_Hartmut'
+dir4='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated_qs_Hartmut_adaptive_thresh'
+dir5='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated_qs_Hartmut_adaptive_tasksize_updated'
+dir6='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/6/adaptive'
+dir7='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/6/nonadaptive'
 
-    if avg:
-        for gd in g_dict.keys():
-            for td in g_dict[gd].keys():
-                g_dict[gd][td][0]=sum(g_dict[gd][td][0])/len(g_dict[gd][td][0])
-                g_dict[gd][td][1]=np.ceil(sum(g_dict[gd][td][1])/len(g_dict[gd][td][1]))
-    return g_dict
+save_dir_name='latest/blazemark/idle/'
+alias=['latest-adaptive','latest-nonadaptive']
+dirs=[dir6, dir7]
+bf.compare_results(dirs, save_dir_name, alias=alias, save=True)
 
-def create_dict_reference(directory):
-    thr=[]
-    nodes=[]
-    data_files=glob.glob(directory+'/*.dat')
-    benchmark=''
-    benchmarks=[]
-    
-    for filename in data_files:
-        try:
-            (node, benchmark, th) = filename.split('/')[-1].replace('.dat','').split('-')   
-        except:
-            (node, benchmark, th, ref) = filename.split('/')[-1].replace('.dat','').split('-')  
-        if benchmark not in benchmarks:
-                benchmarks.append(benchmark)                
-        if int(th) not in thr:
-            thr.append(int(th))
-        if node not in nodes:
-            nodes.append(node)        
-                  
-    thr.sort()
-    benchmarks.sort()      
-    nodes.sort()      
-    
-    d_all={}   
-    for node in nodes:
-        d_all[node]={}
-        for benchmark in benchmarks:  
-            d_all[node][benchmark]={}
-            for th in thr:
-                d_all[node][benchmark][th]={}     
-                                            
-    data_files.sort()        
-    for filename in data_files:                
-        stop=False
-        f=open(filename, 'r')
-                 
-        result=f.readlines()[3:]
-        try:
-            (node, benchmark, th) = filename.split('/')[-1].replace('.dat','').split('-')   
-        except:
-            (node, benchmark, th, ref) = filename.split('/')[-1].replace('.dat','').split('-')          
-        th = int(th)
-        size=[]
-        mflops=[]    
-        for r in result:        
-            if "N=" in r or '/' in r:
-                stop=True
-            if not stop:
-                size.append(int(r.strip().split(' ')[0]))
-                mflops.append(float(r.strip().split(' ')[-1]))
-            
-        d_all[node][benchmark][th]['size']=size
-        d_all[node][benchmark][th]['mflops']=mflops
- 
-            
-    return d_all                           
+save_dir_name='5-6-7-8/blazemark/idle_updated_Hartmut_adaptive/'
+alias=['idle', 'idle_qs_Hartmut','idle_qs_Hartmut_adaptive']
+bf.compare_results([dir1, dir2, dir3], save_dir_name, alias=alias, save=True)
+
+save_dir_name='5-6-7-8/blazemark/idle_updated_qs_Hartmut_adaptive_task_size_updated/'
+alias=['idle_qs_adaptive', 'idle_qs_adaptive_tasksize_updated']
+bf.compare_results([dir4, dir5], save_dir_name, alias=alias, save=True)
+
+alias=['idle_qs_adaptive', 'idle_qs_adaptive_tasksize_updated']
+
+bf.compare_results([dir3, dir4, dir5], save_dir_name, alias=alias, save=True)
 
 hpx_dir_ref_0='/home/shahrzad/repos/Blazemark/data/matrix/09-15-2019/reference-chunk_size_fixed/'         
 hpx_dir_ref_0='/home/shahrzad/repos/Blazemark/data/matrix/c7/reference/4-10-2020-wo-numa'
