@@ -36,6 +36,9 @@ then
     elif [ $1 == 'BLAZE_HPX_SPLIT_TYPE_IDLE' ]
 	    then 
 	    line_number=61
+    elif [ $1 == 'BLAZE_SPLIT_ADAPTIVE' ]
+            then
+            line_number=69
     fi
         filename=${blaze_dir}/blaze/config/HPX.h
 	param=$(sed -n ${line_number}' p' ${filename} |cut -d' ' -f3)

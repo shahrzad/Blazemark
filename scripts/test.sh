@@ -6,17 +6,38 @@
 #  echo "It's there!"
 #fi
 
+qs=""
+mode="idle"
+ctr=""
+adaptive=""
 
+# Argument parsing
+while getopts "qm:ac" OPTION; do case $OPTION in
+    q)
+    	qs="qs"
+        ;;
+    m)
+        mode=$OPTARG
+        ;;
+    a)
+        adaptive="adaptive"
+        ;;
+    c)
+        counter="ctr"
+        ;;
+esac; done
 
-cd ../data/grain_size/marvin/
-for filename in *
-do
-echo $filename
-#mv "$filename" "${filename/marvin-/}"
-#mv "$filename" "marvin-${filename}"
+echo "${qs} ${mode} ${adaptive} ${counter}"
 
+#cd ../data/grain_size/marvin/
+#for filename in *
+#do
 #echo $filename
-done
+##mv "$filename" "${filename/marvin-/}"
+##mv "$filename" "marvin-${filename}"
+#
+##echo $filename
+#done
 
 
 #NUMBER=501
