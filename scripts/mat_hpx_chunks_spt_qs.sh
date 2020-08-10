@@ -1,27 +1,40 @@
 #!/bin/bash
-if [ $# -ne 1 ]
+if [ $# -eq 0 ]
 then
-echo "node not specified, marvin by default"
-node="marvin"
+        echo "node not specified, marvin by default"
+        node="marvin"
+        echo "split type= all by default"
+        split_type="all"
+elif [ $# -eq 1 ]
+then
+        node=$1
+        echo "split type= all by default"
+        split_type="all"
 else
-node=$1
+        node=$1
+        split_type=$2
+fi
+
 if [ $node = "marvin_old" ]
 then
         module load clang/6.0.1
         module load boost/1.68.0-clang6-release
 fi
 
-echo "Running on ${node}"
-fi
-papi=1
+echo "Running on ${node} split type ${split_type}"
+papi=0
 steps=0
 counters=0
+
+
+#split_type="idle"
+
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/work/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 #hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
 hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/lib"
-hpx_source_dir="/home/sshirzad/src/hpx"
+hpx_source_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include"
 hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
@@ -41,13 +54,27 @@ r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
 i=1
+cd ${blazemark_dir}/scripts
+
+if [ $split_type == "idle" ]
+then
+        ./change_hpx_parameters.sh BLAZE_HPX_SPLIT_TYPE_IDLE 1
+else
+        ./change_hpx_parameters.sh BLAZE_HPX_SPLIT_TYPE_IDLE 0
+fi
 
 export OMP_NUM_THREADS=1
 for b in ${benchmarks[@]}
 	do
-	rm -rf ${results_dir}/info_${node}_${b}
+#	rm -rf ${results_dir}/info_${node}_${b}
 	mkdir -p ${results_dir}/info_${node}_${b}/hpx_info
 	cp -r $hpx_log_dir/* ${results_dir}/info_${node}_${b}/hpx_info
+	cp ${hpx_source_dir}/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/hpx_info/
+	cp ${hpx_source_dir}/hpx/parallel/util/detail/splittable_task.hpp ${results_dir}/info_${node}_${b}/hpx_info/
+	cp ${hpx_source_dir}/hpx/parallel/executors/splittable_executor.hpp ${results_dir}/info_${node}_${b}/hpx_info/
+
+	cp ${hpx_source_dir}/hpx/executors/splittable_executor.hpp ${results_dir}/info_${node}_${b}/hpx_info/
+
 	#hpx_source_dir="/home/sshirzad/src/hpx"
 	#cd $hpx_source_dir
 	#BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -59,7 +86,7 @@ for b in ${benchmarks[@]}
 	date>> ${results_dir}/info_${node}_${b}/date.txt
 	#cp ${hpx_log_file} ${results_dir}/info/
 	cp ${config_dir}/Configfile_hpx_${node} ${results_dir}/info_${node}_${b}/
-	cp ${blazemark_dir}/scripts/mat_hpx_chunks.sh ${results_dir}/info_${node}_${b}/
+	cp ${blazemark_dir}/scripts/mat_hpx_chunks_spt_qs.sh ${results_dir}/info_${node}_${b}/
 	cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/
 	git --git-dir $blaze_dir/.git log>>${results_dir}/info_${node}_${b}/blaze_git.txt
 	cd ${blaze_dir}
@@ -87,9 +114,9 @@ for b in ${benchmarks[@]}
 	elif [ $b == 'dmatdmatadd' ] || [ $b == 'dmattdmatadd' ] || [ $b == 'dmatdmatdmatadd' ]
         then
                 start_line=91
-                length=16
+                #length=16
 		#length=10
-		#length=2
+		length=2
                 end_line=119
 		#start_line=113
 		#start_line=117
@@ -149,58 +176,25 @@ for b in ${benchmarks[@]}
 	        		num_chunks_2=$(python3 -c "from math import ceil;print (int(ceil($mat_size/$block_size_col)))")
     	                        echo "matrix size: $mat_size num_chunks: "$((num_chunks_1*num_chunks_2))
 				num_chunks=$((num_chunks_1*num_chunks_2))
-				for c in "${chunk_sizes[@]}"
-					do
-						if [ $c -lt $num_chunks ]
+				cd ${blazemark_dir}/scripts
+				./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" ${node}
+		
+				block_size_value_row=$(sed -n '53 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+				block_size_value_col=$(sed -n '57 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
+	
+				echo "block size row:" $block_size_value_row
+				echo "block size col:" $block_size_value_col	
+	
+				for th in "${thr[@]}"
+					do 	
+						if [ $counters == 1 ]
 						then
-		
-							#./change_hpx_parameters.sh reset HPX.h
-						        cd ${blazemark_dir}/scripts
-						        ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_CHUNK_SIZE "${c}"
-				                        ./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" ${node}
-							chunk_size=$(sed -n '49 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
-							echo "chunk size:" ${chunk_size}	
-		
-					                block_size_value_row=$(sed -n '53 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
-					                block_size_value_col=$(sed -n '57 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
-	
-					                echo "block size row:" $block_size_value_row
-					                echo "block size col:" $block_size_value_col	
-	
-							for th in "${thr[@]}"
-								do 	
-									if [ $counters == 1 ]
-									then
-									       ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
-									else
-										${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
-									fi
-								    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: $mat_size"
-							done
-					      fi
+						       ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:queuing=static-priority --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0 --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}_sptqs_${split_type}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+						else
+							${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:queuing=static-priority --hpx:bind=balanced --hpx:numa-sensitive --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}_sptqs_${split_type}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
+						fi
+					    echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: $mat_size"
 				done
-				c=$num_chunks
-			        cd ${blazemark_dir}/scripts
-		                ./change_hpx_parameters.sh BLAZE_HPX_MATRIX_CHUNK_SIZE "${c}"
-                       		./generate_benchmarks.sh $b hpx "${blaze_dir}/blazemark/" ${node}
-				chunk_size=$(sed -n '49 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
-		                echo "chunk size:" ${chunk_size}	
-		                block_size_value_row=$(sed -n '53 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)
-		                block_size_value_col=$(sed -n '57 p' "${blaze_dir}/blaze/config/HPX.h"|cut -d' ' -f3)	
-	        	        echo "block size row:" $block_size_value_row
-		                echo "block size col:" $block_size_value_col
-	
-		                for th in "${thr[@]}"
-	        	        do
-					if [ $counters == 1 ]
-                                        then
-                                               ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
-                                        else
-                                               ${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-${b}-${th}-${r}-${chunk_size}-${block_size_row}-${block_size_col}-${mat_size}.dat
-                                        fi
-
-					echo ${b} "benchmark for" ${r} "finished for "${th} "threads, chunk size ${c}, block_size row: ${block_size_row} col:${block_size_col} matrix size: ${mat_size}"
-				done	    
 		                sed -i "${line_number}s/(/${s}/" $param_filename
 			done
 		done

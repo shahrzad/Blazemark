@@ -38,10 +38,10 @@ counter=0
 #split_type="idle"
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/work/sshirzad/repos/Blazemark"
-hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/lib"
-hpx_bin_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/bin"
-hpx_source_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}_main/include"
-hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/info/"
+hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/lib"
+hpx_bin_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/bin"
+hpx_source_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include"
+hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
 results_dir="${blazemark_dir}/results_grain_size"
 export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 
@@ -57,7 +57,7 @@ rm -rf ${results_dir}/*.dat
 rm -rf ${results_dir}/info_${node}/
 mkdir -p ${results_dir}/info_${node}/hpx_info
 date>> ${results_dir}/info_${node}/date.txt
-cp ${blazemark_dir}/scripts/grain_size_test_spt.sh ${results_dir}/info_${node}/
+cp ${blazemark_dir}/scripts/grain_size_test_spt_qs.sh ${results_dir}/info_${node}/
 cp -r $hpx_log_dir/* ${results_dir}/info_$node/hpx_info
 cp ${hpx_source_dir}/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}/hpx_info/
 cp ${hpx_source_dir}/hpx/parallel/util/detail/splittable_task.hpp ${results_dir}/info_${node}/hpx_info/
@@ -78,9 +78,9 @@ do
 			export OMP_NUM_THREADS=1
 			if [ $counter == 1 ]
 			then
-				${hpx_bin_dir}/grain_size_test --spt --counter -Ihpx.stacks.use_guard_pages=0 --split_type=${split_type} --min_task_size=${min_task_size} --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=3 --hpx:print-counter=/threads/time/cumulative --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-sptctr_${split_type}_grain_size_${th}_${min_task_size}_${il}_${ni}.dat
+				${hpx_bin_dir}/grain_size_test --spt -qs --counter -Ihpx.stacks.use_guard_pages=0 --split_type=${split_type} --min_task_size=${min_task_size} --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=3 --hpx:print-counter=/threads/time/cumulative --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-sptctrqs_${split_type}_grain_size_${th}_${min_task_size}_${il}_${ni}.dat
 			else
-				${hpx_bin_dir}/grain_size_test --spt --min_task_size=${min_task_size} --split_type=${split_type}  -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=6 --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-spt_${split_type}_grain_size_${th}_${min_task_size}_${il}_${ni}.dat
+				${hpx_bin_dir}/grain_size_test --spt -qs --min_task_size=${min_task_size} --split_type=${split_type}  -Ihpx.stacks.use_guard_pages=0 --chunk_size=1 --num_iterations=${ni}  --hpx:threads=${th} --iter_length=${il} --repetitions=6 --hpx:ini=hpx.thread_queue.min_tasks_to_steal_staged=0>>${results_dir}/${node}-sptqs_${split_type}_grain_size_${th}_${min_task_size}_${il}_${ni}.dat
 				
 				echo "Run for ${ni} iterations, iter length of ${il}, on ${th} threads finished"			
 			fi

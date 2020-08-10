@@ -60,9 +60,9 @@ for b in ${benchmarks[@]}
 echo $b
 echo $r
 echo $node
-        rm -rf ${benchmarks_dir}/${b}_${r}_$node
-        echo ${b} ${r} ${node}>>${benchmarks_dir}/build_log_$node.txt
-        echo ${b} ${r} ${node}>>${benchmarks_dir}/compile_log_$node.txt
+        rm -rf ${benchmarks_dir}/${b}_${r}_${node}
+        echo ${b} ${r} ${node}>>${benchmarks_dir}/build_log_${node}.txt
+        echo ${b} ${r} ${node}>>${benchmarks_dir}/compile_log_${node}.txt
         
         if [ -f ${blazemark_dir}/bin/${b} ]
         then
@@ -70,10 +70,10 @@ echo $node
         fi
         
         rm -rf Makefile
-	${blazemark_dir}/configure ${config_dir}/Configfile_${r}_$node>>${benchmarks_dir}/compile_log_$node.txt
-        make ${b}>>${benchmarks_dir}/build_log_$node.txt
-        mv ${blazemark_dir}/bin/${b} ${benchmarks_dir}/${b}_${r}_$node
-        echo "benchmark "${b}" for "${r}" runtime created on node $node"
+	${blazemark_dir}/configure ${config_dir}/Configfile_${r}_${node}_install_main>>${benchmarks_dir}/compile_log_${node}.txt
+        make ${b}>>${benchmarks_dir}/build_log_${node}.txt
+        mv ${blazemark_dir}/bin/${b} ${benchmarks_dir}/${b}_${r}_${node}
+        echo "benchmark "${b}" for "${r}" runtime created on node ${node}"
     done
 done
 
