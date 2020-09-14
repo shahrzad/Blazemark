@@ -1,0 +1,398 @@
+commit ca7d5e8aad897b50b3aae471ad90ea4b25706882
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Fri Aug 28 10:13:39 2020 -0500
+
+    Compressed pdf needed for JOSS paper
+
+commit 7e75dd365efa1017498a538b0d08797a48d2d725
+Merge: e07fd355193 6b6c26c3fcf
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Aug 28 16:05:15 2020 +0200
+
+    Merge pull request #4929 from STEllAR-GROUP/JOSS2
+    
+    Add final version of the JOSS paper
+
+commit e07fd355193396d9ac5522405e6c3c22748c8a68
+Merge: 571c2b405e3 60308e870bf
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Thu Aug 27 18:37:36 2020 -0500
+
+    Merge pull request #4925 from STEllAR-GROUP/transform_reduce_cpos
+    
+    Making transform_reduce conforming to C++20
+
+commit 571c2b405e3949a35fb1d246a387938dc7d801f4
+Merge: fe5a7da288a 3cd3b43160d
+Author: Auriane R <48684432+aurianer@users.noreply.github.com>
+Date:   Thu Aug 27 17:06:31 2020 +0200
+
+    Merge pull request #4930 from mgnisia/master
+    
+    Documentation Distributed HPX applications localvv with local_vv
+
+commit 3cd3b43160d963ee4c4380f975b6527b979e5ccd
+Author: Moritz Gnisia <moritzgnisia@gmail.com>
+Date:   Thu Aug 27 11:07:18 2020 +0200
+
+    replacing localvv with local_vv
+    
+    Signed-off-by: Moritz Gnisia <moritzgnisia@gmail.com>
+
+commit fe5a7da288a44b2501563d1d62e4539af446b373
+Merge: a5212b41f32 f5208745cec
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Aug 27 09:28:50 2020 +0200
+
+    Merge pull request #4915 from STEllAR-GROUP/actions
+    
+    Moving more action related files to actions modules
+
+commit 60308e870bfb72da9e39e9caf500107b0a5449c8
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Mon Aug 24 19:20:21 2020 -0500
+
+    Making transform_reduce conforming to C++20
+
+commit 6b6c26c3fcf0960ee379ce8682c75126818a0357
+Author: Patrick <patrickdiehl@lsu.edu>
+Date:   Wed Aug 26 12:45:55 2020 -0500
+
+    Add final version of the JOSS paper
+
+commit f5208745cec3624501b8bf026db22d7d0ddea425
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Wed Aug 19 19:12:53 2020 -0500
+
+    Moving more action related files to actions modules
+    
+    - flyby: remove unused manage_object_action
+    - flyby: remove obsolete header reference from build system
+
+commit a5212b41f32a7b28ff35f07cfda9b5be86f47357
+Merge: 63729e8a05e 7e0c4722469
+Author: Auriane R <48684432+aurianer@users.noreply.github.com>
+Date:   Wed Aug 26 14:09:27 2020 +0200
+
+    Merge pull request #4928 from msimberg/event-polling-nodiscard
+    
+    Add HPX_NODISCARD to enable_user_polling structs
+
+commit 7e0c47224698f62b3409602fa7cd8946e9626ba7
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 26 10:38:11 2020 +0200
+
+    Add HPX_NODISCARD to enable_user_polling structs
+    
+    Avoid mistakes where user polling is enabled and disabled immediately,
+    instead of at the end of a scope.
+
+commit 63729e8a05ea2c087f9f7ed8090468e7e744a8fb
+Merge: 75fa1b5bb39 39c71edf7db
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 25 16:46:44 2020 +0200
+
+    Merge pull request #4926 from msimberg/rename-distributed-executors-module
+    
+    Rename distributed_executors module to executors_distributed
+
+commit 39c71edf7db1f3eb75238cfa2f3e1313fdfa59cb
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 25 12:20:23 2020 +0200
+
+    Rename distributed_executors module to executors_distributed
+
+commit 75fa1b5bb39250840a2bed32a74ea32f7d83d191
+Merge: 4ed19cb72cc b543db8fb65
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Mon Aug 24 15:42:08 2020 -0500
+
+    Merge pull request #4923 from STEllAR-GROUP/fixing_latch1
+    
+    Don't acquire lock if not needed
+
+commit b543db8fb6514a16caf736665aca78bec0814729
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Mon Aug 24 09:12:38 2020 -0500
+
+    Don't acquire lock if not needed
+
+commit 4ed19cb72cc1596c14a07a72111b93414c675e48
+Merge: bf7a43850a7 4aac386a9af
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Aug 21 14:14:04 2020 +0200
+
+    Merge pull request #4919 from STEllAR-GROUP/cuda-futures
+    
+    Make cuda event pool dynamic instead of fixed size
+
+commit bf7a43850a7f4d120c8072d9afff69572a39cb9f
+Merge: 810eac851fa e64899183e6
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Aug 21 14:12:51 2020 +0200
+
+    Merge pull request #4916 from STEllAR-GROUP/fix-deprecation
+    
+    HPX_HAVE_DEPRECATION_WARNINGS needs to be set even when disabled
+
+commit 810eac851fa35b000ef19bb3898e910659d3da3e
+Merge: 6efd620705a 83b5cfbfe6d
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Aug 21 11:52:07 2020 +0200
+
+    Merge pull request #4861 from STEllAR-GROUP/limiting_executor
+    
+    Limiting executor improvements
+
+commit 6efd620705a73c4d2582ffbcfc605f6a911af3c2
+Merge: f72c871632f 26295fb6e47
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Aug 21 11:49:21 2020 +0200
+
+    Merge pull request #4917 from msimberg/chrono-namespace
+    
+    Move chrono functionality to hpx::chrono namespace
+
+commit e64899183e6e8b61dd516f05313bd0b4f7ae2ba5
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Fri Aug 21 09:15:48 2020 +0200
+
+    Fix a problem with undefined HPX_HAVE_DEPRECATION_WARNINGS
+
+commit 83b5cfbfe6dc3dea72546b3d4fa55fd26229f675
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Thu Aug 20 22:21:28 2020 +0200
+
+    Fix inspect violation
+
+commit 4aac386a9afc4209ca4505904a6e6878a3101b2f
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Thu Aug 20 22:16:41 2020 +0200
+
+    Fix comment abiut fixed/dynamic size
+
+commit 94f1c11512b5531930a70ee484b224f81cca3ee8
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Thu Aug 20 21:59:48 2020 +0200
+
+    Make cuda event pool dynamic instead of fixed size
+
+commit f72c871632f97a80821e8785eab831c94e750ed8
+Merge: 43fbe0378fb a47b1943ad2
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Aug 20 17:56:00 2020 +0200
+
+    Merge pull request #4895 from aurianer/update_apex_tag
+    
+    Update apex tag
+
+commit 26295fb6e47bb3340823327380c03c835b2835b4
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Aug 20 17:52:09 2020 +0200
+
+    Move chrono functionality to hpx::chrono namespace
+
+commit 43fbe0378fb91d8ece011c8b8816a687f10d703f
+Merge: 55e834d3555 2bab386d698
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Aug 20 09:29:44 2020 +0200
+
+    Merge pull request #4914 from msimberg/cmake-namespaced-alias-targets
+    
+    Add alias targets with namespaces used for exporting
+
+commit 55e834d3555065101e650e4264b8ca6d331485bb
+Merge: 52fbf93bd4a 94edf7cd298
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Wed Aug 19 19:25:13 2020 -0500
+
+    Merge pull request #4905 from STEllAR-GROUP/for_loop_specializations
+    
+    Adding specializations for simple for_loops
+
+commit 52fbf93bd4aea089fca2b62ab4d227217854fc99
+Merge: 2c493c5bb97 13091670600
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 19 21:08:48 2020 +0200
+
+    Merge pull request #4912 from msimberg/cpos-construction
+    
+    Aggregate initialize CPOs
+
+commit 2c493c5bb973db544bbef26968c47c5d5503c3fe
+Merge: 16f5cb2fb54 c547030b395
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 19 21:05:18 2020 +0200
+
+    Merge pull request #4904 from aurianer/update_boost_to_1_74
+    
+    Update boost to 1.74.0 for the newest jenkins configs
+
+commit 94edf7cd29850a71f0b15365a25ecfbd8d7fcb03
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Mon Aug 17 08:05:55 2020 -0500
+
+    Adding specializations for simple for_loops
+    
+    - flyby: improve loop unrolling for algorithms
+
+commit c547030b395bf15a051a62479981822e546cacd1
+Author: aurianer <aurianer@cscs.ch>
+Date:   Tue Aug 18 17:26:44 2020 +0200
+
+    Adapt boost macro to its new name
+
+commit 4f20d156c062a6efe698c4afada3f5ca65d85c46
+Author: aurianer <aurianer@cscs.ch>
+Date:   Mon Aug 17 15:24:50 2020 +0200
+
+    Remove using namespace std from the regex example
+
+commit 16f5cb2fb547f98100eac4ee9e7bb06851165d83
+Merge: 09ba51de7de a4e0f9d6676
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 19 15:31:32 2020 +0200
+
+    Merge pull request #4908 from msimberg/docs-numeric-etc
+    
+    Fix algorithms documentation
+
+commit 8c381bd1fb521235b2f4ad9a5bebd6d45c4a2782
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Wed Aug 19 15:26:55 2020 +0200
+
+    Move limiting executor to hpx::execution::experimental namespace
+
+commit 2bab386d69849824fd860061628f0743791b8eb8
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 19 15:06:25 2020 +0200
+
+    Add alias targets with namespace used for exporting
+
+commit c34813c71a79cd181a1884a464702cc6dad4dc02
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Wed Aug 19 13:21:53 2020 +0200
+
+    Move limiting_executor unit test from execution to executors lib
+
+commit 41809203817197e0f13aba1441265e0e6d342087
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Wed Aug 19 13:16:28 2020 +0200
+
+    Move limiting executor into experimental namespace
+
+commit 13091670600bafc35c24dd9b29a0a865d9bc7b0e
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 19 10:05:16 2020 +0200
+
+    Aggregate initialize CPOs
+
+commit d90c2ecdd8a4257b5d191c1f71308e8837e9400b
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Wed Aug 19 09:50:37 2020 +0200
+
+    Add new limiting executor test that checks number of in flight tasks
+
+commit 6e74c48b8bf59b70fdb1b9a4a90cc57cab5b169a
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Wed Aug 19 09:46:04 2020 +0200
+
+    Fix incomplete type compile error by adding a dummy template param
+
+commit a51e00d7710ceb7716c7e4f09f47548521c17dba
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Wed Jul 29 11:29:59 2020 +0200
+
+    Fix Inspect and format-violations
+
+commit 742b24020851bdab553ea5ebb0706e66a27b718e
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Mon Jul 27 15:06:34 2020 +0200
+
+    Allow limiting executor to use external counting mechanism
+    
+    The limiting executor does not work with some special executors
+    like the MPI one since it returns immediately but leave a task
+    that is 'detached' from the runtime (the counters count up and down
+    almost immediately, but the task completes later).
+    
+    To solve this we add a specialization inside the limiting executor
+    counting mechanism that allows the executor being wrapped to return
+    a counter that can be used to throttle tasks.
+    
+    Any executor that implements the "in_flight_estimate" member can
+    override the counting mechanism to control throttling.
+    
+    Currently we only handle a single counter so multiple mpi executors
+    would reference the same internal mpi counter and it would not be
+    possible to throttle different mpi executors spearately.
+    
+    Simplify the mpi_ring_async_test to use a limiting executor at
+    the top level and thereby reduce resource consumption by only
+    keeping N mpi requests in flight at once.
+    
+    Note that the limiting executor is only used for the outer iteration
+    of sending, otherwise a deadlock would occur if a receive could
+    not trigger a send.
+
+commit c13aaf30a81d6bf386eb35cc8f78ceeaf9eb920f
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Sun May 24 20:20:04 2020 +0200
+
+    Use RAII counter for limiting executor and improve forwarding
+    
+    WIP: Add a unit test for limiting executor (unfinished)
+
+commit 09ba51de7de8d9be271dfcfc1c87cba102caeb99
+Merge: 82b365c7785 d18986a05af
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Aug 19 09:15:08 2020 +0200
+
+    Merge pull request #4910 from msimberg/jenkins-daint-hwloc-root
+    
+    Explicitly specify hwloc root on Jenkins CSCS builds
+
+commit c1e4b2bbd8e41f4de2b6258fe1287599c41fa537
+Author: aurianer <aurianer@cscs.ch>
+Date:   Mon Aug 17 12:34:24 2020 +0200
+
+    Update boost to 1.74.0 for the newest jenkins configs
+
+commit d18986a05af2db4ce5949dfd3c7367fb447c4843
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 18 15:22:17 2020 +0200
+
+    Explicitly specify hwloc root on Jenkins CSCS builds
+
+commit a4e0f9d6676f4da9b7235c402b7bc4042b85e302
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 18 14:58:30 2020 +0200
+
+    Update docs with numeric.hpp header and which headers to include for different algorithms
+
+commit 82b365c77850e0d16b6cef8c096e1607434cfbe1
+Merge: 7470db83d9a e8e93712f3a
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 18 10:07:31 2020 +0200
+
+    Merge pull request #4901 from STEllAR-GROUP/msimberg-patch-4
+    
+    Update public API list with updated algorithms
+
+commit 7470db83d9a3136b190e61521de66d9544b91349
+Merge: 2d0ed161b0b bd6bc3d1d4a
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 18 09:45:28 2020 +0200
+
+    Merge pull request #4907 from msimberg/remove-hpx-no-wrap-main
+    
+    Remove HPX::hpx_no_wrap_main target
+
+commit 2d0ed161b0b5c37706b1cb8196d98fb5c9645a6f
+Merge: 606c33fb85b 9d580e7c8cd
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Aug 18 09:37:41 2020 +0200
+
+    Merge pull request #4906 from STEllAR-GROUP/fixing_warnings
+    
+    Fixing unused variable warning
