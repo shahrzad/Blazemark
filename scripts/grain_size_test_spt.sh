@@ -25,11 +25,13 @@ else
 	min_task_size=$3
 fi
 
+hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/lib"
 
 if [ $node = "marvin_old" ]
 then
         module load clang/6.0.1
         module load boost/1.68.0-clang6-release
+	export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 fi
 echo "Running on ${node} split type ${split_type}"
 
@@ -38,12 +40,10 @@ counter=0
 #split_type="idle"
 saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/work/sshirzad/repos/Blazemark"
-hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/lib"
 hpx_bin_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/bin"
 hpx_source_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}_main/include"
 hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/info/"
 results_dir="${blazemark_dir}/results_grain_size"
-export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 
 thr=(1 2 3 4 5 6 7 8)
 #thr=(8)
