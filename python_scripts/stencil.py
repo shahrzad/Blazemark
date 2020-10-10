@@ -93,7 +93,7 @@ def create_dict_stencil(directories,to_csv=False):
         f_csv.close()
 #    return (data, d, thr, iter_lengths, num_iterations)  
 
-marvin_dir='/home/shahrzad/repos/Blazemark/data/stencil/marvin'
+marvin_dir='/home/shahrzad/repos/Blazemark/data/stencil/medusa/1000000'
 #medusa_dir='/home/shahrzad/repos/Blazemark/data/grain_size/medusa'
 create_dict_stencil([marvin_dir],1)
 
@@ -139,7 +139,7 @@ for node in nodes:
     data_size=int(np.shape(array)[0])
     print(data_size)
     
-    train_size=int(1*np.ceil(data_size*0.6))
+    train_size=int(1*np.ceil(data_size))
     tes_size=data_size-train_size
     
     per = np.random.permutation(data_size)
@@ -181,10 +181,10 @@ for node in nodes:
         
     i=1
 
-    for ps in grid_points[-4:]:
+    for ps in grid_points:
         
-        array_ps=test_set[test_set[:,0]==ps]
-        labels_ps=test_labels[test_set[:,0]==ps]
+        array_ps=array[:,0:-1][array[:,0]==ps]
+        labels_ps=array[:,-1][array[:,0]==ps]
         
         for th in thr:
             new_array=array_ps[array_ps[:,1]==th]
