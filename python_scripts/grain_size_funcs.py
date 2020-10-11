@@ -533,6 +533,10 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
 
 def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
     colors=['red', 'green', 'purple', 'pink', 'cyan', 'lawngreen', 'yellow']
+    color_map={}
+    for c,desc in zip(colors,['adaptive','adaptive with threshold','guided','guided with threshold']):
+        color_map[desc]=c
+    color_map['equal']=colors[4] 
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
     i=1
     descs=[desc for desc in spt_results.keys()]
@@ -547,7 +551,7 @@ def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
                 for c,desc in zip(colors,descs):
                     plt.figure(i)  
                     node=[n for n in spt_results[desc].keys()][0] 
-                    plt.axhline(spt_results[desc][node][ps][th], color=c, label=desc)
+                    plt.axhline(spt_results[desc][node][ps][th], color=color_map[desc], label=desc)
            
                 plt.axvline(ps/th,color='gray',linestyle='dashed')
                 plt.xlabel('Grain size')

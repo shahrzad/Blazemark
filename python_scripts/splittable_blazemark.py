@@ -27,6 +27,8 @@ dir1='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/all/
 dir2='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/idle/'
 dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/general/medusa/'
 benchmark='dmatdmatadd'
+hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/final/blazemark/ref/marvin/'
+hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/final/blazemark/ref/medusa/'
 
 dirs=[dir1,dir2]
 alias=['guided','adaptive']
@@ -66,9 +68,29 @@ dirs=[dir1,dir2,dir3,dir4]
 alias=['adaptive','adaptive with threshold','guided','guided with threshold']
 
 save_dir_name='thesis'
-results,results_th=bf.compare_results(dirs, save_dir_name, benchmark, alias, plot=1,plot_bars=0,plot_bars_all=1)
+results,results_th=bf.compare_results(dirs, save_dir_name, benchmark, alias, plot=0,save=1,plot_bars=0,plot_bars_all=0,hpx_dir_ref=hpx_dir_ref,ref=0)
 
+im={}
+within={}
+co=0
+for desc in alias:
+    im[desc]=0
+    within[desc]=0
+for m in results.keys():
+    for th in results[m].keys():
+        r=results[m][th]['equal']
+        rm=results[m][th]['min']
+        co=co+1
+        for desc in alias:
+            if results[m][th][desc]<r:
+                im[desc]+=1
+            if abs(results[m][th][desc]-rm)<0.1*rm:
+                within[desc]+=1
 
+for desc in alias:
+    im[desc]/=co
+    within[desc]/=co
+    
 colors=['red', 'green', 'purple', 'pink', 'cyan', 'lawngreen', 'yellow']
 perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
 

@@ -238,7 +238,7 @@ for node in nodes:
                     test_errors[node][base_ps][ps][th]=100*np.mean(np.abs(z_5-new_labels)/new_labels)
                     r2_errors[node][base_ps][ps][th]=r2_score(new_labels,z_5)
             th=8
-            lb=0.5
+            lb=0.01
             ls=0.1
             for ps in base_pss:#[ps for ps in problem_sizes]:
                 plt.figure(i)
@@ -528,7 +528,7 @@ for node in nodes:
 #        test_errors[node][th]=[]
 #        true_values[node][th]=[]
 #        pred_values[node][th]=[]
-    for m in [690,4222]:#[m for m in matrix_sizes]:# if m<cache_limit[node]]:        
+    for m in [690,912,1825,3193,4222,4855,6420]:#[m for m in matrix_sizes]:# if m<cache_limit[node]]:        
         chunk_sizes[node][m]={}
         chunk_sizes[node][m][str(lb)+'_'+str(ls)]={}
 
@@ -553,7 +553,7 @@ for node in nodes:
         array_b=df_selected.values
         g_params[node][benchmark]=bf.grain_dict(array_b,1)
 
-        for th in thr:
+        for th in [8]:
 
             new_array=array_b[array_b[:,2]==th][:,:-1]
             new_labels=array_b[array_b[:,2]==th][:,-1]
@@ -573,9 +573,9 @@ for node in nodes:
             plt.xscale('log')
             plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
 
-#            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
+            plt.savefig(perf_dir+'/blazemark/ranges/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
 
-            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
             i=i+1
             
             
