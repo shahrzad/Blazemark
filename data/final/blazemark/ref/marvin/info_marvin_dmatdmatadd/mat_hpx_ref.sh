@@ -35,8 +35,8 @@ thr=(1 2 3 4 5 6 7 8)
 benchmarks=('dmatdmatadd')
 r='hpx'
 
-rm -rf ${results_dir}/info
-mkdir ${results_dir}/info
+#rm -rf ${results_dir}/info
+#mkdir ${results_dir}/info
 
 #cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info
 #date>> ${results_dir}/info/date.txt

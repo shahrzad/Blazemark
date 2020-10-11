@@ -1,89 +1,2870 @@
-commit 9d16c22d5ef085b23e23772d75ae5f23f0652294
+commit 9cd0dc433772128559f0007561298cd1d830f5ca
 Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Mon Jul 22 12:30:35 2019 -0500
+Date:   Thu Apr 16 13:06:16 2020 -0500
 
-    Changing number of reps to 6
+    Removing 4 in hpx/Functions.h
 
-commit 5846db30fd57629efe0bf3db4e2f69e2e255390e
+commit f37cc400371de5ebe364133f062166433f47db60
 Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Fri Jun 7 14:53:01 2019 -0500
+Date:   Sat Apr 11 23:51:19 2020 -0500
 
-    Updating the way hpx backend selects number of columns in the blocks
+    Updating the DMatDMatDMatAdd benchmark
 
-commit d8c5cef3eb1887868de07a031a9ec73ac3049b9b
+commit 54ab9ce88afb1c1330720fddd5f018872fc72956
 Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Fri Jun 7 14:45:43 2019 -0500
+Date:   Sat Apr 11 23:04:45 2020 -0500
 
-    Updating the way hpx backend selects number of columns in the blocks
+    editting configure file
 
-commit 4155d6ac3e42b5fc86ded3938354e1ee456be8e8
+commit 1367b77f9fc0bcdc89145c94db59f8489a6763b8
 Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Fri Feb 8 10:28:16 2019 -0600
+Date:   Sat Apr 11 23:01:19 2020 -0500
 
-    changing the name of cache_size variable to block_size
+    adding dmatdmatdmatadd benchmark to blazemark
 
-commit 93c9eb9a0026ebdc608f6b42f9766dbb2658b004
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Tue Jan 8 11:27:31 2019 -0600
+commit cac64f2b35002f74a8ad2410ce6fb562b2cd2371
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 26 18:53:03 2019 +0100
 
-    Updating the code
+    Update the 'README.md' for Blaze 3.5
 
-commit 249960daf37bf5f4b59b74cf9b5535e9b69c2bdd
-Merge: 4e780598f 7852d9e22
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Wed Dec 19 14:32:59 2018 -0600
+commit cc6646ffd55b7bc1a553bb1a23c559d745d04d9a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 25 14:49:18 2019 +0100
 
-    Merge branch 'master' into hpx_backend
+    Improve the setup examples for element selections, row selections and column selections in the tutorial
 
-commit 7852d9e22aeb89b907cb878c28d6ca75e5528431
-Merge: d6bf1d4d2 637801049
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Wed Dec 19 14:29:42 2018 -0600
+commit 94666dba17d1c76d5d34a557d870503369e2fa08
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 25 14:46:23 2019 +0100
 
-    Merge remote-tracking branch 'upstream/master'
+    Fix several small issues in the tutorial
 
-commit 4e780598feeebbf1f73b3e2ecf2a927ae6a4722c
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Wed Dec 19 13:17:57 2018 -0600
+commit 01570e0de1a6e29268eaace7a2e46e410561c7f6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 25 11:16:14 2019 +0100
 
-    Updating the code
+    Add SIMD operation tests for the 'set()' functions
 
-commit f495b4e71cbf5b016f5be7440e5e05438ccb0632
-Merge: 7b7f9f51d 806b1ef18
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Tue Dec 18 10:09:25 2018 -0600
+commit 39ede452164352c782e5998fc37e138276e07d94
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 25 11:13:56 2019 +0100
 
-    Merge branch 'hpx_backend' of https://bitbucket.org/shahirzad/blaze_shahrzad into hpx_backend
+    Fix the AVX intrinsic 'set()' function for 64-bit integral types
 
-commit 7b7f9f51da2c23c7d94791bfd3d371e91abe6ea4
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Tue Dec 18 10:09:05 2018 -0600
+commit 697df97615262a6b770e2094740aaf829ce0c04f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 25 10:57:08 2019 +0100
 
-    Changing params files, adding configuration files
+    Restrict all 'inv()' operation tests to non-uniform matrices
 
-commit 806b1ef18d9b2c589109b2c1e83a6d08c2b640e3
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Tue Dec 18 10:03:59 2018 -0600
+commit 954950b0665cfc1ce685f0d0c6adbe043531aea7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Feb 23 08:40:32 2019 +0100
 
-    Adding row and column block size parameters
+    Fix the minimum alignment for calls to 'posix_memalign()'
 
-commit c0212fe9b12d4ae04c0bee73289eb26cf647b343
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Thu Dec 13 15:37:43 2018 -0600
+commit b742cdd522a0bf0c4c578bdf2ec3a7d5f40ec910
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Feb 21 06:51:19 2019 +0100
 
-    Adding the block_size parameter
+    Disable the SMP assignment of 'ZeroVector' and 'ZeroMatrix'
 
-commit 76c145f5d19874fe6f056b5c425ae192e3f334fc
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Wed Dec 12 18:01:11 2018 -0600
+commit c92f2737288acd23e81e0040a96b3ac5d6c9a29f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 15:30:20 2019 +0100
 
-    updating the code
+    Remove an obsolete type alias from the 'MatrixSerializer::serializeMatrix()' function
 
-commit 86c07c063b82c71bfaeb44d9812a6284f090518c
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Mon Dec 10 17:24:24 2018 -0600
+commit 5503af21b6e90e095f683a6e2d9a0bea5f08a9c1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 15:14:20 2019 +0100
 
-    Changing implementation of matrix operations with HPX backend
+    Modernize several for loops in various vector and matrix classes
+
+commit a91a7c585359d156332c9cbc880f44fdd1c2a0cf
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 13:14:28 2019 +0100
+
+    Rework the 'norm()', 'sqrNorm()', 'l2Norm()' and 'l4Norm()' functions for vectors and matrices
+
+commit 3d31f7e5b2b42c59f646f35af26772ab563be42e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 13:12:21 2019 +0100
+
+    Add the 'SqrAbs' functor
+
+commit 009a4d2d17de38cdb694d1a5ae0f9066732b8449
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 11:07:42 2019 +0100
+
+    Update the 'Submatrix' class tests for AVX512F and AVX512BW
+
+commit 280c38da84285cf3dea3f49ca976fb782e1a2a64
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 11:06:37 2019 +0100
+
+    Update the 'Subvector' class tests for AVX512F and AVX512BW
+
+commit cfb44acb5a4c3a0507acae51e7aa18f25e8ef194
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 09:00:43 2019 +0100
+
+    Update the 'CustomMatrix' class tests for AVX512BW
+
+commit 2ea1daf64dd1d73f81902dab52f940f0111dd62b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 09:00:15 2019 +0100
+
+    Update the 'CustomVector' class tests for AVX512BW
+
+commit 6c499befb4835f9ae3ad7866103816589d30b21a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 19 08:56:32 2019 +0100
+
+    Fix the AVX512F intrinsic 'set()' overloads for 32-bit and 64-bit integrals
+
+commit 38011a649762d558f73640eb2a684b027adf8a00
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 18 11:01:42 2019 +0100
+
+    Fix a typo in the AVX512BW intrinsic 'stream()' overload for 16-bit complex numbers
+
+commit a9138c4dc50eb39ae19f777fff2039b851a60899
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 18 10:57:44 2019 +0100
+
+    Resolve a GNU compilation issue in the AVX512BW intrinsic 'stream()' overloads for 8-bit and 16-bit integrals
+
+commit c069823ce1801631dda159250103f03428b1bb0a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 18 10:57:14 2019 +0100
+
+    Fix the AVX512BW intrinsic 'equal()' overloads for 8-bit and 16-bit integrals
+
+commit 7a85a97cf4ead018c871e31dc78640b77cf6355e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 18 10:53:00 2019 +0100
+
+    Fix the 'HasSIMDConj' type trait for 8-bit complex integrals
+
+commit eecee3afe8e19d32a48e8c67f5324a3dc2b15d87
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 18 10:21:38 2019 +0100
+
+    Rework the 'complex' specializations of the 'AlignmentOf' type trait
+
+commit 0ffead24f70d8a3aea8fe348154ade04fde4c489
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 18 10:07:56 2019 +0100
+
+    Resolve a GNU compilation issue in the AVX512F intrinisc multiplication operator for 32-bit complex integrals
+
+commit a292f437c37fb7f1fbbfc4355d5de714f6c4b6f4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Feb 8 07:54:39 2019 +0100
+
+    Fix the 'norm()', 'sqrNorm()', 'l2Norm()' and 'l4Norm()' functions for vectors and matrices with complex numbers
+
+commit d637c2e2be9e72c42af9c8821378404295b1ca76
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 5 13:42:05 2019 +0100
+
+    Document the row-/columnwise 'softmax()' function in the tutorial
+
+commit 62f83f19c2a9738dde47189cb427107578f23d26
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 5 13:31:06 2019 +0100
+
+    Add a 'softmax()' overload with support for row- and columnwise evaluation
+
+commit c253431c454819a8ff98b4d6e48e2957c81cbe45
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 5 13:28:55 2019 +0100
+
+    Relocate the dense matrix 'softmax()' function
+
+commit 675351d5836c6cced6581957564e67e24f1d692c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Feb 5 13:25:31 2019 +0100
+
+    Relocate the dense vector 'softmax()' function
+
+commit 5befd5fc2d6f12ee6b219cd66acfbce141e55f34
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 16:11:09 2019 +0100
+
+    Fix the documentation of the 'resize()' member function of the 'ZeroVector' class template
+
+commit 23b9063fcebb5a2084d319ebe12249c12e93266f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:37:24 2019 +0100
+
+    Document the 'paddingEnabled' flag in the tutorial
+
+commit ac518775beeccaddaf029e8af3574840c9122641
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:16:09 2019 +0100
+
+    Add padding support detection to the 'DMatDMatMapExpr' expression class
+
+commit 681020354d43a144577849343426832181a3d3a1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:15:58 2019 +0100
+
+    Add padding support detection to the 'DMatMapExpr' expression class
+
+commit 135f51130f88cbf606fe09ab4dc6852dc3c81f5f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:15:47 2019 +0100
+
+    Add padding support detection to the 'DVecDVecMapExpr' expression class
+
+commit 02988ca359558c2638555d145c88d5ee42ec46a3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:15:37 2019 +0100
+
+    Add padding support detection to the 'DVecMapExpr' expression class
+
+commit 553f5e1d47ebd25c2deabc1949e98e2695bbe840
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:14:38 2019 +0100
+
+    Add the 'paddingEnabled' flag to all SIMD-supporting functors
+
+commit da6970d15dda9faa41772b9a2f942305a28a9a1a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 16:08:46 2019 +0100
+
+    Add a test for the 'IsPaddingEnabled' type trait
+
+commit 9491690fb33b7d5e1029fbb9581e1582559b600e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:36:54 2019 +0100
+
+    Add the 'IsPaddingEnabled' type trait along with the according compile time constraints
+
+commit 2769ddb8d0ecd604100726ed614fbb3dfed56bf3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:30:49 2019 +0100
+
+    Simplify dense matrix reduction expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 64f9067db0750a0b0c0cac30e4a373678f54b8d4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:30:33 2019 +0100
+
+    Simplify dense matrix norm expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 0a4a3a2f2127c4c015e0755b151988c8de26eea3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:30:13 2019 +0100
+
+    Simplify binary dense matrix map expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 25d202a0d243cddff534326f8df6d37fd42e7450
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:29:55 2019 +0100
+
+    Simplify unary dense matrix map expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit c322890fe0f5b00c65b53ec9911a9903ef67d1dc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:29:38 2019 +0100
+
+    Simplify dense vector reduction expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 5cef8faf4d2891aa7878720edda9f2dc65df6f24
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:29:21 2019 +0100
+
+    Simplify dense vector norm expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 56b16b76b1be747e78c6c784c8463e3b4993883f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:28:45 2019 +0100
+
+    Simplify binary dense vector map expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 5d2863a224c8afb2c2f3bd08d1ca1a6bda9aa45b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 14:27:12 2019 +0100
+
+    Simplify unary dense vector map expressions by means of the 'IsSIMDEnabled' and 'HasLoad' type traits
+
+commit 509256f05c0ca58c4c06fac7143801cd2fcec461
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 15:57:50 2019 +0100
+
+    Add a test for the 'IsSIMDEnabled' type trait
+
+commit b54d65408d68a9fc420e43c47609da5469a95c6b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 13:34:44 2019 +0100
+
+    Rework the 'IsSIMDEnabled' type trait
+
+commit 4f2db83a5d561e60114593a0952ec1cfa5a66f74
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Feb 4 09:26:38 2019 +0100
+
+    Fix several missing and obsolete include directives
+
+commit 1785700280cbd6aac3361e04d0aa91472c72c734
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 14:17:30 2019 +0100
+
+    Fix several 'unused parameter' Clang compiler warnings
+
+commit fc977cdc73b9de174180ea450a54e70b1c4eaf92
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 14:17:02 2019 +0100
+
+    Document the 'reverse()' function for dense and sparse matrices in the tutorial
+
+commit 8739653776351e9ff439793401e3cb6c6ccfc376
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 14:16:31 2019 +0100
+
+    Add the 'reverse()' function for dense and sparse matrices
+
+commit 81d1efb516bbf7129bd838cb98172cc567c0c2e9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 14:00:44 2019 +0100
+
+    Document the 'reverse()' function for dense and sparse vectors in the tutorial
+
+commit 085cd5616bdca4b16253ac278fd9bc1f99821f55
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 13:08:28 2019 +0100
+
+    Add the 'reverse()' function for dense and sparse vectors
+
+commit c7338ccfeaad918f59bd08d3fa130e9295853727
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 10:51:32 2019 +0100
+
+    Document the setup of column selections via lambda expression in the tutorial
+
+commit dc0d92bd97fbd73fad817354445ff2a076193951
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 10:49:37 2019 +0100
+
+    Extend the 'Columns' constructor tests
+
+commit 9e6e783a49136152c71934759d626475ea8c6cf4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 10:49:08 2019 +0100
+
+    Enable column selections via lambda expression
+
+commit e4d686b6b4e285e36e054eeb4d212ead39c8ec26
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 10:04:03 2019 +0100
+
+    Rework the compile time arguments of the 'Columns' class template from non-type parameters to type parameters
+
+commit eb9b542b2b4ded5294510ab98ee7686d5429e233
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 10:52:58 2019 +0100
+
+    Fix several documentation errors in 'rows()' overloads
+
+commit 460e8e143b808c2e15e80d30280a6100c75940bb
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 09:38:23 2019 +0100
+
+    Document the setup of row selections via lambda expression in the tutorial
+
+commit 8ff361ef6ff9e5cbeaa8f0776759d3f8f541d691
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 09:38:04 2019 +0100
+
+    Extend the 'Rows' constructor tests
+
+commit ec6b0c881a33c7d824052b50eb5527604cf62142
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 09:37:48 2019 +0100
+
+    Enable row selections via lambda expression
+
+commit 02fbe3f72d0d041840ee8f03686fa9e4be45c643
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 31 09:37:04 2019 +0100
+
+    Rework the compile time arguments of the 'Rows' class template from non-type parameters to type parameters
+
+commit a15b175f9cfa9d5c5745066e1a41b3a09929e121
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 29 15:42:35 2019 +0100
+
+    Fix several documentation errors in the specializations of the 'Elements' class template
+
+commit f0dd7b12056b69be1778828df3a985f5195f8a8b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 29 15:05:01 2019 +0100
+
+    Document the setup of element selections via lambda expression in the tutorial
+
+commit 34159b26390416004d0729cdef90eae826fd6964
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 29 14:56:52 2019 +0100
+
+    Extend the 'Elements' constructor tests
+
+commit e184cc0ab7330098462991232940948a4d595790
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 29 14:56:21 2019 +0100
+
+    Enable element selections via lambda expression
+
+commit 3aeb14a6fb20ee677b84f4fdbc77a2aedb816d5e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 29 11:47:43 2019 +0100
+
+    Rework the compile time arguments of the 'Elements' class template from non-type parameters to type parameters
+
+commit 4d941c94c8cdfd56617df8f2422143a59dba9b35
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 22 13:32:40 2019 +0100
+
+    Rework the 'ColumnsTrait' class template
+
+commit 6edea356829d309807da34ef54cc96d0e90ac88f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 22 13:32:13 2019 +0100
+
+    Rework the 'RowsTrait' class template
+
+commit ac59827b434403da240978e013ce6fd780341c49
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 22 13:04:10 2019 +0100
+
+    Rework the 'ElementsTrait' class template
+
+commit 3e49b2f066981f66f9f2ff5c4fd83df0910e4035
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 8 12:37:51 2019 +0100
+
+    Rework the 'idces()' member function of the 'ColumnsData' class template
+
+commit 941c78adcf0634e981950dfbb418a85b95d40c16
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 8 12:37:18 2019 +0100
+
+    Rework the 'idces()' member function of the 'RowsData' class template
+
+commit f10c83c18d9822116394882a30c5edf60e1b4ed8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 8 12:36:33 2019 +0100
+
+    Rework the 'idces()' member function of the 'ElementsData' class template
+
+commit a37e32afa89a5f38b655351678ec241caeb25b10
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 21 14:18:43 2019 +0100
+
+    Add an equality and inequality comparison operator for 'index_sequence'
+
+commit f7d235a6515d318349e0c12d33a19588ece637c3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Jan 11 11:05:47 2019 +0100
+
+    Rework the static buffer of the 'SmallArray' class template
+
+commit 8b5f5b9718ae10ce6a714abf5a911db76c236cd5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 10 13:34:44 2019 +0100
+
+    Prevent comparisons between integer expressions of different signedness in several 'elements()', 'rows()', and 'columns()' functions
+
+commit c3ee6080c92dd6c7e22aa1971048331b34ba6e8e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 10 13:14:34 2019 +0100
+
+    Rework all return type SFINAE conditions in the expressions submodule
+
+commit 2bd9eb8417b5e6a4322d5188d5c1b3c9696098b0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 10 08:51:46 2019 +0100
+
+    Rework all return type SFINAE conditions in the lapack submodule
+
+commit e2ac9ed2ce320e3ebb1a37751d09e9bd72a633eb
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 10 08:51:27 2019 +0100
+
+    Rework all return type SFINAE conditions in the SMP submodule
+
+commit c445176d73dd10c9d07422daa0aaab1a3fcd02d7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 9 15:58:43 2019 +0100
+
+    Fix two of the dense vector expansion operation tests
+
+commit efbbd9efc530a6a88a1543370344d4094333022e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 9 15:54:16 2019 +0100
+
+    Fix an issue in the 'load()' and 'store()' functions of the nested 'SubmatrixIterator' class template
+
+commit f6acd740a775448c88bcd492819ebe3450a2bf77
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 9 15:53:13 2019 +0100
+
+    Fix an issue in the 'load()' and 'store()' functions of the nested 'SubvectorIterator' class template
+
+commit 705cd826def83bf9113ed20da6e483921ff67232
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 23 17:49:29 2019 +0100
+
+    Fix a GCC compilation issue in the AVX 'prod()' functions for 32-bit and 64-bit floating point numbers
+
+commit 92ef7875b49177e428c872e7e31ca7813fd35bd3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 8 14:55:42 2019 +0100
+
+    Rework the evaluation strategy of the dense vector and sparse vector expansion expressions
+
+commit 2b1334f2035dc69d02e5370f51f6689c27a76c8c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 7 16:48:20 2019 +0100
+
+    Fix several mask computations in the 'CustomVector' class template
+
+commit c32615330740618b8cdb005ebed75c521973a02f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 7 16:47:57 2019 +0100
+
+    Fix the 'spacing()' member function of the 'Columns' specialization for row-major matrices
+
+commit e20a8835d527a164d94528cb5f5b0e5e8aa63981
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 7 16:47:46 2019 +0100
+
+    Fix the 'spacing()' member function of the 'Rows' specialization for column-major matrices
+
+commit bad7ee2f91a0a5a1397373d26b59b2312b2d5966
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 7 16:47:20 2019 +0100
+
+    Rework the alignment checks for the setup of dense subvectors and submatrices
+
+commit a6a92e855e2439eaf778f6000b55638112100a1e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 7 12:51:03 2019 +0100
+
+    Fix the 'UniformMatrix' class test
+
+commit 1d311629e5d2eb79e59f0050b5782eef54b75e9d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Jan 7 12:36:26 2019 +0100
+
+    Fix the alignment checks for the setup of dense submatrices
+
+commit 0a91a4e5e89f81f03cb138121dbebc07ebbf7e53
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Jan 4 14:08:42 2019 +0100
+
+    Improve the documentation of all functions for the treatment of zero matrix subtraction
+
+commit e3f12ef29bb8b67dfd65838cfd6830abae6e72e8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Jan 4 14:08:16 2019 +0100
+
+    Improve the documentation of all functions for the treatment of zero matrix addition
+
+commit c03c96b07dacaed095dcb78b3226b920c9f83a8e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Jan 4 13:33:56 2019 +0100
+
+    Rework the treatment of matrix/matrix multiplications with identity matrices
+
+commit 298b132e576cb406d0da783df27f3905ae1cf45c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Jan 4 13:33:05 2019 +0100
+
+    Rework the treatment of matrix/vector multiplications with identity matrices
+
+commit 69a0c05414215a003f63dd6ecf4db9769b028ed9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Jan 4 10:53:48 2019 +0100
+
+    Refactor all backend functions returning zero vectors or matrices or identity matrices
+
+commit 11ebc84dac313b64b86d4e35e70d565df2bda134
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 15:20:56 2019 +0100
+
+    Fix a comment of the 'ElementsData' class template
+
+commit 8aea9aaa1d41c827774c57e852d2b0a63f54406a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 14:26:57 2019 +0100
+
+    Rework the 'constexpr' constructors and copy assignment operators of the 'StaticMatrix' class template
+
+commit 0684df4ed769c99c6681880a4cce41de70ff36f3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 14:26:29 2019 +0100
+
+    Rework the 'constexpr' constructors and copy assignment operators of the 'StaticVector' class template
+
+commit 621597a6a0cd17a0d32dac1d25fa8271c4aae7b7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 12:48:16 2019 +0100
+
+    Refactor the handling of iterators in all expressions
+
+commit beb7f6f518f907f482bb67b341a8faea87ebcba3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:54:40 2019 +0100
+
+    Fix several missing and obsolete include directives
+
+commit cd42baa3c3f898af248a8ee539e9643f0b0e6f0b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:45:41 2019 +0100
+
+    Remove identity and zero matrices from the 'default' and 'essential' build rules
+
+commit ed39f0a8b23f5b18639237cb969df1b0bb77caf5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:31:59 2019 +0100
+
+    Add the <ZeroMatrix.h> include to several header files
+
+commit 89db51012955a77fc0be3655e472e01c27bd31e2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:31:32 2019 +0100
+
+    Add the <ZeroVector.h> include to several header files
+
+commit 3b5d3a9d3f6f3f11744985056a36d5a72e30d683
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:27:21 2019 +0100
+
+    Add the 'DeclZeroTrait' class template
+
+commit ef2192590044d52ada6556e8051139944974f824
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:15:44 2019 +0100
+
+    Document the 'declzero()' function for vectors in the tutorial
+
+commit ee21ae20e82437a7dc0b385d4bf69bfe07af6b16
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Jan 3 09:04:10 2019 +0100
+
+    Document the 'ZeroVector' class template in the tutorial
+
+commit 6043138e8c65f30394220e2ef1f02087b72d7f19
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:48:12 2019 +0100
+
+    Fix some include directives in the sparse vector expansion operation tests
+
+commit 7c688bab039e9a939ceb14a4663b839203bf195f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:47:54 2019 +0100
+
+    Extend the 'ExpandTrait' class test for the 'ZeroVector' class template
+
+commit 4823e80aabb1dc8f4ec79bca6c5fad6ad64009c0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:47:27 2019 +0100
+
+    Extend the 'MapTrait' class test for the 'ZeroVector' class template
+
+commit 8baddd995c9de1fec352b4c193a52eb2551ca2d8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:47:10 2019 +0100
+
+    Extend the 'CrossTrait' class test for the 'ZeroVector' class template
+
+commit 2e498fa5d5e087e783d56858b669893ccc7da887
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:46:54 2019 +0100
+
+    Extend the 'DivTrait' class test for the 'ZeroVector' class template
+
+commit 148629dc1fd17b45c51d0df87d31222954a209e4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:46:41 2019 +0100
+
+    Extend the 'MultTrait' class test for the 'ZeroVector' class template
+
+commit 600ec1d89aba4065ed8a51a8f23e981e0ead97f4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:46:15 2019 +0100
+
+    Extend the 'SubTrait' class test for the 'ZeroVector' class template
+
+commit dc7e33218203198a834a470621ee857a394f02f4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:45:57 2019 +0100
+
+    Extend the 'AddTrait' class test for the 'ZeroVector' class template
+
+commit bd2e0366d43c33ac76496bb772a6582cf3180269
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:44:18 2019 +0100
+
+    Add sparse vector/sparse vector subtraction tests for the 'ZeroVector' class template
+
+commit b103327d2a7311c634da80b2cddc574837cdc14a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:44:03 2019 +0100
+
+    Add sparse vector/sparse vector addition tests for the 'ZeroVector' class template
+
+commit 5ffde12c8e8124e4b09ce317d5d6860f2e287296
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:43:43 2019 +0100
+
+    Add sparse vector/dense vector subtraction tests for the 'ZeroVector' class template
+
+commit fd6838d0979daedf82df96ff1baec69ea3847a39
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:42:33 2019 +0100
+
+    Add sparse vector/dense vector addition tests for the 'ZeroVector' class template
+
+commit 2ca03aedf268b57a8b9d5ea7aba8dc13c6a85d34
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:41:50 2019 +0100
+
+    Add dense vector/sparse vector subtraction tests for the 'ZeroVector' class template
+
+commit 1a53d0c4d64ace30e18d63080118adf7364fea66
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:41:09 2019 +0100
+
+    Add dense vector/sparse vector addition tests for the 'ZeroVector' class template
+
+commit f2a752804d5c261562a33c54b461bd9b9f147639
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:39:29 2019 +0100
+
+    Add sparse vector total reduction tests for the 'ZeroVector' class template
+
+commit 0d831062cfe77df536c8c137f27df7c8256429c6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:38:17 2019 +0100
+
+    Add a missing include directive to the 'Creator' specialization for the 'ZeroMatrix' class template
+
+commit df77ae7f8249b600c97cf091baa9cd71d5eb2151
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:38:00 2019 +0100
+
+    Add a specialization of the 'Creator' class for zero vectors
+
+commit ee113a9130469fd40cf5158d80fd7a9b45e997e5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 16:36:40 2019 +0100
+
+    Add a class test for the 'ZeroVector' class template
+
+commit 9c8a88b462cb72a407bffba0e7829703c32d6a5f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 14:07:59 2019 +0100
+
+    Add the 'ZeroVector' class template
+
+commit 6eb211020ef5445e8f1a38d3cd80b62831c64fa6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 14:06:09 2019 +0100
+
+    Prepare the 'ZeroMatrix' class template for zero vectors
+
+commit 740bb560218d0878d0ff9a7afa648e0461dd0ba9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 14:05:31 2019 +0100
+
+    Prepare the 'UniformMatrix' class template for zero vectors
+
+commit 83acb6886ea28fe15ba2c0a03de10c3cc87442a5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 14:04:54 2019 +0100
+
+    Prepare the 'UniformVector' class template for zero vectors
+
+commit 4a72a06e3c1240b9115b828b4092e3f808a36986
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 14:00:12 2019 +0100
+
+    Prepare all vector/scalar division expressions for zero vectors
+
+commit 1431dc624732808b88d085814d3c6821cbd560be
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:59:50 2019 +0100
+
+    Prepare all vector/scalar multiplication expressions for zero vectors
+
+commit 6c4ee1c17466926516f865bb9c78f61b930c5524
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:59:34 2019 +0100
+
+    Prepare all vector/matrix multiplication expressions for zero vectors
+
+commit 77607e709376315aaf3e7e7b14d25513e9b939a0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:59:19 2019 +0100
+
+    Prepare all matrix/vector multiplication expressions for zero vectors
+
+commit 4e4d8fd555c14aa68be219dc88f4c6b62b8ab7aa
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:58:42 2019 +0100
+
+    Prepare all componentwise vector/vector division expressions for zero vectors
+
+commit 25277a4e4732612a1c2d1f5a102343abc864cf81
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:58:20 2019 +0100
+
+    Prepare all cross product expressions for zero vectors
+
+commit 62369304d72ab4db2263201151314ea8b37b4ab4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:58:05 2019 +0100
+
+    Prepare all outer product expressions for zero vectors
+
+commit db965088498266831ed0709ed0ef43dbcd114a81
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:56:29 2019 +0100
+
+    Prepare all componentwise vector/vector product expressions for zero vectors
+
+commit bd520c910d52c4d6b32917e4f03028a742894868
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:56:15 2019 +0100
+
+    Prepare all vector/vector subtraction expressions for zero vectors
+
+commit 30f24a3ff6dc18edfa4e4b4e3eca12a49d20cee3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Jan 2 13:56:01 2019 +0100
+
+    Prepare all vector/vector addition expressions for zero vectors
+
+commit 7a03356736be3f0fda9cc76b63b9a0996c148313
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Jan 1 19:47:57 2019 +0100
+
+    Add a forward declaration for the 'ZeroVector' class template
+
+commit 46e07653d567a8f54dd7ce2c94c3fdebd01c9b70
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 09:24:28 2018 +0100
+
+    Update the 'SubTrait' class test
+
+commit fa3f9803a1cf1f4814cdff995b53d4e5d58420e0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 09:24:10 2018 +0100
+
+    Update the 'AddTrait' class test
+
+commit 006f85d749afcae1133a368ddca6c9836433e4da
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 09:05:00 2018 +0100
+
+    Rework the treatment of scalar divisions with zero matrices
+
+commit 2a1bd3abff1bb25cd838963e99198c14d1f790f8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 08:59:15 2018 +0100
+
+    Rework the treatment of scalar multiplications with zero matrices
+
+commit c18fa57b63c9f6faac1e3df6a794283d646235fe
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 08:33:09 2018 +0100
+
+    Rework the treatment of matrix multiplications with zero matrices
+
+commit 3979d2ee27ff86dd1e5fe56e49b2579583f20b0a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 08:30:30 2018 +0100
+
+    Rework the treatment of Schur products with zero matrices
+
+commit 285f1771e7cd156845d2e983c67a6a1bad5aa8f7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 08:27:52 2018 +0100
+
+    Rework the treatment of matrix subtractions with zero matrices
+
+commit 010bf8f0fe221c969e9f270db926aec8e233c71c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 31 08:25:04 2018 +0100
+
+    Rework the treatment of matrix additions with zero matrices
+
+commit 1c12cead9a45506159bafae85784f870fbfc1d61
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 29 10:36:33 2018 +0100
+
+    Fix various implementation details of the 'ZeroMatrix' class template
+
+commit 6c2e7c75bcfc8755bd9bbefa23f9c9e87fc82849
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 29 10:17:09 2018 +0100
+
+    Fix the documentation of the 'at()' function of the 'CompressedMatrix' class template
+
+commit 5f7a0228ef7ee0370fae89d1bf40d6f375399fc4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 29 10:16:35 2018 +0100
+
+    Fix the documentation of the 'at()' function of the 'CompressedVector' class template
+
+commit cc7a623f63aeee9efb4812608b78ceb6090ba935
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 29 10:13:50 2018 +0100
+
+    Fix the documentation of the vector/vector division operators
+
+commit 3b471af8ff2e08c454e5748f3bfd5e5045c842f6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 12:06:43 2018 +0100
+
+    Rework the 'data()' function of the 'UniformMatrix' class template
+
+commit 3ccae7f4b2148798c6bb22d2460731311b368bf6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 12:06:33 2018 +0100
+
+    Rework the 'data()' function of the 'UniformVector' class template
+
+commit 1bafe4ffd016987992e0dd48253a593788b556a5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 12:05:53 2018 +0100
+
+    Improve the runtime alignment evaluation of dense submatrices
+
+commit 7af2272eca88da5595e029376e08e446cc29791e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 12:04:34 2018 +0100
+
+    Improve the runtime alignment evaluation of dense subvectors
+
+commit b42661161dabe5893f13f50db3ee8526b81b5b67
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 11:31:29 2018 +0100
+
+    Fix several 'unused parameter' Clang compiler warnings
+
+commit 20e58802b6e3b1f957995cce57aeabdf4049f342
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:51:20 2018 +0100
+
+    Improve the documentation of vector and matrix 'initializer_list' constructors and assignment operators in the tutorial
+
+commit 747db08f32b8c18dd9c3e6258ee9bb2a5b822563
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:37:41 2018 +0100
+
+    Improve the documentation of the 'initializer_list' constructor and assignment operator of the 'DynamicMatrix' class template
+
+commit 87a004f59ff6711da26f7dd4a997e9340d62cd28
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:37:30 2018 +0100
+
+    Improve the documentation of the 'initializer_list' constructor and assignment operator of the 'HybridMatrix' class template
+
+commit 904552f328b256758d324cfd515fc3eedafd70b7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:37:19 2018 +0100
+
+    Improve the documentation of the 'initializer_list' constructor and assignment operator of the 'StaticMatrix' class template
+
+commit 742b2e3ebb0ed9cbf56ee610b0466b75a7145fd0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:36:46 2018 +0100
+
+    Improve the documentation of the 'initializer_list' constructor and assignment operator of the 'DynamicVector' class template
+
+commit aeb91c053b8f2f15555dd188318e2c21df363c23
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:36:23 2018 +0100
+
+    Improve the documentation of the 'initializer_list' constructor and assignment operator of the 'HybridVector' class template
+
+commit a8ee91383e8509dcf5211cc74fc0a01e763de841
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:35:49 2018 +0100
+
+    Improve the documentation of the 'initializer_list' constructor and assignment operator of the 'StaticVector' class template
+
+commit bcdba7b6db3a8b91600d2c0a6c9456990ff3ea39
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:04:56 2018 +0100
+
+    Rework the 'StorageOrder' type trait
+
+commit 76d675cd54497e7e52629090ceb0b8bb79c2996a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:04:29 2018 +0100
+
+    Rework the 'TransposeFlag' type trait
+
+commit ac5f2d34c3174947fcfd7b94310842b9bdd69389
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:02:43 2018 +0100
+
+    Add the 'storageOrder' constant to the 'Matrix' class template
+
+commit 3d79f6dda366e32576646182637f76a5496bc36c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 10:00:35 2018 +0100
+
+    Add the 'transposeFlag' constant to the 'Vector' class template
+
+commit 0da9c49c64933f18d67d9cefaf9f98b3246a2681
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Dec 27 09:46:03 2018 +0100
+
+    Add a 'BaseType' type alias to all expression classes
+
+commit 51ea7609a009c4a164566b7ae4a8fa338ae01bed
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Dec 26 06:19:41 2018 +0100
+
+    Document the 'declzero()' function for matrices in the tutorial
+
+commit feaf701f3ccf66748b0f0b497675db62d7fc2cef
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Dec 26 06:18:17 2018 +0100
+
+    Document the 'ZeroMatrix' class template in the tutorial
+
+commit 5103fb5360d1033f1b8a8b87205501e21aabc559
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Dec 26 05:36:26 2018 +0100
+
+    Update the 'SchurTrait' class test
+
+commit b0e986ed28db11620206ab9ad566e46e03890cc1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Dec 26 05:35:27 2018 +0100
+
+    Implement all special cases of the Schur product that result in a zero matrix
+
+commit 9322a64f5c9779df5fcd0d88396838614159076a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:07:45 2018 +0100
+
+    Fix the documentation of the 'IsZero' type trait
+
+commit 7e0e6f400a32a6fc15d9268030378f37c912dfa4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:06:58 2018 +0100
+
+    Update the 'DeclDiagTrait' class test
+
+commit 62587de03d3d5c7f982eb033a8d4a980a4122fc3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:06:48 2018 +0100
+
+    Update the 'DeclUppTrait' class test
+
+commit 50a6cb57fb6fbbb494d9dba7249b70f0b6ddcea6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:06:41 2018 +0100
+
+    Update the 'DeclLowTrait' class test
+
+commit 280295dc7bfa1c732100515904eedf90ffe07b43
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:06:25 2018 +0100
+
+    Update the 'DeclHermTrait' class test
+
+commit b1f08b87f3f032e679d769d9424d211ccd949fe5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:06:12 2018 +0100
+
+    Update the 'DeclSymTrait' class test
+
+commit 1e0edb516905b5a0bb62e7a75d524acbde6ade4e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:05:40 2018 +0100
+
+    Update the 'DeclSymTrait', 'DeclHermTrait', 'DeclLowTrait' and 'DeclDiagTrait' specializations for the 'StrictlyUpperMatrix' class template
+
+commit ec59a786aaaa16e876f9561e7d0fd17aa213c216
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 10:05:16 2018 +0100
+
+    Update the 'DeclSymTrait', 'DeclHermTrait', 'DeclUppTrait' and 'DeclDiagTrait' specializations for the 'StrictlyLowerMatrix' class template
+
+commit 5709002a9e8e71b92a2e57888c36bf95250fb39f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:45:21 2018 +0100
+
+    Add a test for the 'IsZero' type trait
+
+commit ca243271b0c087638827f26582fcbb48e55047b4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:38:42 2018 +0100
+
+    Add a sparse matrix operation test for zero matrices
+
+commit 9ef92c188fde444ca75087eceaf09ceb8a4ceb94
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:37:33 2018 +0100
+
+    Add a sparse matrix operation test for identity matrices
+
+commit dfd9349cf008eeb9cab74de40d962cdb17cb1f05
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:35:47 2018 +0100
+
+    Fix a typo in the dense matrix operation test for general matrices
+
+commit a47945af960573a968efc6b4144bdb8ff48936e4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:35:31 2018 +0100
+
+    Add a dense matrix operation test for uniform matrices
+
+commit 1d9b91c2071dcbaa684ff67de702baea296b3566
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:33:47 2018 +0100
+
+    Rework several sparse matrix operations by means of the 'IsZero' type trait
+
+commit 740b5eea177f4eaf743a19b618c60a0a4fbaefac
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Dec 24 09:29:23 2018 +0100
+
+    Rework several dense matrix operations by means of the 'IsUniform' and 'IsZero' type traits
+
+commit 09704409e8c59fccb31aa047a7f766edaefb7d06
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sun Dec 23 11:49:50 2018 +0100
+
+    Remove the inline specifier from all forward declarations of global functions and operators
+
+commit 74d9cbc78eeca39928fff696b80ba0de7bdc3346
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sun Dec 23 06:15:54 2018 +0100
+
+    Fix the view-based tests of the sparse matrix/dense matrix multiplication test
+
+commit bc95019ec5a066862f7b69eba525b595a86e6078
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sun Dec 23 06:15:36 2018 +0100
+
+    Fix the view-based tests of the dense matrix/sparse matrix multiplication test
+
+commit 7f8f50f2879d75bbbff1d704871f56ba181baca2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 13:49:42 2018 +0100
+
+    Replace all occurrences of 'constexpr inline' with 'inline constexpr'
+
+commit f642c1644cee46df2da46312fff2501f34877bca
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 13:47:04 2018 +0100
+
+    Fix the documentation of the 'IsAdaptor' type trait
+
+commit d56f13b2154fdba2fdb61015a98c9e5f11204067
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 13:44:28 2018 +0100
+
+    Fix several missing and obsolete include directives
+
+commit d86621db6e39123d77e8baa166fa7ea14967c664
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:40:29 2018 +0100
+
+    Improve several small issues in the 'UniformMatrix' class test
+
+commit 91c7621714008b9fe094aa7cc9d589709a69089d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:40:15 2018 +0100
+
+    Improve several small issues in the 'IdentityMatrix' class test
+
+commit 046bb0455a9062bd054b2ff52efdb8f6919209b9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:39:19 2018 +0100
+
+    Remove the 'RemoveIdentity' class template
+
+commit b1f5b448c1a1733df922afb8540f6e624e22b362
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:38:36 2018 +0100
+
+    Remove several sparse matrix/sparse matrix multiplication tests
+
+commit 9c82706a90cf8a7a2cbeca1552d85a1b9365a3a2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:34:13 2018 +0100
+
+    Remove several sparse matrix/sparse matrix Schur product tests
+
+commit a144c88ee2f315b82b52c2ff6e15651aabeb08b3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:26:37 2018 +0100
+
+    Extend the 'DeclDiagTrait' class test for the 'ZeroMatrix' class template
+
+commit a07755024da5264493ce43ec93409ddf6044e718
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:26:17 2018 +0100
+
+    Extend the 'DeclUppTrait' class test for the 'ZeroMatrix' class template
+
+commit fc713072860cb658b8f5db12667f7100a2d9d5bd
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:26:01 2018 +0100
+
+    Extend the 'DeclLowTrait' class test for the 'ZeroMatrix' class template
+
+commit ae4cffaf2d3dfd1da22f8c92328b26641ec660aa
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:25:47 2018 +0100
+
+    Extend the 'DeclHermTrait' class test for the 'ZeroMatrix' class template
+
+commit efe9e718e8767139627b3b07621e5e263f2996b0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:25:29 2018 +0100
+
+    Extend the 'DeclSymTrait' class test for the 'ZeroMatrix' class template
+
+commit a0dd3950d1461615d3efc2fa3993ab7bbf591e17
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:25:04 2018 +0100
+
+    Extend the 'MapTrait' class test for the 'ZeroMatrix' class template
+
+commit ecfa78556109531e9865992bc9d21a0f0c9a471e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:24:42 2018 +0100
+
+    Extend the 'SchurTrait' class test for the 'ZeroMatrix' class template
+
+commit 0c036dec83490ea01161304bd2ea8cc6b05cb83e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:24:25 2018 +0100
+
+    Extend the 'DivTrait' class test for the 'ZeroMatrix' class template
+
+commit 01d11bcfbb6d3d19c2c9194135f9b13b9e964928
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:24:11 2018 +0100
+
+    Extend the 'MultTrait' class test for the 'ZeroMatrix' class template
+
+commit 5e04938f17840ec93f2098d314ec73ebab5cd54c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:23:25 2018 +0100
+
+    Extend the 'SubTrait' class test for the 'ZeroMatrix' class template
+
+commit 85deeb02249d5c2ca00a456f0689aaa1182bd18f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:23:05 2018 +0100
+
+    Extend the 'AddTrait' class test for the 'ZeroMatrix' class template
+
+commit 320a6ca7aeb4a24924042b4ed5ead0c9d0fc5cab
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:19:24 2018 +0100
+
+    Add sparse matrix/sparse matrix subtraction tests for the 'ZeroMatrix' class template
+
+commit e27675600a170edf69df4c2f03ca42648e9b5926
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:18:58 2018 +0100
+
+    Add sparse matrix/sparse matrix addition tests for the 'ZeroMatrix' class template
+
+commit 569e9705c40d5bf6e19efac55ce37e4ded0d3002
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:17:53 2018 +0100
+
+    Add sparse matrix/dense matrix subtraction tests for the 'ZeroMatrix' class template
+
+commit 000ca0cb0d66ad5e9fecd59d9a756b9c97c0092d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:16:25 2018 +0100
+
+    Add sparse matrix/dense matrix addition tests for the 'ZeroMatrix' class template
+
+commit 9afcc3ff079fc730d34b89bf36d46d8038a52f5f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:15:20 2018 +0100
+
+    Add dense matrix/sparse matrix subtraction tests for the 'ZeroMatrix' class template
+
+commit 2f301131e723f820c035da0d78328c6413a1b12d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:13:21 2018 +0100
+
+    Add dense matrix/sparse matrix addition tests for the 'ZeroMatrix' class template
+
+commit 9f1e0f1088986c52f4721d2c389f1d0a4c60e8d0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:11:27 2018 +0100
+
+    Add sparse matrix column-wise reduction tests for the 'ZeroMatrix' class template
+
+commit dff943c0ad15642e7eac410ba0dd06aff4c293a7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:10:39 2018 +0100
+
+    Add sparse matrix row-wise reduction tests for the 'ZeroMatrix' class template
+
+commit f06f14f44f2c563472b57261aeed5077ce6be857
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:09:44 2018 +0100
+
+    Add sparse matrix total reduction tests for the 'ZeroMatrix' class template
+
+commit 3a1b1ee4ad6aac03b0e2030d9ed4680d3c492ee7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 06:20:57 2018 +0100
+
+    Add a specialization of the 'Creator' class for zero matrices
+
+commit 8fa5277ca107a45fbbde751132c69725b45c59e6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 13:00:28 2018 +0100
+
+    Add a class test for the 'ZeroMatrix' class template
+
+commit da71bbc831044696b900c43e3acde75b23005714
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:56:32 2018 +0100
+
+    Add the 'DeclZero' functor
+
+commit cfad88501aec6bbb6b100e0611f9fed746c4944f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:55:05 2018 +0100
+
+    Add the 'ZeroMatrix' class template
+
+commit 1d953a08b66039030811a77935a9616c863bd438
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:49:08 2018 +0100
+
+    Add a forward declaration for the 'ZeroMatrix' class template
+
+commit c23d9174a73f82ef1f1c5c1045a88fa27f4fbca4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:42:37 2018 +0100
+
+    Prepare the 'TSMatSMatMultExpr' expression class for zero matrices
+
+commit 366678f6f50067ea90099958b008b9b70f39c555
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:42:22 2018 +0100
+
+    Prepare the 'SMatTSMatMultExpr' expression class for zero matrices
+
+commit 12411474bf73efc8b7f5b4b33ffe7585312d9d45
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:42:07 2018 +0100
+
+    Prepare the 'TSMatSMatSubExpr' expression class for zero matrices
+
+commit f2f6171130306bc76c7577df60fb951d720b3752
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:41:55 2018 +0100
+
+    Prepare the 'SMatTSMatSubExpr' expression class for zero matrices
+
+commit 16c5d8b430b101f46ed3fe06577f6a30afab747f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:41:37 2018 +0100
+
+    Prepare the 'SMatTSMatAddExpr' expression class for zero matrices
+
+commit 7c52512152915673c42379c020225c49fdfee3fe
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:41:21 2018 +0100
+
+    Prepare the 'TSMatDMatMultExpr' expression class for zero matrices
+
+commit cd795302d80c0dd3b7db262f9f84024f2e81bb70
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:41:06 2018 +0100
+
+    Prepare the 'SMatTDMatMultExpr' expression class for zero matrices
+
+commit 2050bc5503932758861796f74ad8932e68f3bf8e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:48:38 2018 +0100
+
+    Prepare the 'DiagonalMatrix' class template for zero matrices
+
+commit b3cbbfe9512f7449c9a51863877599f43bd3992c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:48:18 2018 +0100
+
+    Prepare the 'StrictlyUpperMatrix' class template for zero matrices
+
+commit 08edfff41ba2b02cb5ab26c4a69b43199b605492
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:48:06 2018 +0100
+
+    Prepare the 'UniUpperMatrix' class template for zero matrices
+
+commit c7a4b1218ffa540905367c644ad3dfd7e4d28469
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:47:57 2018 +0100
+
+    Prepare the 'UpperMatrix' class template for zero matrices
+
+commit 330f72d36ad096958805fd652c6630c04fddfde3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:47:12 2018 +0100
+
+    Prepare the 'StrictlyLowerMatrix' class template for zero matrices
+
+commit 3a8a1cba44afa4325c907d5a2d4be409a270044d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:46:53 2018 +0100
+
+    Prepare the 'UniLowerMatrix' class template for zero matrices
+
+commit cdd014d12d6b2b9f92ee7ace83891aeaf5787698
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:45:21 2018 +0100
+
+    Prepare the 'LowerMatrix' class template for zero matrices
+
+commit ddb8aa21631e88111f925d1a4f51c7e9780e6d2f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:05:03 2018 +0100
+
+    Prepare the 'HermitianMatrix' class template for zero matrices
+
+commit 70a9ce3307bb938ff73c47aa38410b2b27c15004
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:04:20 2018 +0100
+
+    Prepare the 'SymmetricMatrix' class template for zero matrices
+
+commit c73e89bf97650d99a80de9b6807651869501ee02
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:03:44 2018 +0100
+
+    Prepare the 'IdentityMatrix' class template for zero matrices
+
+commit 89667f659eae438598c342d6bbcf464bb23bb6ce
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 12:03:26 2018 +0100
+
+    Prepare the 'UniformMatrix' class template for zero matrices
+
+commit a63384825671f33d9bc28cd8a7fcaff2a289f115
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:33:09 2018 +0100
+
+    Prepare the 'UniformVector' class template for zero matrices
+
+commit 322ab54956468a0ca348c3ad74ee744ed66aab42
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:32:42 2018 +0100
+
+    Prepare the 'CompressedMatrix' class template for zero matrices
+
+commit 64c7d32bf3e91111c5d72f1ec6a4f4f67f11f41e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:32:27 2018 +0100
+
+    Prepare the 'DynamicMatrix' class template for zero matrices
+
+commit 57338806ec99b8bac074f33ccb1dbc12ecf23f85
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:32:12 2018 +0100
+
+    Prepare the 'HybridMatrix' class template for zero matrices
+
+commit ae7158cb86fc6ec208c4a6f9121a76070a795aae
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Dec 21 16:31:49 2018 +0100
+
+    Prepare the 'StaticMatrix' class template for zero matrices
+
+commit ab557deea5b3c178485844e8897ae5db28616e6f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 11:56:23 2018 +0100
+
+    Add specializations for the 'YieldsZero' type trait for the according unary functors
+
+commit a3b7e45ad87bb5d459a8028cd83ef20de11c1e14
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 4 11:53:00 2018 +0100
+
+    Add the 'YieldsZero' type trait
+
+commit 02f155017c989907b691d722371e649e6f9a2e4d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:41:52 2018 +0100
+
+    Update all calls to 'erase()' in the 'DiagonalMatrix' specializations for sparse matrices
+
+commit 81e29761c7039092e313628204c2e93f270ac51c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:40:37 2018 +0100
+
+    Update all calls to 'erase()' in the 'StrictlyUpperMatrix' specializations for sparse matrices
+
+commit a306ff1c41a7a4348048c0cf8fab0b4691ca3d2a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:39:06 2018 +0100
+
+    Update all calls to 'erase()' in the 'UpperMatrix' specializations for sparse matrices
+
+commit e495746009ea5978ede8a40764b86e5a0807a009
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:38:08 2018 +0100
+
+    Update all calls to 'erase()' in the 'StrictlyLowerMatrix' specializations for sparse matrices
+
+commit 3b3de2cd06598fae907f73473bd468d8371ffad9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:36:30 2018 +0100
+
+    Update all calls to 'erase()' in the 'LowerMatrix' specializations for sparse matrices
+
+commit 3c6b46c48ce0021a1ec249e3dba721714577c6d9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:35:00 2018 +0100
+
+    Update all calls to 'erase()' in the 'HermitianMatrix' specializations for sparse matrices
+
+commit bb46f430c01a45111e8ac73a3535eaf8bbfb6fb0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 11:34:19 2018 +0100
+
+    Update all calls to 'erase()' in the 'SymmetricMatrix' specializations for sparse matrices
+
+commit 4eb83163b5506e1a6f2de2afef413a2ae70613fd
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 10:29:14 2018 +0100
+
+    Add the free 'erase()' function for sparse matrices
+
+commit 5ba15e53a8a954f461bef8d8c426647358c26c26
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Dec 11 10:28:44 2018 +0100
+
+    Add the free 'erase()' function for sparse vectors
+
+commit 12517983113c2cbb14b52399f24e82d1cbc53d7b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:38:36 2018 +0100
+
+    Document the 'isZero()' function in the tutorial
+
+commit e59ddf6aa27f91de6c7f060ea6fd47029e9f5845
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:33:22 2018 +0100
+
+    Add an operation test for the 'isZero()' function for sparse matrices
+
+commit aaffd543873dcad59dd0ffec34babb17a9b45d43
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:32:50 2018 +0100
+
+    Add the 'isZero()' for sparse matrices
+
+commit 0638701bb357e3b12875f369c991a7cf4bb963de
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:32:32 2018 +0100
+
+    Add an operation test for the 'isZero()' function for dense matrices
+
+commit 9d871394fc93e293abd3554e12785c08f0654aae
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:29:37 2018 +0100
+
+    Add the 'isZero()' for dense matrices
+
+commit 3802783323c5594693001a793c6f214f386f1145
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:29:14 2018 +0100
+
+    Add an operation test for the 'isZero()' function for sparse vectors
+
+commit 87c6bdb92c77179c5082ee778098817756a8c2f5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:28:41 2018 +0100
+
+    Add the 'isZero()' for sparse vectors
+
+commit ea9ff87fe323098946ea6ccf202ea4e82e2c8e66
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:24:46 2018 +0100
+
+    Add an operation test for the 'isZero()' function for dense vectors
+
+commit b3fed287d4fa3a49ddccc03f02ce67a8ea89948d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:23:32 2018 +0100
+
+    Add the 'isZero()' for dense vectors
+
+commit 348e2b87bd7cbd0541b524a60d3fb7f1ad5bab24
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:22:43 2018 +0100
+
+    Remove the 'isZero()' overload for non-numeric data types
+
+commit c39d88887bc3910907f2b2c6a005722176bda1b0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Dec 22 05:43:48 2018 +0100
+
+    Implement the 'IsUniform' type trait in terms of the 'IsZero' type trait
+
+commit 6400982ca2f822c97b8f978a3cd5c3f56c0f0b3f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 23 15:12:53 2018 +0100
+
+    Add the 'IsZero' type trait along with the according compile time constraints
+
+commit 8c75382c8516534f3b1e7a3f21a7cc531240fea0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:15:25 2018 +0100
+
+    Fix several Doxygen warnings
+
+commit 5240ea2a1df5045cdf14ad3dc76af6af0c865735
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 23 15:04:30 2018 +0100
+
+    Fix the documentation of the 'IsIdentity' type trait
+
+commit ca7a250a45308297bce5829b78594d3820f12c6a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 09:38:48 2018 +0100
+
+    Rework the 'isUniform()' function for dense and sparse matrices
+
+commit 1ca38e0525fc918c37e6e1447629ba1dbf6ba313
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 23 14:54:27 2018 +0100
+
+    Rework the 'isUniform()' function for dense and sparse vectors
+
+commit e86cbd2aa230d566f3bece1055ccf7a28f8fd3d8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 23 14:53:58 2018 +0100
+
+    Fix the 'nonZeros()' function for the 'initializer_list' class template
+
+commit a2f4cfe74eefac747cd743753e965f24096f4260
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 23 13:34:38 2018 +0100
+
+    Add the <hpx/hpx_main.hpp> include to all source files of the Blazetest
+
+commit 749e0aa9f264fa6fa00be3f63a63d3a1b26b8db1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Nov 22 08:13:37 2018 +0100
+
+    Rework the 'IdentityMatrix' class template in terms of 'constexpr'
+
+commit 8e56823be9baca52ac001bde8cee42f110da3120
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Nov 22 08:13:27 2018 +0100
+
+    Rework the 'ValueIndexPair' class template in terms of 'constexpr'
+
+commit 64d0e4e995665fc99af9d67e8548cac4d3f37625
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 16 08:54:05 2018 +0100
+
+    Rework the 'dimensionof()' function
+
+commit cbb087cdeeb382f952d704e57cc39de820e47450
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 14:10:21 2018 +0100
+
+    Document the 'UniformMatrix' class template in the tutorial
+
+commit ee7c88494ada939db2d5d7fae9cc33ce07acf96d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 13:40:55 2018 +0100
+
+    Document the 'UniformVector' class template in the tutorial
+
+commit ea793fe860ad43281b3d8eec37f7cb26fbf62e11
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 26 13:10:10 2018 +0100
+
+    Document the 'expand()' function in the tutorial
+
+commit e95992d0d3858f306b43dc1086ddcf8eec25cbf5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Nov 22 08:09:18 2018 +0100
+
+    Extend the operation test for the sparse vector expansion operation
+
+commit f5f9b9ca1c8306ba68c5f30b1d7f1e985ce6ade4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Thu Nov 22 08:09:01 2018 +0100
+
+    Extend the operation test for the dense vector expansion operation
+
+commit d18235552da103b75062d792b160c63ec7f2f0cb
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:51:25 2018 +0100
+
+    Improve the return type of the function call operators of all creators
+
+commit 6243a6d89c14de93626b7cd3fb9c6c43f6f08b9d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:23:18 2018 +0100
+
+    Enable the 'columns()' operation for vector expansion operations
+
+commit 249ab26922d2bffc77c6082050156364d16e26e5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:23:07 2018 +0100
+
+    Enable the 'column()' operation for vector expansion operations
+
+commit bc9a7d406ec66036482a6ec013ae7b082109dd4a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:23:01 2018 +0100
+
+    Enable the 'rows()' operation for vector expansion operations
+
+commit 26b6d3712e34f6e160edfc40662fae0ac5262ad8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:22:40 2018 +0100
+
+    Enable the 'row()' operation for vector expansion operations
+
+commit d797e7bbdab7283b8ba1571d95f76d0d38da4d23
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:19:28 2018 +0100
+
+    Simplify the constructor of several operation tests
+
+commit 17ddcfa9ea69f419701dbfb1ec05c3e8769b3ba3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 13 09:48:15 2018 +0100
+
+    Provide an optimization for the 'min()' and 'max()' functions for uniform matrices
+
+commit e37f2cb2136489505371447dcc951d4104ffa972
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 13 09:47:11 2018 +0100
+
+    Provide an optimization for the 'min()' and 'max()' functions for uniform vectors
+
+commit dcbfada979433d30a038c2e031af27d1151f216e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:10:38 2018 +0100
+
+    Extend the 'DeclDiagTrait' class test for the 'UniformMatrix' class template
+
+commit 7dceba84e14856f7b70b874b8d6ed9b7675de756
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:08:54 2018 +0100
+
+    Extend the 'DeclUppTrait' class test for the 'UniformMatrix' class template
+
+commit 57baecbde1ed940cca9975cb120414af4194bdda
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:08:36 2018 +0100
+
+    Extend the 'DeclLowTrait' class test for the 'UniformMatrix' class template
+
+commit 463b5ef3967bc2cd9c349e2b93af9e788d04de21
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:08:22 2018 +0100
+
+    Extend the 'DeclHermTrait' class test for the 'UniformMatrix' class template
+
+commit a6ae76e25f5fda19456f4fdf84ec998bcb3f079d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:08:05 2018 +0100
+
+    Extend the 'DeclSymTrait' class test for the 'UniformMatrix' class template
+
+commit 0369830cf355c49fc61044f75cfb6bf9b4f373cc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:07:46 2018 +0100
+
+    Extend the 'ExpandTrait' class test for the 'UniformMatrix' class template
+
+commit f7204b6d93518222b19943e16d575c01730d2a3f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:07:09 2018 +0100
+
+    Extend the 'MapTrait' class test for the 'UniformMatrix' class template
+
+commit 6c361bbefe82d035df316d4e333f7792c8fa973b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:06:41 2018 +0100
+
+    Extend the 'SchurTrait' class test for the 'UniformMatrix' class template
+
+commit e4c0d7c0a13402a55c04805a095a26fb4aa873fa
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:06:13 2018 +0100
+
+    Extend the 'DivTrait' class test for the 'UniformMatrix' class template
+
+commit aab0a4c2da522800d365cdbfcd3f94ea9ca8aaea
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:06:02 2018 +0100
+
+    Extend the 'MultTrait' class test for the 'UniformMatrix' class template
+
+commit 1d32409db1e678fcc9d2db05ab4f6eb49c90f32c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:03:59 2018 +0100
+
+    Extend the 'SubTrait' class test for the 'UniformMatrix' class template
+
+commit 2b28fe818cc520dc99c6a42f779838fc78d28a83
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:03:43 2018 +0100
+
+    Extend the 'AddTrait' class test for the 'UniformMatrix' class template
+
+commit 8fa58768447b442c443fe5776f3fd707acf947cb
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:03:04 2018 +0100
+
+    Add sparse matrix/dense matrix multiplication tests for the 'UniformMatrix' class template
+
+commit 07b5c7af5702c36a1ca9c624b02607c5636700ee
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:02:46 2018 +0100
+
+    Add sparse matrix/dense matrix Schur product tests for the 'UniformMatrix' class template
+
+commit 0430bb5ca7be7d4afe6a0a9e4fa687d87c4f2fa8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:02:30 2018 +0100
+
+    Add sparse matrix/dense matrix subtraction tests for the 'UniformMatrix' class template
+
+commit eb55c73e36c0f79f3dfac84145963a6f08a64bc2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:02:13 2018 +0100
+
+    Add sparse matrix/dense matrix addition tests for the 'UniformMatrix' class template
+
+commit 7f2bcc5b912e14574baecec7cfa0b71e1e2826a3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:01:53 2018 +0100
+
+    Add dense matrix/sparse matrix multiplication tests for the 'UniformMatrix' class template
+
+commit bd7d97c3b941d81582d68bc140e8464b3b5107e4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:01:26 2018 +0100
+
+    Add dense matrix/sparse matrix Schur produdct tests for the 'UniformMatrix' class template
+
+commit 6badbd434f2aae2aa5d055d5d9b474d5671e7da6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:01:02 2018 +0100
+
+    Add dense matrix/sparse matrix subtraction tests for the 'UniformMatrix' class template
+
+commit 7d187637fe1a4a2847782275602d7f5722d0be68
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:00:36 2018 +0100
+
+    Add dense matrix/sparse matrix addition tests for the 'UniformMatrix' class template
+
+commit d16b3a021005ac431096ec199da99e038a81cfa0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:00:16 2018 +0100
+
+    Add dense matrix/dense matrix maximum tests for the 'UniformMatrix' class template
+
+commit 45c97d0f26b9ca80bd22e3b2f7888b0973d42219
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 15:00:00 2018 +0100
+
+    Add dense matrix/dense matrix minimum tests for the 'UniformMatrix' class template
+
+commit 40171b7b4d8a6b77066e82c4d61ae57243ef9c64
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:59:37 2018 +0100
+
+    Add dense matrix/dense matrix multiplication tests for the 'UniformMatrix' class template
+
+commit 20e5245dc3eda752c72d611b70db54abe0ecc462
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:59:12 2018 +0100
+
+    Add dense matrix/dense matrix Schur product tests for the 'UniformMatrix' class template
+
+commit 291dd92b0e46e6500fa54fc552483f9724042031
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:58:44 2018 +0100
+
+    Add dense matrix/dense matrix subtraction tests for the 'UniformMatrix' class template
+
+commit 6dbd4a36a7c458f766dd4a39a450abdfef7adcd2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:58:15 2018 +0100
+
+    Add dense matrix/dense matrix addition tests for the 'UniformMatrix' class template
+
+commit 2cc5a3b574a812b2fb703ab39737ac40c81c974d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:57:52 2018 +0100
+
+    Add sparse vector/dense matrix multiplication tests for the 'UniformMatrix' class template
+
+commit 3779aa932100cfb9bf3498369a0814d1977d0395
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:57:31 2018 +0100
+
+    Add dense vector/dense matrix multiplication tests for the 'UniformMatrix' class template
+
+commit 35bc1ae14e425109f63426c53ce90f0d878d1c02
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:57:10 2018 +0100
+
+    Add dense matrix/sparse vector multiplication tests for the 'UniformMatrix' class template
+
+commit 2d1f4cf358134722119223f70f166d4c11939b4a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:56:48 2018 +0100
+
+    Add dense matrix/dense vector multiplication tests for the 'UniformMatrix' class template
+
+commit bb34866c7c2ca42f92d83ae3079192bbc5b799ce
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:56:11 2018 +0100
+
+    Add dense matrix reduction tests for the 'UniformMatrix' class template
+
+commit b3812fe48dc866db83754f7557db07cbfa0584cf
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:55:39 2018 +0100
+
+    Add a specialization of the 'Creator' class for uniform matrices
+
+commit 49a4646a1abb734036708b03e06ffddcf7860ae6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:55:10 2018 +0100
+
+    Add a class test for the 'UniformMatrix' class template
+
+commit 6b7039aa11080243b585140132251e0963bfe8ad
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:45:50 2018 +0100
+
+    Prevent the use of the 'DiagonalMatrix' adaptor with uniform matrices
+
+commit 66e92456185904107eecb19ca6ed363c22944644
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:45:41 2018 +0100
+
+    Prevent the use of the 'StrictlyUpperMatrix' adaptor with uniform matrices
+
+commit 849f61e8b0bfaa30ab64ee09fe5db4ecd3127646
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:45:32 2018 +0100
+
+    Prevent the use of the 'UniUpperMatrix' adaptor with uniform matrices
+
+commit 1cf45aad2b750c326b04330705ac577c02f8c17e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:45:23 2018 +0100
+
+    Prevent the use of the 'UpperMatrix' adaptor with uniform matrices
+
+commit 5ef17cae31e907b54b8cdd40cbacccc6ab317940
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:45:15 2018 +0100
+
+    Prevent the use of the 'StrictlyLowerMatrix' adaptor with uniform matrices
+
+commit e1d2140ab8f954344109433734ab92e8d66444f1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:44:55 2018 +0100
+
+    Prevent the use of the 'UniLowerMatrix' adaptor with uniform matrices
+
+commit 402338a614badfec2fc133535405284ecb0bab10
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:42:20 2018 +0100
+
+    Prevent the use of the 'LowerMatrix' adaptor with uniform matrices
+
+commit c11a4eca894ab19dec10f38f660c37895364457a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 12 14:46:46 2018 +0100
+
+    Add the 'UniformMatrix' class template
+
+commit e1d5302b0b6489df0dfd3b14a329653f3abb2913
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sun Nov 11 10:22:41 2018 +0100
+
+    Add a forward declaration for the 'UniformMatrix' class template
+
+commit 8d85ca906889a7e1bb5b5e3929ab822a5c6714ba
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 6 11:40:32 2018 +0100
+
+    Fix the 'RowsTrait' and 'ColumnsTrait' specializations for the 'CompressedMatrix' class template
+
+commit d902c9b65439bd2336636485179f9ec364c8a891
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 6 11:39:46 2018 +0100
+
+    Fix the 'RowsTrait' and 'ColumnsTrait' specializations for the 'DynamicMatrix' class template
+
+commit 23fa8b0ac0e24fdda106fc5cfc216bcce646775f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 6 11:39:34 2018 +0100
+
+    Fix the 'RowsTrait' and 'ColumnsTrait' specializations for the 'HybridMatrix' class template
+
+commit 0608cbb3fda5eae242ec0a3ce60bf12e0381c981
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 6 11:39:21 2018 +0100
+
+    Fix the 'RowsTrait' and 'ColumnsTrait' specializations for the 'StaticMatrix' class template
+
+commit d50e83fca76597405b05888296f7e80fd038b9d2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 6 11:38:58 2018 +0100
+
+    Fix the 'ColumnTrait' and 'BandTrait' specializations for the 'CompressedVector' class template
+
+commit 39aae8860f305f287bc069e2c79967236b5627b4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:56:33 2018 +0100
+
+    Fix the 'ColumnTrait' and 'BandTrait' specializations for the 'DynamicVector' class template
+
+commit 04bfd2e96294e946bbcca5f4a25afde6c674a12c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:56:24 2018 +0100
+
+    Fix the 'ColumnTrait' and 'BandTrait' specializations for the 'HybridVector' class template
+
+commit b1b0c85851f755723e993ff82d0cf90f356ab497
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:56:12 2018 +0100
+
+    Fix the 'ColumnTrait' and 'BandTrait' specializations for the 'StaticVector' class template
+
+commit a5f374da42de17dfc52ee92c328979649e941632
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:53:17 2018 +0100
+
+    Fix several small errors in the 'DynamicMatrix' class test
+
+commit 3f62b5e81c5437ea1211fce38b1e405ba09978c5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:52:21 2018 +0100
+
+    Fix several small errors in the 'IdentityMatrix' class test
+
+commit 0eeda0ee16c390d47acdab44f63b34cefea737c5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:44:34 2018 +0100
+
+    Extend the 'ExpandTrait' class test for the 'UniformVector' class template
+
+commit 196f4260c9c55aab2bf67e68f0ed586baa5edf05
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:44:21 2018 +0100
+
+    Extend the 'MapTrait' class test for the 'UniformVector' class template
+
+commit b6c030893a6c75349f5a01dacb6f3c58f102affc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:44:04 2018 +0100
+
+    Extend the 'CrossTrait' class test for the 'UniformVector' class template
+
+commit 6393607fdabdd5f469de23475db5498f958ffdd4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:43:50 2018 +0100
+
+    Extend the 'DivTrait' class test for the 'UniformVector' class template
+
+commit 5adadf4bf9da97d45a648de2e52c6ee40d5614f5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:43:23 2018 +0100
+
+    Extend the 'MultTrait' class test for the 'UniformVector' class template
+
+commit f33b4bab282b604f9263d5d8a6a7e58ade356ad1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:43:03 2018 +0100
+
+    Extend the 'SubTrait' class test for the 'UniformVector' class template
+
+commit 4088d85968841a35e85ca4f957038dce6b503856
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:42:49 2018 +0100
+
+    Extend the 'AddTrait' class test for the 'UniformVector' class template
+
+commit 3904b32d3a1cc417121d66ae0b53dcea38f2e503
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:41:03 2018 +0100
+
+    Add dense vector/sparse matrix multiplication tests for the 'UniformVector' class template
+
+commit 7056ac4b291bec812eea7b3e0b0319eb4ff8e852
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:40:29 2018 +0100
+
+    Add dense vector/dense matrix multiplication tests for the 'UniformVector' class template
+
+commit af408ec7d812cc8c2f8e3b8ad0ecc8174b2ea1dd
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:39:59 2018 +0100
+
+    Add sparse matrix/dense vector multiplication tests for the 'UniformVector' class template
+
+commit c09e9a28e6beb6e724d231901e3fe1fca75c0a6b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:39:06 2018 +0100
+
+    Add dense matrix/dense vector multiplication tests for the 'UniformVector' class template
+
+commit 4b10e129c01b10ee280d1df060010bfbb1ba312e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:38:28 2018 +0100
+
+    Add sparse vector/dense vector outer product tests for the 'UniformVector' class template
+
+commit 0194eadbcdb2e0d63b89e5ad26e1255c594f1dd1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:37:33 2018 +0100
+
+    Add sparse vector/dense vector inner product tests for the 'UniformVector' class template
+
+commit 32768ddbb0c881880d93a2a8483aafecd1f56297
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:37:03 2018 +0100
+
+    Add sparse vector/dense vector cross product tests for the 'UniformVector' class template
+
+commit c8b73f8a9a53d5d85b15a058922fe234a09f0935
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:35:44 2018 +0100
+
+    Add sparse vector/dense vector division tests for the 'UniformVector' class template
+
+commit c6a36226623f2ee48119ddb3d8efae03fc809528
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:34:54 2018 +0100
+
+    Add sparse vector/dense vector multiplication tests for the 'UniformVector' class template
+
+commit 05037dfaf192f4b7ca2110a5db68e0dd1a3d95a5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:34:13 2018 +0100
+
+    Add sparse vector/dense vector subtraction tests for the 'UniformVector' class template
+
+commit 6032e28773436544dfca782a55eef0e9de5a3d27
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:33:27 2018 +0100
+
+    Add sparse vector/dense vector addition tests for the 'UniformVector' class template
+
+commit 9e26276ec6a6d553cb5798867039936a1a6d3db3
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:32:48 2018 +0100
+
+    Add dense vector/sparse vector outer product tests for the 'UniformVector' class template
+
+commit 5cc9a57e9836f7464f748ff43afe912216e0105d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:32:22 2018 +0100
+
+    Add dense vector/sparse vector inner product tests for the 'UniformVector' class template
+
+commit 922c4bc1ad795040a9b32ac799ce641ec7e3c395
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:31:53 2018 +0100
+
+    Add dense vector/sparse vector cross product tests for the 'UniformVector' class template
+
+commit fff63af4c3a761881d48b3c903b6bc9bf6963e2e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:31:26 2018 +0100
+
+    Add dense vector/sparse vector multiplication tests for the 'UniformVector' class template
+
+commit 92114284f38052fa700e2b17b4961b8a06e9e382
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:29:34 2018 +0100
+
+    Add dense vector/sparse vector subtraction tests for the 'UniformVector' class template
+
+commit 7314548d93a073d40feb9752f76b9ab961e74266
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:28:53 2018 +0100
+
+    Add dense vector/sparse vector addition tests for the 'UniformVector' class template
+
+commit 6b5ef726b457ecd39cfd1b595ad4bfed5ac63382
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:27:36 2018 +0100
+
+    Add dense vector/dense vector maximum tests for the 'UniformVector' class template
+
+commit 0b7999faed70b56e08a47bc88dd4765840a22e12
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:26:56 2018 +0100
+
+    Add dense vector/dense vector minimum tests for the 'UniformVector' class template
+
+commit b258ef10e959efe7881d9aa7c5cca04a3d044518
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:25:08 2018 +0100
+
+    Add dense vector/dense vector outer product tests for the 'UniformVector' class template
+
+commit 0fba920ec092de5d6f0df5f31a0055e1e0e22985
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:24:28 2018 +0100
+
+    Add dense vector/dense vector inner product tests for the 'UniformVector' class template
+
+commit 380d9e91849bd5f9140e0ea9754a9b1ae3540bd5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:23:39 2018 +0100
+
+    Add dense vector/dense vector cross product tests for the 'UniformVector' class template
+
+commit 509c54d71aeb2a1e6057791c42086201f6931dbc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:22:57 2018 +0100
+
+    Add dense vector/dense vector division tests for the 'UniformVector' class template
+
+commit e88d75e5ab2b552cc1db7c3fafc5eabf22cabb7f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:22:00 2018 +0100
+
+    Add dense vector/dense vector multiplication tests for the 'UniformVector' class template
+
+commit 086d3cbd5a94f649dd976ec22f75000b2692d933
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:21:21 2018 +0100
+
+    Add dense vector/dense vector subtraction tests for the 'UniformVector' class template
+
+commit 3cbdc1ecd7ba138588a34def0d6054244bfdd62f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:20:47 2018 +0100
+
+    Add dense vector/dense vector addition tests for the 'UniformVector' class template
+
+commit b22d4276a9f5932ba94489ee09f821e97e3e6ca8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:20:04 2018 +0100
+
+    Add dense vector reduction tests for the 'UniformVector' class template
+
+commit adef99b5870d74b192f5ed500baad38c82c88edd
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:19:34 2018 +0100
+
+    Add dense vector expansion tests for the 'UniformVector' class template
+
+commit 4d8319069f7d9927da3d7f74fe02fd49fe93915e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:18:08 2018 +0100
+
+    Add a specialization of the 'Creator' class for uniform vectors
+
+commit 10fd0934600ed261d82f28a915e5a66bcc75fa3b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:03:43 2018 +0100
+
+    Add a class test for the 'UniformVector' class template
+
+commit 8c07b0ca0c1af793d458374ab1c9588be076a156
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:01:34 2018 +0100
+
+    Add the 'UniformVector' class template
+
+commit 4e1588abcaf771bf2a379252725dda16dde108cc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sun Nov 11 10:18:05 2018 +0100
+
+    Add a forward declaration for the 'UniformVector' class template
+
+commit 72e1a13c381904cb11d727d09ee86660a56f3376
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Nov 5 11:01:02 2018 +0100
+
+    Add the 'UniformIterator' class template
+
+commit 2bd6191ee1f62a6291d5db53df44062972ad628d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:03:20 2018 +0100
+
+    Prepare the dense matrix/dense matrix maximum operation test for uniform matrices
+
+commit b83affcffcfa75cfb45aa88e3863536c273102e7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:03:05 2018 +0100
+
+    Prepare the dense matrix/dense matrix minimum operation test for uniform matrices
+
+commit da732f78e7a85e03e601748151cdeaf60a34324c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:02:50 2018 +0100
+
+    Prepare the dense matrix/dense matrix multiplication operation test for uniform matrices
+
+commit c46f8770d380d4b2f22ec8e95e57b28f9c8aaac1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:02:33 2018 +0100
+
+    Prepare the dense matrix/dense matrix Schur product operation test for uniform matrices
+
+commit a8827687cfc2db9cb0a387ffb1a1e84e14eab4b4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:02:12 2018 +0100
+
+    Prepare the dense matrix/dense matrix subtraction operation test for uniform matrices
+
+commit c50a730b1708b15c052b3fae28e427acf892916d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:01:52 2018 +0100
+
+    Prepare the dense matrix/dense matrix addition operation test for uniform matrices
+
+commit 504bd0ff021f93f597929c176524a030dc111c2f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:01:05 2018 +0100
+
+    Prepare the dense vector/sparse matrix multiplication operation test for uniform vectors
+
+commit d7b48721e8d3fd8d4eeac07b416d17853c8504a8
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:00:45 2018 +0100
+
+    Prepare the sparse vector/dense matrix multiplication operation test for uniform matrices
+
+commit cb15d8aa78e6623d5754a5bdbe9b844d18934d4c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:00:25 2018 +0100
+
+    Prepare the dense vector/dense matrix multiplication operation test for uniform vectors and matrices
+
+commit 7cab379c7082d7b95bf4d19d31fb28b52259e33c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 11:00:01 2018 +0100
+
+    Prepare the sparse matrix/dense vector multiplication operation test for uniform vectors
+
+commit 8cad2ab91024db94089fb87ea650b97ab1f5bbf6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:59:32 2018 +0100
+
+    Prepare the dense matrix/sparse vector multiplication operation test for uniform matrices
+
+commit 8c7d2c30ecdc96d73815114f3390ecdedc7db06f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:59:07 2018 +0100
+
+    Prepare the dense matrix/dense vector multiplication operation test for uniform vectors and matrices
+
+commit e0c6013cd4cfd9f45fc3c0b7f24b7fab7f4b4ce1
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:58:26 2018 +0100
+
+    Prepare the dense vector/dense vector outer product operation test for uniform vectors
+
+commit aab6c216317ed9aece89a7572dc9139cf6b16145
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:56:57 2018 +0100
+
+    Prepare the dense vector/dense vector maximum operation test for uniform vectors
+
+commit 68678431f46f9fd8347cfebacc0751e8a91255f0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:56:35 2018 +0100
+
+    Prepare the dense vector/dense vector minimum operation test for uniform vectors
+
+commit 57611c019aacc8ea61176dbfe3a37b0ccf1d8374
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:56:05 2018 +0100
+
+    Prepare the dense vector/dense vector division operation test for uniform vectors
+
+commit 3c6ac60271ecdd62e2b4ab6a0f38545172b24540
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:55:32 2018 +0100
+
+    Prepare the dense vector/dense vector multiplication operation test for uniform vectors
+
+commit d2347fc28ec8da80f48d99e5d6d3911b70437f0c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:55:05 2018 +0100
+
+    Prepare the dense vector/dense vector subtraction operation test for uniform vectors
+
+commit d4efd5ea130a776743cf2daab15836ec0d8d3a34
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:54:45 2018 +0100
+
+    Prepare the dense vector/dense vector addition operation test for uniform vectors
+
+commit a0096e3a6f9e8a4eebbd411877f4874ad2335e8b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Wed Nov 14 10:53:46 2018 +0100
+
+    Prepare the dense matrix reduction tests for uniform vectors and matrices
+
+commit 52a514ac1a61e2958ea0b39759f6fda6164b86b6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Nov 13 13:54:28 2018 +0100
+
+    Prepare the dense vector expansion operation test for uniform vectors and matrices
+
+commit fae7e1771011d27f9fd22d5451d0dd139ec75ffe
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 2 13:58:38 2018 +0100
+
+    Fix several Doxygen conditionals
+
+commit d0b5866ceb49a82952018059eac8edc9cc3a416a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 2 13:58:20 2018 +0100
+
+    Improve the 'isUniform()' function for sparse matrices
+
+commit 4040bf9f9eae403f5f9f0b0c6180f4917e8e8a7d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 2 13:58:08 2018 +0100
+
+    Improve the 'isUniform()' function for dense matrices
+
+commit 072f7156883895720b389221999988c3f79c1b85
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 2 13:57:56 2018 +0100
+
+    Improve the 'isUniform()' function for sparse vectors
+
+commit 5ff718c6a7d8dd10ccff9c80f53dabecbfc187fa
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 2 13:57:35 2018 +0100
+
+    Improve the 'isUniform()' function for dense vectors
+
+commit 4fa0d65731552c2721f4bd34c64194052108628a
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 27 05:57:23 2018 +0200
+
+    Fix the documentation of the 'IsIdentity' type trait
+
+commit 999d4f165357d3759fadf475bbf70bc158df13b0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 27 05:57:07 2018 +0200
+
+    Add a test for the 'IsUniform' type trait
+
+commit eb3c318b10ad448166a1e0aad3429d416391a124
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 27 05:56:30 2018 +0200
+
+    Rework the 'IsUniform' type trait
+
+commit 291420f16b8bd00592d2d40b695ec11d3a653a98
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 13:13:00 2018 +0200
+
+    Remove all obsolete specializations of the 'IsStrictlyUpper' type trait
+
+commit bf2f6e5020723e70d3dbe65ef548ac0f090b2d27
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 12:50:52 2018 +0200
+
+    Add a test for the 'IsStrictlyUpper' type trait
+
+commit 8af35ebf9e7f26be7ffadc914adcf686a95e8e5f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 12:50:19 2018 +0200
+
+    Rework the 'IsStrictlyUpper' type trait
+
+commit 20b2ba65299208b367d922f79800d46b7c571413
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 12:44:00 2018 +0200
+
+    Remove all obsolete specializations of the 'IsUniUpper' type trait
+
+commit 86ac912e4629150e8806ede8c618983b87398404
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 12:43:38 2018 +0200
+
+    Rework the test for the 'IsUniUpper' type trait
+
+commit 537bdf42b5e493ca76a751c7affc8fc849254401
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 12:43:09 2018 +0200
+
+    Rework the 'IsUniUpper' type trait
+
+commit 3dd7c54f4f10f7d4ed4dec41e9ee2a953c612001
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 11:43:35 2018 +0200
+
+    Remove all obsolete specializations of the 'IsUpper' type trait
+
+commit 2122bd4856ee3e782d6077e1567d0e900be3c8b4
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 11:43:08 2018 +0200
+
+    Rework the test for the 'IsUpper' type trait
+
+commit 06e2e2df2f5938fce8e399c83ccaa35b50188152
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 26 11:42:51 2018 +0200
+
+    Rework the 'IsUpper' type trait
+
+commit e5c26f6c199fe07ac2edfa7947f126288d8a07c0
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Oct 23 07:19:41 2018 +0200
+
+    Remove all obsolete specializations of the 'IsStrictlyLower' type trait
+
+commit 1868ceea9579ac057b0c7064401cf6bd3ccdfc99
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Oct 23 07:19:20 2018 +0200
+
+    Add a test for the 'IsStrictlyLower' type trait
+
+commit fd16a7650fcd7a50efcc05c32e5051996f58b8ce
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Tue Oct 23 07:18:34 2018 +0200
+
+    Rework the 'IsStrictlyLower' type trait
+
+commit c5e70809b8f348f3e29a36a22e2a2c2532812586
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 22:06:31 2018 +0200
+
+    Remove all obsolete specializations of the 'IsUniLower' type trait
+
+commit d74fe1e5cc4dda8f8aa32cd72cd0e25ef8c20c01
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 21:44:18 2018 +0200
+
+    Rework the test for the 'IsUniLower' type trait
+
+commit 3c1362d0c7c28f981448fbc967b829e14a840a73
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 21:43:42 2018 +0200
+
+    Rework the 'IsUniLower' type trait
+
+commit f537f7ae815e7bc76f9ff34fb1ad3167d32abdbc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 21:30:11 2018 +0200
+
+    Remove all obsolete specializations of the 'IsLower' type trait
+
+commit 3275d2a55863fa137e7a7fd8dee7a92ddc308949
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 14:20:39 2018 +0200
+
+    Rework the test for the 'IsLower' type trait
+
+commit 4ec85e2900c1076ac511aba09c554a8898c13728
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 13:55:50 2018 +0200
+
+    Rework the 'IsLower' type trait
+
+commit 21694360de5f426989e90f39d46a1f5c8db6bbbf
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 11:01:55 2018 +0200
+
+    Remove all obsolete specializations of the 'IsHermitian' type trait
+
+commit 7cdc7590dd57f00c489a73ae7bbd58997b9b6265
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 14:09:54 2018 +0200
+
+    Add a test for the 'IsHermitian' type trait
+
+commit d67cbf67fdfc6fdaafdc011d1461957cc03f6ed7
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 10:44:38 2018 +0200
+
+    Rework the 'IsHermitian' type trait
+
+commit cd9c3911263ee969d9f0bbb6c7e8dde494a8a79e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 11:07:24 2018 +0200
+
+    Rework the test for the 'IsSymmetric' type trait
+
+commit 79f5ec07cc5143a812c561f941d4b314be7b6d1d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Mon Oct 22 10:26:43 2018 +0200
+
+    Remove all obsolete specializations of the 'IsSymmetric' type trait
+
+commit 26c707f3abc1faa98a7e1ee443b7f4286b07d0aa
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sun Oct 21 18:07:42 2018 +0200
+
+    Rework the 'IsSymmetric' type trait
+
+commit 2728d4dd1fa92c2fb6b5f78a704fa75693e40677
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Nov 2 10:22:07 2018 +0100
+
+    Rework all inheritance-based math type traits
+
+commit 6d8ae0d0c10cb31538d3e8b88199a687fcf7f4ea
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:41:26 2018 +0200
+
+    Add specializations for the 'YieldsUniform' type trait for all binary functors
+
+commit 53475926852161d45796ab693c48cc6aa9824008
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:41:03 2018 +0200
+
+    Add specializations for the 'YieldsUniform' type trait for all unary functors
+
+commit 4d689ac1b023c85ff92867626c7cb4bc3472d645
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Oct 5 14:53:08 2018 +0200
+
+    Add the 'YieldsUniform' type trait
+
+commit 3e28b8b8d0506851c94af220d38576e10840c7ca
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:25:49 2018 +0200
+
+    Add a class test for the 'DeclDiagTrait' class template
+
+commit d414130c8cfca14cdd54e5e2e26fb60dff41a801
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:24:12 2018 +0200
+
+    Add a class test for the 'DeclUppTrait' class template
+
+commit 87d79a7ee10e8cbf744584c7f19a33c500f7808e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:22:42 2018 +0200
+
+    Add a class test for the 'DeclLowTrait' class template
+
+commit 6a2028304f370b5fad30573656c54bf924810a0e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:21:10 2018 +0200
+
+    Add a class test for the 'DeclHermTrait' class template
+
+commit 384ee213e07f4f96f546ab9840bf0c02998efb20
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:16:59 2018 +0200
+
+    Add a class test for the 'DeclSymTrait' class template
+
+commit dfe0725cbdabf9d4b8eb4463640399d433cb1786
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:13:37 2018 +0200
+
+    Improve the specializations for the 'DeclDiagTrait' class template
+
+commit f17bae06344b8684eef03ca02243b79e40c72dc9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:12:16 2018 +0200
+
+    Improve the specializations for the 'DeclUppTrait' class template
+
+commit dc1ad32092582b32c2ce036b8031e938a68dc92e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:12:05 2018 +0200
+
+    Improve the specializations for the 'DeclLowTrait' class template
+
+commit 9fbe1b8ee1fd9762637b0d762c248146d24814c5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:11:56 2018 +0200
+
+    Improve the specializations for the 'DeclHermTrait' class template
+
+commit d080fe68b77436ceba9a20c42cffda071c651d71
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Sat Oct 20 16:11:40 2018 +0200
+
+    Improve the specializations for the 'DeclSymTrait' class template
+
+commit cf967b35f6825bd6a02e164d3c2d374e19482dd9
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:43:49 2018 -0700
+
+    Add an operation test for the sparse vector expansion operation
+
+commit fe458d143facc88bb054001a1d754b7a97458ca5
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:41:58 2018 -0700
+
+    Add an operation test for the dense vector expansion operation
+
+commit 705fea02576201bb38de66ebe3fc4e20e08882cd
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:46:04 2018 +0200
+
+    Add a test for the 'ExpandTrait' class template
+
+commit cb15b5cfd79bd9fe15e8acdc713b8899ff34ae92
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:06:21 2018 -0700
+
+    Disable the 'columns()' operation for vector expansion operations
+
+commit 0979ee263d7aa384ea35a0b961a61b03e5cf245e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:06:12 2018 -0700
+
+    Disable the 'column()' operation for vector expansion operations
+
+commit 5e7267aa6867352d46234a003af8fdc0fa4c4db6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:06:03 2018 -0700
+
+    Disable the 'rows()' operation for vector expansion operations
+
+commit 78f112cb1ebce607b3d0af502721fd5ae9570676
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:05:53 2018 -0700
+
+    Disable the 'row()' operation for vector expansion operations
+
+commit bc672076b7a7e0658c9d50424d5dfbe98217636c
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:06:34 2018 -0700
+
+    Add an overload of the 'band()' function for vector expansion operations
+
+commit abf3d7ad8eb142fb36581d201d6a7e2c678036dd
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:05:41 2018 -0700
+
+    Add an overload of the 'submatrix()' function for vector expansion operations
+
+commit 2a5e9e2065a29c2da06e1037ae258bd56d7684c2
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:42:47 2018 +0200
+
+    Add the sparse vector 'expand()' functions
+
+commit b500a4f5b1999060fa713abf5b595b8b83c54e4d
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:25:30 2018 +0200
+
+    Add the dense vector 'expand()' functions
+
+commit fb07b71885fcd0aeb88f21dec55ccd129e18b625
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 15:28:57 2018 +0200
+
+    Add the 'ExpandExprData' class template
+
+commit b694f903800c47e0d411ecb683d0de0a9c1a50da
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 15:00:21 2018 +0200
+
+    Add the 'IsVecExpandExpr' type trait along with the according compile time constraints
+
+commit edab5e2748491a6cdf2ad693c304b2e8f96f106b
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 14:54:28 2018 +0200
+
+    Add the 'VecExpandExpr' class template
+
+commit afb0a94ae8b1a1f0096f7539befa61a052b9037f
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 14:53:29 2018 +0200
+
+    Add the 'IsExpandExpr' type trait along with the according compile time constraints
+
+commit e02d9cce495b9b9e7568a9718cae6d80f9d1d3a6
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 13:54:21 2018 +0200
+
+    Add the 'ExpandExpr' class template
+
+commit b7651fe327faa432c6877b2ba78276c3901d6696
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:29:08 2018 +0200
+
+    Add specializations of 'ExpandTrait' for the 'CompressedMatrix' class template
+
+commit 9f2262d9ed474c1810f36385d807a374af98f2ae
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:28:52 2018 +0200
+
+    Add specializations of 'ExpandTrait' for the 'DynamicMatrix' class template
+
+commit f0598f5f5c6c58b958ac2b8412dc84d843147247
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:28:43 2018 +0200
+
+    Add specializations of 'ExpandTrait' for the 'HybridMatrix' class template
+
+commit 790936238da6b5a1cf9e2e76993b21a9d6383aaa
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 16:28:30 2018 +0200
+
+    Add specializations of 'ExpandTrait' for the 'StaticMatrix' class template
+
+commit 19d9f3b43522a6fd05d500c2ad6a7e4424868396
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 21 11:41:37 2018 +0200
+
+    Add the 'ExpandTrait' class template
+
+commit b663fe1319b030c710670a9564ac4d97ebcdf2bc
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:02:15 2018 -0700
+
+    Extend the 'UNUSED_PARAMETER' function with a 'constexpr' specifier
+
+commit 9553b894c5959864fd769328ec7abc3560dcfa75
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:01:27 2018 -0700
+
+    Add the 'AlwaysFalse' type trait
+
+commit eb882722f76739e21cafb6b6ba0df856e3e4630e
+Author: Klaus Iglberger <klaus.iglberger@gmail.com>
+Date:   Fri Sep 28 15:00:55 2018 -0700
+
+    Add the 'AlwaysTrue' type trait
 
 commit 63780104980c47c2e166a2b0bcb51655820f2308
 Merge: f48b7aba5 331e6e8ee
@@ -103,12 +2884,6 @@ Author: Klaus Iglberger <klaus.iglberger@gmail.com>
 Date:   Sun Nov 25 11:53:55 2018 +0100
 
     Add 'blaze_tensor' to the Blaze projects section in the 'README.md'
-
-commit c58e26e3fda2a1d2369209ddc48e7360af8155d9
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Fri Nov 2 10:08:25 2018 -0500
-
-    Adding new configurations for hpx backend
 
 commit 71581c4ad8d7ef34e397d37a69614c2b1eb9023c
 Author: Klaus Iglberger <klaus.iglberger@gmail.com>
@@ -200,12 +2975,6 @@ Date:   Mon Oct 15 19:27:52 2018 +0200
 
     Resolve compilation issues with compilers that don't support the C++17 raw memory algorithms
 
-commit 89b58f6b5d2e2b3534991e3faf4c30dd3cd88958
-Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
-Date:   Wed Oct 10 18:20:39 2018 -0500
-
-    adding the option to change hpx parameters
-
 commit 5d35d2d2dc6f5db14ff9dbe2845926b9ae50d002
 Merge: 739df7563 a8ee52351
 Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
@@ -218,13 +2987,6 @@ Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
 Date:   Mon Oct 8 17:03:06 2018 -0500
 
     Adding the missing header files for HPX backend
-
-commit d6bf1d4d263add69c73c39434137223f161893c2
-Merge: 1e02b4e6d 739df7563
-Author: Patrick Diehl <patrickdiehl1@gmail.com>
-Date:   Mon Oct 8 11:27:02 2018 -0400
-
-    Merged blaze-lib/blaze into master
 
 commit 739df75638ed1fbfb9471eecc26062fdc753df92
 Author: Klaus Iglberger <klaus.iglberger@gmail.com>
