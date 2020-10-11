@@ -55,20 +55,21 @@ for filename in [filename_nows, filename_ws]:
     array=df_n_selected.values
     for ps in problem_sizes:
         if 'ws' in filename:
-            label='true'
+            label='work stealing off'
         else:
-            label='prediction'
+            label='work stealing on'
         array_ps=array[array[:,0]==ps]
         th=4
         array_t=array_ps[array_ps[:,2]==th]
+        plt.axes([0, 0, 2, 2])
+
         plt.axvline(ps/th,color='lightgray',linestyle='dashed')
-        plt.axes([0, 0, 1.5, 1])
-        plt.scatter(array_t[:,5], array_t[:,-1],marker='.',label=label)   
+        plt.scatter(array_t[:,5], array_t[:,-1],label=label)   
         plt.xscale('log')
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.,prop={"size":15})
-        plt.xlabel('Relative Error(%)  $R^2$ score  Number of Cores' ,fontsize=20)
-        plt.ylabel('Imbalance Ratio',fontsize=30)
-plt.savefig(perf_dir+'/test.png',bbox_inches='tight')
+        plt.xlabel('Grain size')
+        plt.ylabel('Execution Time($\mu{sec}$)')
+plt.savefig(perf_dir+'/thesis/'+str(int(ps))+'_'+str(int(th))+'_ws.png',bbox_inches='tight')
 
 plt.savefig(perf_dir+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'_ws_compared.png',bbox_inches='tight')
 

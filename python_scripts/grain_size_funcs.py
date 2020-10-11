@@ -10,9 +10,13 @@ import csv
 import glob
 import numpy as np
 import pandas
+import matplotlib
 from matplotlib import pyplot as plt
+matplotlib.rcParams.update({'font.size': 22})
+from scipy.optimize import curve_fit
 
-def create_dict(directories,to_csv=True,data_filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv', mini=False, maxi=False):
+def create_dict(directories,data_filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv', mini=False, maxi=False):
+    to_csv=True
     thr=[]
     data_files=[]
     
@@ -41,7 +45,7 @@ def create_dict(directories,to_csv=True,data_filename='/home/shahrzad/repos/Blaz
             (node, _,_, _, iter_length, num_iteration) = filename.split('/')[-1].replace('.dat','').split('_')         
             chunk_size=0
             th=1         
-        elif len(filename.split('/')[-1].replace('.dat','').split('_'))==6:
+        elif len(filename.split('/')[-1].replace('.dat','').split('-'))==6:
             (node, _,_, th, iter_length, num_iteration) = filename.split('/')[-1].replace('.dat','').split('_')         
             chunk_size=1
         else:
@@ -150,8 +154,7 @@ def create_spt_dict(spt_filename,iteration_length=1):
     
     nodes=dataframe['node'].drop_duplicates().values
     nodes.sort()
-    
-    node='c7-spt'
+    node=nodes[0]
     node_selected=dataframe['node']==node
     iter_selected=dataframe['iter_length']==iteration_length
     th_selected=dataframe['num_threads']>=1
@@ -168,6 +171,8 @@ def create_spt_dict(spt_filename,iteration_length=1):
     problem_sizes.sort()
     
     spt_results={}
+    node=nodes[0].replace('-spt','')
+
     spt_results[node]={}
     
     array=df_n_selected.values
@@ -491,9 +496,9 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
             il=iteration_lengths[i]
         spt_results[desc]=create_spt_dict(spt_filename,il)
         descs.append(desc)
-        
-    problem_sizes=[ps for ps in spt_results[descs[0]]['c7-spt'].keys()]
-    node='marvin'
+    
+    node=[n for n in spt_results[descs[0]].keys()][0]
+    problem_sizes=[ps for ps in spt_results[descs[0]][node].keys()]
     threads={}
     
     titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
@@ -529,39 +534,41 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
 def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
     colors=['red', 'green', 'purple', 'pink', 'cyan', 'lawngreen', 'yellow']
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
-    node='marvin'
     i=1
     descs=[desc for desc in spt_results.keys()]
-    for ps in problem_sizes:
+    for ps in [100000, 100000000]:#problem_sizes:
         array_ps=array[array[:,0]==ps]
         if np.shape(array_ps)[0]!=0:
             for th in thr:
                 plt.figure(i)
+                plt.axes([0, 0, 1.5, 1.5])
                 array_t=array_ps[array_ps[:,2]==th]
-#                plt.scatter(array_t[:,5],array_t[:,-1])
+                plt.scatter(array_t[:,5],array_t[:,-1])
                 for c,desc in zip(colors,descs):
-                    plt.figure(i)                
-                    plt.axhline(spt_results[desc]['c7-spt'][ps][th], color=c, label=desc)
+                    plt.figure(i)  
+                    node=[n for n in spt_results[desc].keys()][0] 
+                    plt.axhline(spt_results[desc][node][ps][th], color=c, label=desc)
            
                 plt.axvline(ps/th,color='gray',linestyle='dashed')
                 plt.xlabel('Grain size')
-                plt.ylabel('Execution time')
+                plt.ylabel('Execution Time($\mu{sec}$)')
                 plt.xscale('log')
-                plt.title('ps='+str(int(ps))+' '+str(int(th))+' threads')
-                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+#                plt.title('ps='+str(int(ps))+' '+str(int(th))+' threads')
+                plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
                 i=i+1
                 if save:
-                    plt.savefig(perf_dir+'/splittable/'+save_dir_name+'/'+node+'_'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+                    plt.savefig(perf_dir+'/'+save_dir_name+'/splittable/'+node+'_'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
     
 
 def plot_mode(spt_results, thr, save_dir_name, save):
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
-    node='marvin'
     i=1
     for desc in spt_results.keys():
         for th in thr:
-            plt.figure(i)                
-            plt.scatter([ps for ps in spt_results[desc]['c7-spt'].keys()],[ps/spt_results[desc]['c7-spt'][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], label=str(int(th))+' threads', marker='.')
+            plt.figure(i)  
+            node=[n for n in spt_results[desc].keys()][0] 
+              
+            plt.scatter([ps for ps in spt_results[desc][node].keys()],[ps/spt_results[desc][node][ps][th] for ps in spt_results[desc][node].keys()], label=str(int(th))+' threads', marker='.')
    
         plt.xlabel('Problem size')
         plt.ylabel('Execution time/ps')
@@ -592,8 +599,10 @@ def plot_th(array, spt_results, thr, save_dir_name, save):
                 t_min_execs.append(ps/np.min(array_ps[:,-1]))
             
         for c,desc in zip(colors,spt_results.keys()):
-            plt.figure(i)                            
-            plt.scatter(problem_sizes,[ps/spt_results[desc]['c7-spt'][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], color=c,label=desc, marker='.')
+            plt.figure(i)                        
+            node=[n for n in spt_results[desc].keys()][0] 
+
+            plt.scatter(problem_sizes,[ps/spt_results[desc][node][ps][th] for ps in spt_results[desc][node].keys()], color=c,label=desc, marker='.')
         plt.scatter(problem_sizes,t_min_execs, label='best', marker='*')
         plt.scatter(problem_sizes,t_equals, label='equal', marker='+')
 
@@ -638,3 +647,64 @@ def plot_ps(array, spt_results, thr, save_dir_name, save):
         i=i+1
         if save:
             plt.savefig(perf_dir+'/splittable/'+save_dir_name+'/'+node+'_'+str(int(ps))+'.png',bbox_inches='tight')
+
+
+def my_model(ndata,alpha,gamma): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+    ts=ps
+    return alpha*L+ts*(1+(gamma)*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
+
+def find_model_parameters(directories,data_filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv'):
+    create_dict(directories)
+    titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
+
+    perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general/thesis'
+    
+    dataframe = pandas.read_csv(data_filename, header=0,index_col=False,dtype=str,names=titles)
+    for col in titles[1:]:
+        dataframe[col] = dataframe[col].astype(float)
+    
+    nodes=dataframe['node'].drop_duplicates().values
+    nodes.sort()
+    popt={}               
+    threads={}
+    for node in nodes:
+        np.random.seed(0)                
+    
+        node_selected=dataframe['node']==node
+        nt_selected=dataframe['num_tasks']>=1
+        iter_selected=dataframe['iter_length']==1
+        th_selected=dataframe['num_threads']>=1
+        df_n_selected=dataframe[node_selected & nt_selected & iter_selected & th_selected][titles[1:]]
+        
+        thr=df_n_selected['num_threads'].drop_duplicates().values
+        thr.sort()
+        problem_sizes=df_n_selected['problem_size'].drop_duplicates().values
+        problem_sizes.sort()
+    
+        threads[node]=thr
+    
+        array_all=df_n_selected.values
+        array_all=array_all.astype(float)
+        popt[node]={}
+        base_ps=1e5
+        array_selected_ps=array_all[array_all[:,0]==base_ps]
+               
+        array_ps=array_selected_ps[:,:-1]
+        labels_ps=array_selected_ps[:,-1]
+            
+        a_s=np.argsort(array_ps[:,5])
+        for ir in range(np.shape(array_ps)[1]):
+            array_ps[:,ir]=array_ps[a_s,ir]
+        labels_ps=labels_ps[a_s]     
+        
+        param_bounds=([0,0],[np.inf,np.inf])
+    
+        param, pcov=curve_fit(my_model,array_ps,labels_ps,method='trf',bounds=param_bounds)
+        popt[node]=param
+    return popt
