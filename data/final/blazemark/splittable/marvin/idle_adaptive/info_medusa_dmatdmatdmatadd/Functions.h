@@ -40,7 +40,7 @@
 // Includes
 //*************************************************************************************************
 
-#include <hpx/runtime/get_os_thread_count.hpp>
+#include <hpx/runtime_local/get_os_thread_count.hpp>
 
 #include <blaze/math/Exception.h>
 #include <blaze/system/Inline.h>
