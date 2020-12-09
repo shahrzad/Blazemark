@@ -128,6 +128,8 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
    const size_t rest2      ( equalShare2 & ( SIMDSIZE - 1UL ) );
    const size_t colsPerThread( ( simdEnabled && rest2 )?( equalShare2 - rest2 + SIMDSIZE ):( equalShare2 ) );
 
+   hpx::evaluate_active_counters(true, "Initialization");
+
    for_loop( par, size_t(0), threads, [&](int i)
    {
       const size_t row   ( ( i / threadmap.second ) * rowsPerThread );
@@ -160,6 +162,8 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
          op( target, source );
       }
    } );
+   hpx::evaluate_active_counters(false, "Done");
+
 }
 /*! \endcond */
 //*************************************************************************************************

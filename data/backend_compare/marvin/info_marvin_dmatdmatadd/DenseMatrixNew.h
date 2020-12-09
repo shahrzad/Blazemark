@@ -40,7 +40,7 @@
 // Includes
 //*************************************************************************************************
 #include <hpx/include/parallel_for_loop.hpp>
-#include <hpx/include/parallel_executors.hpp>
+#include <hpx/include/parallel_executor_parameters.hpp>
 #include <blaze/config/HPX.h>
 #include <blaze/math/Aliases.h>
 #include <blaze/math/AlignmentFlag.h>
@@ -131,26 +131,10 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
    const size_t addon2     ( ( ( (~rhs).columns() % colsPerIter ) != 0UL )? 1UL : 0UL );
    const size_t equalShare2( (~rhs).columns() / colsPerIter + addon2 );
 
-//   hpx::evaluate_active_counters(true, "Initialization");
-    hpx::parallel::execution::splittable_mode sptMode =
-                hpx::parallel::execution::splittable_mode::all; 
+   hpx::parallel::execution::dynamic_chunk_size chunkSize ( BLAZE_HPX_MATRIX_CHUNK_SIZE );
+   hpx::evaluate_active_counters(true, "Initialization");
 
-    size_t minChunkSize = 0;
-    if ( BLAZE_SPLIT_ADAPTIVE )
-    {
-        double alpha = static_cast<double>( BLAZE_HPX_PARAM_ALPHA );
-        double lambdaB = static_cast<double>( BLAZE_HPX_PARAM_LAMBDA_B );
-        minChunkSize = ceil( ceil( sqrt( alpha * (~rhs).rows() * (~rhs).columns()/( threads * lambdaB ))) / ( numRows * numCols ));
-    }
-
-    if (BLAZE_HPX_SPLIT_TYPE_IDLE == 1 )
-    {   
-        sptMode = hpx::parallel::execution::splittable_mode::idle;
-    }
-
-    hpx::parallel::execution::splittable_executor spt( sptMode, minChunkSize );
-
-    for_loop( par.on( spt ), size_t(0), equalShare1 * equalShare2, [&](int i)
+    for_loop( par.with( chunkSize ), size_t(0), equalShare1 * equalShare2, [&](int i)
    {
       const size_t row   ( ( i / equalShare2 ) * rowsPerIter );
       const size_t column( ( i % equalShare2 ) * colsPerIter );
@@ -182,7 +166,7 @@ void hpxAssign( DenseMatrix<MT1,SO1>& lhs, const DenseMatrix<MT2,SO2>& rhs, OP o
          op( target, source );
       }
    } );
-  // hpx::evaluate_active_counters(false, "Done");
+   hpx::evaluate_active_counters(false, "Done");
 
 }
 /*! \endcond */
