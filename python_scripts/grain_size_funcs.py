@@ -154,6 +154,7 @@ def create_spt_dict(spt_filename,iteration_length=1):
     
     nodes=dataframe['node'].drop_duplicates().values
     nodes.sort()
+    
     node=nodes[0]
     node_selected=dataframe['node']==node
     iter_selected=dataframe['iter_length']==iteration_length
@@ -162,10 +163,8 @@ def create_spt_dict(spt_filename,iteration_length=1):
     
     df_n_selected=dataframe[node_selected & cs_selected & iter_selected & th_selected][titles[1:]]
     
-    threads={}
     thr=df_n_selected['num_threads'].drop_duplicates().values
     thr.sort()
-    threads[node]=thr
     
     problem_sizes=df_n_selected['problem_size'].drop_duplicates().values
     problem_sizes.sort()
@@ -178,10 +177,10 @@ def create_spt_dict(spt_filename,iteration_length=1):
     array=df_n_selected.values
     for ps in problem_sizes:
         array_ps=array[array[:,0]==ps]
-        spt_results[node][ps]={}
+        spt_results[ps]={}
         for th in thr:
             array_t=array_ps[array_ps[:,2]==th]
-            spt_results[node][ps][th]=array_t[:,-1]
+            spt_results[ps][th]=array_t[:,-1]
     return spt_results
 
 #def get_split_info_idle(directories):
@@ -496,10 +495,15 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
             il=iteration_lengths[i]
         spt_results[desc]=create_spt_dict(spt_filename,il)
         descs.append(desc)
+<<<<<<< HEAD
+
+    problem_sizes=[ps for ps in spt_results[descs[0]].keys()]
+=======
     
     node=[n for n in spt_results[descs[0]].keys()][0]
     problem_sizes=[ps for ps in spt_results[descs[0]][node].keys()]
     threads={}
+>>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
     
     titles=['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time']
     filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_all.csv'
@@ -508,7 +512,7 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
     for col in titles[1:]:
         dataframe[col] = dataframe[col].astype(float)
         
-    node_selected=dataframe['node']==node
+    node_selected=dataframe['node']=='marvin'
     nt_selected=dataframe['num_tasks']>=1
     iter_selected=dataframe['iter_length']==1
     th_selected=dataframe['num_threads']>=1
@@ -518,7 +522,6 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
 #    problem_sizes.sort()
     thr=df_n_selected['num_threads'].drop_duplicates().values
     thr.sort()
-    threads[node]=thr
     
     array=df_n_selected.values
     if mode=='th':
@@ -545,9 +548,14 @@ def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
                 array_t=array_ps[array_ps[:,2]==th]
                 plt.scatter(array_t[:,5],array_t[:,-1])
                 for c,desc in zip(colors,descs):
+<<<<<<< HEAD
+                    plt.figure(i)                
+                    plt.axhline(spt_results[desc][ps][th], color=c, label=desc)
+=======
                     plt.figure(i)  
                     node=[n for n in spt_results[desc].keys()][0] 
                     plt.axhline(spt_results[desc][node][ps][th], color=c, label=desc)
+>>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
            
                 plt.axvline(ps/th,color='gray',linestyle='dashed')
                 plt.xlabel('Grain size')
@@ -557,7 +565,11 @@ def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
                 plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
                 i=i+1
                 if save:
+<<<<<<< HEAD
+                    plt.savefig(perf_dir+'/splittable/'+save_dir_name+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+=======
                     plt.savefig(perf_dir+'/'+save_dir_name+'/splittable/'+node+'_'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
+>>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
     
 
 def plot_mode(spt_results, thr, save_dir_name, save):
@@ -565,10 +577,15 @@ def plot_mode(spt_results, thr, save_dir_name, save):
     i=1
     for desc in spt_results.keys():
         for th in thr:
+<<<<<<< HEAD
+            plt.figure(i)                
+            plt.scatter([ps for ps in spt_results[desc].keys()],[ps/spt_results[desc]['c7-spt'][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], label=str(int(th))+' threads', marker='.')
+=======
             plt.figure(i)  
             node=[n for n in spt_results[desc].keys()][0] 
               
             plt.scatter([ps for ps in spt_results[desc][node].keys()],[ps/spt_results[desc][node][ps][th] for ps in spt_results[desc][node].keys()], label=str(int(th))+' threads', marker='.')
+>>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
    
         plt.xlabel('Problem size')
         plt.ylabel('Execution time/ps')
@@ -599,10 +616,15 @@ def plot_th(array, spt_results, thr, save_dir_name, save):
                 t_min_execs.append(ps/np.min(array_ps[:,-1]))
             
         for c,desc in zip(colors,spt_results.keys()):
+<<<<<<< HEAD
+            plt.figure(i)                            
+            plt.scatter(problem_sizes,[ps/spt_results[desc][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], color=c,label=desc, marker='.')
+=======
             plt.figure(i)                        
             node=[n for n in spt_results[desc].keys()][0] 
 
             plt.scatter(problem_sizes,[ps/spt_results[desc][node][ps][th] for ps in spt_results[desc][node].keys()], color=c,label=desc, marker='.')
+>>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
         plt.scatter(problem_sizes,t_min_execs, label='best', marker='*')
         plt.scatter(problem_sizes,t_equals, label='equal', marker='+')
 
@@ -621,7 +643,7 @@ def plot_ps(array, spt_results, thr, save_dir_name, save):
     colors=['red', 'blue', 'cyan', 'lawngreen', 'purple', 'green', 'yellow']
     i=1
     descs=[desc for desc in spt_results.keys()]
-    problem_sizes=[ps for ps in spt_results[descs[0]]['c7-spt'].keys()]
+    problem_sizes=[ps for ps in spt_results[descs[0]].keys()]
     for ps in problem_sizes:
         array_ps=array[array[:,0]==ps]
         t_min_execs=[]
@@ -635,7 +657,7 @@ def plot_ps(array, spt_results, thr, save_dir_name, save):
             
         for c,desc in zip(colors,spt_results.keys()):
             plt.figure(i)                            
-            plt.plot(thr,[ps/spt_results[desc]['c7-spt'][ps][th] for th in thr], color=c,label=desc, marker='.')
+            plt.plot(thr,[ps/spt_results[desc][ps][th] for th in thr], color=c,label=desc, marker='.')
         plt.plot(thr,t_min_execs, label='best', marker='*',color=colors[len(descs)],linestyle='dashed')
         plt.plot(thr,t_equals, label='equal', marker='+',color=colors[len(descs)+1],linestyle='dashed')
 
