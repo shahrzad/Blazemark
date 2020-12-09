@@ -23,7 +23,83 @@ from scipy.optimize import nnls
 from sklearn.metrics import r2_score
 import blaze_funcs as bf
 
+dir1='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/all/'
+dir2='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/idle/'
+dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/general/medusa/'
+benchmark='dmatdmatadd'
+
+dirs=[dir1,dir2]
+alias=['guided','adaptive']
+save_dir_name='thesis'
+bf.compare_results(dirs, save_dir_name, benchmark, alias,save=1,plot=1)
+
+
+dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/all'
+dir4='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/all_adaptive/'
+
+dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/all'
+dir4='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/all_adaptive/'
+
+
+dirs=[dir3,dir4]
+alias=['guided','guided with threshold']
+alias=['adaptive','adaptive with threshold']
+
+save_dir_name='thesis'
+bf.compare_results(dirs, save_dir_name,  benchmark, alias,save=1,plot=1)
+
+
+dir1='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/idle/'
+dir2='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/idle_adaptive/'
+dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/all'
+dir4='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/medusa/all_adaptive/'
+dirs=[dir1,dir2,dir3,dir4]
+alias=['adaptive','adaptive with threshold','guided','guided with threshold']
+save_dir_name='thesis'
+results=bf.compare_results(dirs, save_dir_name, benchmark,alias, save=1)
+
+dir1='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/idle/'
+dir2='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/idle_adaptive/'
+dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/all'
+dir4='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/all_adaptive/'
+dirs=[dir1,dir2,dir3,dir4]
+alias=['adaptive','adaptive with threshold','guided','guided with threshold']
+
+save_dir_name='thesis'
+results,results_th=bf.compare_results(dirs, save_dir_name, benchmark, alias, plot=1,plot_bars=0,plot_bars_all=1)
+
+
+colors=['red', 'green', 'purple', 'pink', 'cyan', 'lawngreen', 'yellow']
 perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
+
+#i=1
+#thr=np.arange(1,9)
+#for m in matrix_sizes:
+#    k=0
+#
+#    for desc in results[m][1].keys():
+#        fig=plt.figure(i)
+#        plt.axes([0, 0, 1.5, 1.5])
+#
+#        width=0.15
+#        plt.bar(thr-.25+width*k, [results[m][th][desc] for th in thr], width,label=desc)
+#        k=k+1
+#        plt.xlabel('Number of cores')
+#        plt.ylabel('Execution Time($\mu{sec}$)')
+#        plt.xticks(range(1,9))
+#        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.) 
+#        plt.savefig(perf_dir+'/'+save_dir_name+'/blazemark_splittable/'+node+'_spt_'+benchmark+'_'+name+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#    i=i+1
+
+dir1='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/idle/'
+dir2='/home/shahrzad/repos/Blazemark/data/final/blazemark/splittable/marvin/idle_adaptive/'
+dir3='/home/shahrzad/repos/Blazemark/data/final/blazemark/general/marvin/'
+dirs=[dir1,dir2]
+alias=['adaptive','adaptive with threshold']
+save_dir_name='thesis'
+bf.compare_results(dirs, save_dir_name, alias, plot=1,save=1)
+
+perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general/thesis/splittable/'
                 
 dir1='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated'
 dir2='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/idle_updated_Hartmut'
@@ -33,8 +109,8 @@ dir5='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/5_master_Hartmut/
 dir6='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/6/adaptive'
 dir7='/home/shahrzad/repos/Blazemark/data/matrix/c7/splittable/6/nonadaptive'
 
-save_dir_name='latest/blazemark/idle/'
-alias=['latest-adaptive','latest-nonadaptive']
+save_dir_name='latest/blazemark/thesis/'
+alias=['adaptive threshold','no threshold']
 dirs=[dir6, dir7]
 bf.compare_results(dirs, save_dir_name, alias=alias, save=True)
 

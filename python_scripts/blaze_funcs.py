@@ -11,6 +11,8 @@ import glob
 import numpy as np
 import pandas
 from matplotlib import pyplot as plt
+import matplotlib
+matplotlib.rcParams.update({'font.size': 22})
 
 def grain_dict(array,avg=False):
     g_dict={}
@@ -92,22 +94,20 @@ def create_dict_reference(directory):
     return d_all  
 
 
-def create_spt_dict(filename):
+def create_spt_dict(filename,benchmark):
     titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops','include']
 
     dataframe = pandas.read_csv(filename, header=0,index_col=False,dtype=str,names=titles)
     for col in titles[3:]:
-        dataframe[col] = dataframe[col].astype(float)    
-    
+        dataframe[col] = dataframe[col].astype(float) 
+        
+    nodes=dataframe['node'].drop_duplicates().values
+    nodes.sort()
     runtime='hpx'
-    benchmark='dmatdmatadd'
-    spt_node='c7_spt'  
     threads={}
     spt_results={}
-    spt_results[spt_node]={}
+    spt_node=nodes[0]
     b='4-256'
-    spt_results[spt_node][b]={}
-    spt_results[spt_node][b][benchmark]={}
     
     threads[spt_node]={}
     included=dataframe['include']==1
@@ -128,6 +128,10 @@ def create_spt_dict(filename):
     thr.sort()
     threads[spt_node][benchmark]=thr    
     features=['chunk_size','num_blocks','num_threads','grain_size','block_size_row','block_size_col','work_per_core','num_tasks','execution_time']    
+    spt_node=spt_node.replace('_spt','')
+    spt_results[spt_node]={}
+    spt_results[spt_node][b]={}
+    spt_results[spt_node][b][benchmark]={}
     
     for m in matrix_sizes:
         m_selected=df_nb_selected['matrix_size']==m
@@ -377,17 +381,28 @@ def write_to_file(directories, filename):
             benchmark_type+=1
         node_type+=1        
     f.close()                    
- 
+
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return array[idx] 
+
+def find_nearest_index(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return idx
     
-def compare_results(directories, save_dir_name, alias=None, save=True, ref=False):
+def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=False, plot=True, plot_bars=False,plot_bars_all=False):
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
     if ref:
         hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/matrix/c7/reference/'
         d_hpx_ref=create_dict_reference(hpx_dir_ref)  
 
+    name=''
+    descs=[]
     spt_results={}
-    for i in range(len(directories)):
-        directory=directories[i]
+    for i in range(len(dirs)):
+        directory=dirs[i]
         spt_filename='/home/shahrzad/repos/Blazemark/data/data_perf_spt_tmp.csv'
         write_to_file([directory], spt_filename)
         if alias is not None:
@@ -395,21 +410,23 @@ def compare_results(directories, save_dir_name, alias=None, save=True, ref=False
         else:
             desc=directory.split('/')[-3].split('_')[0]+'_'+directory.split('/')[-2]      
         print(desc)
-        spt_results[desc]=create_spt_dict(spt_filename)
-    
-    node='marvin'
+        descs.append(desc)
+        name=name+desc+'_'
+        spt_results[desc]=create_spt_dict(spt_filename, benchmark)
+        node=[k for k in spt_results[desc].keys()][0]
     runtime='hpx'
-    benchmark='dmatdmatadd'
-    spt_node='c7_spt'  
     b='4-256'
+    descs.append('equal')
     
     titles=['runtime','node','benchmark','matrix_size','num_threads','block_size_row','block_size_col','num_elements','work_per_core','w1','w2','w3','w4','w5','w6','w7','w8','chunk_size','grain_size','num_blocks','num_blocks/chunk_size','num_elements*chunk_size','num_blocks/num_threads','num_blocks/(chunk_size*(num_threads-1))','L1cache','L2cache','L3cache','cache_line','set_associativity','datatype','cost','simd_size','execution_time','num_tasks','mflops','include']
     
     dataframe = pandas.read_csv('/home/shahrzad/repos/Blazemark/data/data_perf_all.csv', header=0,index_col=False,dtype=str,names=titles)
     for col in titles[3:]:
         dataframe[col] = dataframe[col].astype(float)    
+    nodes=dataframe['node'].drop_duplicates().values
+    nodes.sort()
+#    node=nodes[0]
     
-    spt_node='c7_spt'
     benchmark='dmatdmatadd'
     node_selected=dataframe['node']==node
     included=dataframe['include']==1
@@ -425,35 +442,104 @@ def compare_results(directories, save_dir_name, alias=None, save=True, ref=False
     thr.sort()
     matrix_sizes=df_nb_selected['matrix_size'].drop_duplicates().values
     matrix_sizes.sort()
-    
+    colors=['red', 'green', 'purple', 'pink', 'cyan', 'lawngreen', 'yellow']
+    color_map={}
+    for c,desc in zip(colors,['adaptive','adaptive with threshold','guided','guided with threshold']):
+        color_map[desc]=c
+    color_map['equal']=colors[4]    
+    results={}
+    results_th={}
+
+    for th in thr:
+        results_th[th]={}
+        for desc in descs:
+            results_th[th][desc]=0
+        
     i=1
-    for m in matrix_sizes:
+    for m in [264, 1825]: #matrix_sizes: #
+        results[m]={}
         m_selected=df_nb_selected['matrix_size']==m
         features=['chunk_size','num_blocks','num_threads','grain_size','block_size_row','block_size_col','work_per_core','num_tasks','execution_time']
         df_selected=df_nb_selected[m_selected][features]
     
         array_b=df_selected.values
-        for th in thr:            
-            plt.figure(i)
+        for th in thr:   
+            results[m][th]={}
+
             new_array=array_b[array_b[:,2]==th][:,:-1]
             new_labels=array_b[array_b[:,2]==th][:,-1]
-            plt.scatter(new_array[:,3],new_labels,label='true',marker='.')
+            results[m][th]['min']=np.min(new_labels)
+            results[m][th]['equal']=new_labels[find_nearest_index(new_array[:,3],(m**2)/th)]
+            results_th[th]['equal']+=results[m][th]['min']/results[m][th]['equal']
 
-            
-            for c,desc in zip(['red', 'green', 'purple'],spt_results.keys()):
+            if plot:
+                plt.figure(i)
+                plt.axes([0, 0, 1.5, 1.5])
+                plt.scatter(new_array[:,3],new_labels,label='true')
+           
+            for c,desc in zip(colors,spt_results.keys()):
 #                plt.figure(i)
-                plt.axhline(spt_results[desc][spt_node][b][benchmark][m][th],color=c,label=desc)
+                if plot:
+                    plt.axhline(spt_results[desc][node][b][benchmark][m][th],color=color_map[desc],label=desc)
+                results[m][th][desc]=spt_results[desc][node][b][benchmark][m][th][0]
+                results_th[th][desc]+=results[m][th]['min']/results[m][th][desc]
 
             if ref:
-                k=d_hpx_ref['marvin_old'][benchmark][th]['size'].index(m)    
-                plt.axhline((m**2)/d_hpx_ref['marvin_old'][benchmark][th]['mflops'][k],color='purple',label='reference')
-            plt.axvline((m**2)/th,color='gray',linestyle='dashed')            
-            plt.ylabel('Execution time')       
-            plt.xscale('log')
-            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-            plt.title('matrix size:'+str(int(m))+' '+str(int(th))+' threads')
-            if save:
-                plt.savefig(perf_dir+'/splittable/'+save_dir_name+'/'+node+'_spt_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
-                plt.close()
+                k=d_hpx_ref['marvin_old'][benchmark][th]['size'].index(m)   
+                results[m][th]['ref']=(m**2)/d_hpx_ref['marvin_old'][benchmark][th]['mflops'][k]
+
+                if plot:
+                    plt.axhline((m**2)/d_hpx_ref['marvin_old'][benchmark][th]['mflops'][k],color=color_map[desc],label='reference')
+            if plot:
+                plt.axvline((m**2)/th,color='gray',linestyle='dashed')            
+                plt.ylabel('Execution Time($\mu{sec}$)')
+                plt.xscale('log')
+                plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
+                if save:
+                    plt.savefig(perf_dir+'/'+save_dir_name+'/blazemark_splittable/'+node+'_spt_'+benchmark+'_'+name+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
+                    plt.close()
+                i=i+1
+        if plot_bars:  
+            k=0
+            for desc in [l for l in results[m][1].keys() if l!='min']:
+                plt.figure(i)
+                plt.axes([0, 0, 1.5, 1.5])
+        
+                width=0.15
+                plt.bar(thr-.25+width*k, [results[m][th]['min']/results[m][th][desc] for th in thr], width,label=desc,color=color_map[desc])
+                k=k+1
+                plt.xlabel('Number of cores')
+                plt.ylabel('Speedup')
+                plt.xticks(range(1,9))
+                plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.) 
+                plt.savefig(perf_dir+'/'+save_dir_name+'/blazemark_splittable/'+name[:-1]+'/compare/'+node+'_spt_'+benchmark+'_'+str(int(m))+'.png',bbox_inches='tight')
             i=i+1
+    for th in thr:
+        for desc in descs:
+            results_th[th][desc]/=len(matrix_sizes)
             
+    if plot_bars_all:
+        k=0
+        for c,desc in zip(colors,descs):
+            plt.figure(i)
+            plt.axes([0, 0, 1.5, 1.5])
+            width=0.15
+            plt.bar(thr-.25+width*k, [results_th[th][desc] for th in thr], width,label=desc,color=color_map[desc])
+            k=k+1
+            plt.xlabel('Number of cores')
+            plt.ylabel('Speedup')
+            plt.xticks(range(1,9))
+            plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.) 
+            plt.savefig(perf_dir+'/'+save_dir_name+'/blazemark_splittable/'+name[:-1]+'/compare/'+node+'_spt_'+benchmark+'_all.png',bbox_inches='tight')
+        i=i+1
+    return results,results_th
+            
+            
+def my_model_b(ndata,alpha,gamma,mflop,ts): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=mflop
+    return alpha*L+ts*(1+(gamma)*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)

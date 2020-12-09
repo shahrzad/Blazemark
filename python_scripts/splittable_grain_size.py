@@ -20,10 +20,24 @@ from collections import Counter
 from scipy.optimize import nnls
 
 from scipy.optimize import nnls
-from sklearn.metrics import r2_score
+#from sklearn.metrics import r2_score
 
 import grain_size_funcs as gf
 
+
+dir1='/home/shahrzad/repos/Blazemark/data/final/grain_size/marvin/splittable/all/'
+dir2='/home/shahrzad/repos/Blazemark/data/final/grain_size/marvin/splittable/idle/'
+dir3='/home/shahrzad/repos/Blazemark/data/final/grain_size/marvin/general/'
+
+dir1='/home/shahrzad/repos/Blazemark/data/final/grain_size/medusa/splittable/all/'
+dir2='/home/shahrzad/repos/Blazemark/data/final/grain_size/medusa/splittable/idle/'
+dir3='/home/shahrzad/repos/Blazemark/data/final/grain_size/medusa/general/'
+
+gf.create_dict([dir3])
+dirs=[dir1,dir2]
+alias=['guided','adaptive']
+save_dir_name='thesis'
+gf.compare_results(dirs, save_dir_name, alias, save=1, mode='ps-th')
 
 #dir2='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/2_rem_gt_0/all_cores/'                        
 #dir3='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/3_rem_gt_0_mult4/all_cores/'                        
@@ -64,7 +78,7 @@ save_dir_name='5-6-7-8/compare_th/ps/'
 
 dirs=[dir5,dir6]
 alias=['idle_mask_iter_1', 'idle_mask_iter_1000']
-iteration_lengths=[1,1000]
+iteration_lengths=[1]
 gf.compare_results(dirs, save_dir_name, alias, save=1, mode='ps-th')
 gf.compare_results(dirs, save_dir_name, alias, save=1, mode='ps')
 gf.compare_results(dirs, save_dir_name, alias, save=1, mode='th')
