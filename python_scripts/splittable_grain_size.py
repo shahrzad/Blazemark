@@ -28,8 +28,11 @@ import grain_size_funcs as gf
 #dir2='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/2_rem_gt_0/all_cores/'                        
 #dir3='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/3_rem_gt_0_mult4/all_cores/'                        
 #dir4='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/4_rem_gt_0_mult2/all_cores/'        
+dir1='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/after_latch_update/'
+dir2='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/5_master_Hartmut/idle_updated/'  
+dir3='/home/shahrzad/repos/Blazemark/data/grain_size/marvin/splittable/after_latch_update/'
+dir4='/home/shahrzad/repos/Blazemark/data/grain_size/marvin/splittable/before_latch_update/'
 
-dir2='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/5_master_Hartmut/idle_mask_1/'  
 dir3='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/5_master_Hartmut/all_2/'  
 dir4='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/5_master_Hartmut/all_multiple_tasks_1/'    
 dir5='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/6_master_Hartmut_200/all_multiple_tasks_1/'        
@@ -66,10 +69,11 @@ gf.compare_results(dirs, save_dir_name, alias, save=1, mode='ps-th')
 gf.compare_results(dirs, save_dir_name, alias, save=1, mode='ps')
 gf.compare_results(dirs, save_dir_name, alias, save=1, mode='th')
 
+dirs=[dir1,dir2]
+gf.compare_results(dirs, 'latch_update/c7/', ['idle-latch_updated','idle'], save=1, mode='ps-th')
+gf.compare_results([dir3,dir4], 'latch_update/marvin/', ['idle-latch_updated','idle'], save=1, mode='ps-th')
 
-dir2='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/5_master_Hartmut/idle_mask_perf_1/'  
-dir3='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/7_master_Hartmut_400/idle_mask_perf_1/'  
-dir4='/home/shahrzad/repos/Blazemark/data/grain_size/c7/splittable/9_master_Hartmut_800/idle_mask_perf_1/'  
+gf.compare_results([dir1,dir2,dir3,dir4], 'latch_update/', ['idle-latch_updated','idle','idle-latch_updated_marvin','idle_marvin'], save=0, mode='ps-th')
 
 perf_counter_dirs=[dir2,dir3,dir4]
 save_dir_name='5-6-7-8/perf_counters/idle_mask_1/exec/'

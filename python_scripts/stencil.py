@@ -46,8 +46,8 @@ def create_dict_stencil(directories,to_csv=False):
         f_writer=csv.writer(f_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         f_writer.writerow(['node','grid_points','num_threads','num_partitions','partition_size','grain_size','work_per_core','num_tasks','execution_time'])
 
-    for filename in data_files:       
-        (node, _, th, npo, nx) = filename.split('/')[-1].replace('.dat','').split('_')                 
+    for filename in data_files:            
+        (node, _, th, npo, nx) = filename.replace('_old','').split('/')[-1].replace('.dat','').split('_')                 
         th=int(th)
         npo=int(npo)
         nx=int(nx)
@@ -76,7 +76,7 @@ def create_dict_stencil(directories,to_csv=False):
                  
         result=f.readlines()
         if len(result)==2:
-            (node, _, th, npo, nx) = filename.split('/')[-1].replace('.dat','').split('_')                 
+            (node, _, th, npo, nx) = filename.replace('_old','').split('/')[-1].replace('.dat','').split('_')                 
             th=float(th)
             npo=float(npo)
             nx=float(nx)
@@ -93,7 +93,7 @@ def create_dict_stencil(directories,to_csv=False):
         f_csv.close()
 #    return (data, d, thr, iter_lengths, num_iterations)  
 
-marvin_dir='/home/shahrzad/repos/Blazemark/data/stencil/marvin'
+marvin_dir='/home/shahrzad/repos/Blazemark/data/stencil/marvin_old/100000000'
 #medusa_dir='/home/shahrzad/repos/Blazemark/data/grain_size/medusa'
 create_dict_stencil([marvin_dir],1)
 
@@ -133,8 +133,16 @@ for node in nodes:
     grid_points=dataframe['grid_points'].drop_duplicates().values
     grid_points.sort()
 
-    array=df_n_selected.values
+    array=df_n_selected[['num_threads','grain_size','execution_time']].values
     array=array.astype(float)
+    j=1
+    for th in range(1,9): 
+        plt.figure(j)
+        array_t=array[array[:,0]==th]
+        plt.scatter(array_t[:,1],array_t[:,2],marker='.',label=str(th))
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        plt.xscale('log')
+        j=j+1
     
     data_size=int(np.shape(array)[0])
     print(data_size)
