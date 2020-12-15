@@ -53,8 +53,8 @@ num_iterations=(1000 10000 100000 1000000 10000000 100000000)
 iter_lengths=(1)
 
 mkdir -p ${results_dir}
-rm -rf ${results_dir}/*.dat
-rm -rf ${results_dir}/info_${node}/
+#rm -rf ${results_dir}/*.dat
+#rm -rf ${results_dir}/info_${node}/
 mkdir -p ${results_dir}/info_${node}/hpx_info
 date>> ${results_dir}/info_${node}/date.txt
 cp ${blazemark_dir}/scripts/grain_size_test_spt.sh ${results_dir}/info_${node}/

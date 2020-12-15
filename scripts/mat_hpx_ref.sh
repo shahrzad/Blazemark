@@ -14,16 +14,16 @@ fi
 echo "Running on ${node}"
 fi
 
-blazemark_dir="/home/sshirzad/repos/Blazemark"
 saved_path=$LD_LIBRARY_PATH
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
-repo_dir="/home/sshirzad/repos/Blazemark"
-hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/lib64"
-hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/hpx_cmake_log.txt"
-hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
-results_dir="${repo_dir}/results"
+repo_dir="/work/sshirzad"
+blazemark_dir="${repo_dir}/repos/Blazemark"
+hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}_main/lib64"
+hpx_log_file="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/hpx_cmake_log.txt"
+hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/info/"
+results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
-config_dir="${repo_dir}/configurations"
+config_dir="${blazemark_dir}/configurations"
 #export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=${hpx_dir}:$LD_LIBRARY_PATH
 
@@ -37,7 +37,7 @@ r='hpx'
 
 #rm -rf ${results_dir}/info
 #mkdir ${results_dir}/info
-#
+
 #cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info
 #date>> ${results_dir}/info/date.txt
 #cp ${hpx_log_file} ${results_dir}/info/hpx_cmake_log.txt
@@ -62,9 +62,9 @@ do
         cp ${blaze_dir}/blaze/math/smp/hpx/* ${results_dir}/info_${node}_${b}
         date>> ${results_dir}/info_${node}_${b}/date.txt
         #cp ${hpx_log_file} ${results_dir}/info/
-        cp ${config_dir}/Configfile_hpx_${node} ${results_dir}/info_${node}_${b}/
+        cp ${config_dir}/Configfile_hpx_${node}_install ${results_dir}/info_${node}_${b}/
         cp ${blazemark_dir}/scripts/mat_hpx_ref.sh ${results_dir}/info_${node}_${b}/
-        cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/
+        cp /home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp_${node}_main/include/hpx/parallel/util/detail/chunk_size.hpp ${results_dir}/info_${node}_${b}/
         git --git-dir $blaze_dir/.git log>>${results_dir}/info_${node}_${b}/blaze_git.txt
         cd ${blaze_dir}
         BRANCH=$(git rev-parse --abbrev-ref HEAD)

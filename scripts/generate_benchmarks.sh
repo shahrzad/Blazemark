@@ -70,7 +70,7 @@ echo $node
         fi
         
         rm -rf Makefile
-	${blazemark_dir}/configure ${config_dir}/Configfile_${r}_${node}_install_main>>${benchmarks_dir}/compile_log_${node}.txt
+	${blazemark_dir}/configure ${config_dir}/Configfile_${r}_${node}_install_main_apex>>${benchmarks_dir}/compile_log_${node}.txt
         make ${b}>>${benchmarks_dir}/build_log_${node}.txt
         mv ${blazemark_dir}/bin/${b} ${benchmarks_dir}/${b}_${r}_${node}
         echo "benchmark "${b}" for "${r}" runtime created on node ${node}"

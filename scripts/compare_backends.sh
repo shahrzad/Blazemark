@@ -1,5 +1,6 @@
 #!/bin/bash
 backend="old"
+cs=1
 
 if [ $# -eq 0 ]
 then
@@ -145,9 +146,12 @@ do
 	mkdir -p ${results_dir}/otf2_${backend}/${th}
 	cd ${results_dir}/otf2_${backend}/${th}
 	
+export APEX_OTF2=0
+${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}_${backend}-${b}-${th}-${r}-${mat_size}${tag}_counters.dat
 export APEX_OTF2=1
-${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive --hpx:print-counter=/threads/idle-rate  --hpx:print-counter=/threads/time/average --hpx:print-counter=/threads/time/cumulative-overhead --hpx:print-counter=/threads/count/cumulative --hpx:print-counter=/threads/time/average-overhead --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCA' --hpx:print-counter='/papi{locality#*/worker-thread#*}/PAPI_L2_TCM'>>${results_dir}/${node}_${backend}-${b}-${th}-${r}-${mat_size}${tag}.dat
-    
+${benchmarks_dir}/${b}_${r}_${node} -only-blaze --hpx:threads=${th} --hpx:bind=balanced --hpx:numa-sensitive>>${results_dir}/${node}_${backend}-${b}-${th}-${r}-${mat_size}${tag}.dat
+
+
     echo ${b} "benchmark for" ${r} "finished for "${th} "threads"
 done
 done    
