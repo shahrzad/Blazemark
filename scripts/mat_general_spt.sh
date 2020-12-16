@@ -99,7 +99,7 @@ block_sizes_row=(4)
 block_sizes_col=(256)
 
 rm -rf ${results_dir}/*.dat
-benchmarks=('dmatdmatadd')
+benchmarks=('dmatdmatdmatadd')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 

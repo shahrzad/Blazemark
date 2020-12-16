@@ -39,6 +39,10 @@ then
     elif [ $1 == 'BLAZE_SPLIT_ADAPTIVE' ]
             then
             line_number=69
+    elif [ $1 == 'BLAZE_NEW_BACKEND' ]
+            then
+            line_number=81
+
     fi
         filename=${blaze_dir}/blaze/config/HPX.h
 	param=$(sed -n ${line_number}' p' ${filename} |cut -d' ' -f3)

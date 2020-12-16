@@ -20,9 +20,9 @@ saved_path=$LD_LIBRARY_PATH
 blazemark_dir="/work/sshirzad/repos/Blazemark"
 blaze_dir="/home/sshirzad/src/blaze_shahrzad"
 #hpx_dir="/home/sshirzad/lib/hpx/hpx_release_clang_no_hpxmp/lib64"
-hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/lib"
+hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/lib"
 hpx_source_dir="/home/sshirzad/src/hpx"
-hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}/info/"
+hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/info/"
 results_dir="${blazemark_dir}/results"
 benchmarks_dir="${blaze_dir}/blazemark/benchmarks"
 config_dir="${blazemark_dir}/configurations"
@@ -36,7 +36,7 @@ block_sizes_row=(4)
 block_sizes_col=(256)
 
 rm -rf ${results_dir}/*.dat
-benchmarks=('dmatdmatadd')
+benchmarks=('dmatdmatdmatadd')
 r='hpx'
 cache_filename=${blaze_dir}/blaze/math/smp/hpx/DenseMatrix.h
 
