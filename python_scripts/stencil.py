@@ -75,7 +75,8 @@ def create_dict_stencil(directories,to_csv=False):
         f=open(filename, 'r')
                  
         result=f.readlines()
-        if len(result)==2:
+        if len(result)!=0:
+            print(filename)
             (node, _, th, npo, nx) = filename.replace('_old','').split('/')[-1].replace('.dat','').split('_')                 
             th=float(th)
             npo=float(npo)

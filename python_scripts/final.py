@@ -463,6 +463,30 @@ marvin_gdir='/home/shahrzad/repos/Blazemark/data/final/grain_size/marvin/general
 medusa_gdir='/home/shahrzad/repos/Blazemark/data/final/grain_size/medusa/general/'
 popt=gf.find_model_parameters([marvin_gdir,medusa_gdir])
 
+def my_func_usl(ndata,kappa,epsilon): 
+    alpha=popt[node][0]
+    gamma=popt[node][1]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+    ts=ps
+    return alpha*L+ts*(1+(gamma)*(M-1)+(kappa)*(M)*(M-1))*(w_c)/ps+epsilon*(m)
+
+def my_func_usl(ndata,alpha,gamma): 
+    alpha=popt[node][0]
+    gamma=popt[node][1]
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=ndata[:,0]
+    ts=ps
+    return alpha*L+ts*(1+(gamma)*(M-1))*(w_c)/ps
+
 marvin_dir='/home/shahrzad/repos/Blazemark/data/final/blazemark/general/marvin/'
 medusa_dir='/home/shahrzad/repos/Blazemark/data/final/blazemark/general/medusa/'
 bf.write_to_file([marvin_dir,medusa_dir],b_filename)
@@ -484,7 +508,7 @@ test_errors={}
 r2_errors={}
 chunk_sizes={}
 b='4-256'
-
+popt_all={}
 true_values={}
 pred_values={}
 
@@ -499,6 +523,8 @@ n2=np.ceil(np.sqrt(28160*1024/(8*n)))
 cache_limit={'marvin':n1, 'medusa':n2}
 i=1
 for node in nodes:
+    popt_all[node]={}
+    
     true_values[node]={}
     pred_values[node]={}
     chunk_sizes[node]={}
@@ -528,7 +554,8 @@ for node in nodes:
 #        test_errors[node][th]=[]
 #        true_values[node][th]=[]
 #        pred_values[node][th]=[]
-    for m in [690,4222]:#[m for m in matrix_sizes]:# if m<cache_limit[node]]:        
+    for m in [m for m in matrix_sizes]:# if m<cache_limit[node]]:    
+        popt_all[node][m]={}
         chunk_sizes[node][m]={}
         chunk_sizes[node][m][str(lb)+'_'+str(ls)]={}
 
@@ -545,37 +572,58 @@ for node in nodes:
             mflop=2*(aligned_m)*m
         else:
             mflop=2*(aligned_m)**3   
+            
+        def my_func_u(ndata,kappa): 
+            alpha,gamma=popt[node]
+            N=ndata[:,2]
+            n_t=ndata[:,-1]
+            M=np.minimum(n_t,N) 
+            L=np.ceil(n_t/(M))
+            w_c=ndata[:,-2]
+            ps=mflop
+            return alpha*L+ts*(1+(gamma)*(M-1)+(kappa)*M*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
         
         m_selected=df_nb_selected['matrix_size']==m
         features=['chunk_size','num_blocks','num_threads','grain_size','block_size_row','block_size_col','work_per_core','num_tasks','execution_time']
         df_selected=df_nb_selected[m_selected][features]
     
         array_b=df_selected.values
+        array_m=array_b[:,0:-1]
+        labels_m=array_b[:,-1]
+        
+        param_bounds=([0],[np.inf])
+        popt_c, pcov=curve_fit(my_func_u,array_m,labels_m,method='trf',bounds=param_bounds)
+        popt_all[node][m]=popt_c
+        
         g_params[node][benchmark]=bf.grain_dict(array_b,1)
-
+    
         for th in thr:
 
             new_array=array_b[array_b[:,2]==th][:,:-1]
             new_labels=array_b[array_b[:,2]==th][:,-1]
             ts=g_params[node][benchmark][mflop][1][0]
+            
 
             zb=bf.my_model_b(new_array,*popt[node],mflop,ts)
+            zu=bf.my_model_u(new_array,*popt[node],*popt_c,m,mflop,ts)
             g1=np.ceil(np.sqrt(popt[node][0]*mflop/(th*lb)))
             g2=np.floor(mflop/(th*(1+np.ceil(1/ls))))
             plt.figure(i)
-            plt.axes([0, 0, 2, 2])
+#            plt.axes([0, 0, 2, 2])
             plt.scatter(new_array[:,3],new_labels,color='blue',label='true')
             plt.scatter(new_array[:,3],zb,color='red',label='prediction')
+            plt.scatter(new_array[:,3],zu,color='green',label='full prediction')
+
             plt.axvline(mflop/th,color='gray',linestyle='dashed')
-            plt.axvspan(g1,g2,color='green',alpha=0.5)
+#            plt.axvspan(g1,g2,color='green',alpha=0.5)
             plt.ylabel('Execution Time($\mu{sec}$)')
             plt.xlabel('Grain size')
             plt.xscale('log')
-            plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
+#            plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
 
 #            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
 
-            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
+#            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
             i=i+1
             
             

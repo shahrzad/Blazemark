@@ -543,3 +543,12 @@ def my_model_b(ndata,alpha,gamma,mflop,ts):
     w_c=ndata[:,-2]
     ps=mflop
     return alpha*L+ts*(1+(gamma)*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
+
+def my_model_u(ndata,alpha,gamma,kappa,m,mflop,ts): 
+    N=ndata[:,2]
+    n_t=ndata[:,-1]
+    M=np.minimum(n_t,N) 
+    L=np.ceil(n_t/(M))
+    w_c=ndata[:,-2]
+    ps=mflop
+    return alpha*L+ts*(1+(gamma)*(M-1)+(kappa)*M*(M-1))*(w_c)/ps#+(1)*(d*ps)*np.exp(-((g-ps/N)/(k))**2)#+(1+(gamma)*(M-1))*(w_c)#+(1)*(1/(np.sqrt(2*np.pi)*(d)))*np.exp(-((g-dN)/(ps/N))**2)
