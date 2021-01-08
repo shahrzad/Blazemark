@@ -497,6 +497,7 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
         descs.append(desc)
 
     problem_sizes=[ps for ps in spt_results[descs[0]].keys()]
+#    problem_sizes=[ps for ps in spt_results[descs[0]].keys()]
     
     node=[n for n in spt_results[descs[0]].keys()][0]
     problem_sizes=[ps for ps in spt_results[descs[0]][node].keys()]
@@ -549,18 +550,12 @@ def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
                 array_t=array_ps[array_ps[:,2]==th]
                 plt.scatter(array_t[:,5],array_t[:,-1])
                 for c,desc in zip(colors,descs):
-<<<<<<< HEAD
-                    plt.figure(i)                
-                    plt.axhline(spt_results[desc][ps][th], color=c, label=desc)
-=======
+#                    plt.figure(i)                
+#                    plt.axhline(spt_results[desc][ps][th], color=c, label=desc)
                     plt.figure(i)  
                     node=[n for n in spt_results[desc].keys()][0] 
-<<<<<<< HEAD
-                    plt.axhline(spt_results[desc][node][ps][th], color=color_map[desc], label=desc)
-=======
+                    #plt.axhline(spt_results[desc][node][ps][th], color=color_map[desc], label=desc)
                     plt.axhline(spt_results[desc][node][ps][th], color=c, label=desc)
->>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
->>>>>>> 68a2eaf68649d96650f5bc281edd3695ce9b311a
            
                 plt.axvline(ps/th,color='gray',linestyle='dashed')
                 plt.xlabel('Grain size')
@@ -570,11 +565,8 @@ def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
                 plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
                 i=i+1
                 if save:
-<<<<<<< HEAD
-                    plt.savefig(perf_dir+'/splittable/'+save_dir_name+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
-=======
+#                    plt.savefig(perf_dir+'/splittable/'+save_dir_name+'/'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
                     plt.savefig(perf_dir+'/'+save_dir_name+'/splittable/'+node+'_'+str(int(ps))+'_'+str(int(th))+'.png',bbox_inches='tight')
->>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
     
 
 def plot_mode(spt_results, thr, save_dir_name, save):
@@ -582,15 +574,12 @@ def plot_mode(spt_results, thr, save_dir_name, save):
     i=1
     for desc in spt_results.keys():
         for th in thr:
-<<<<<<< HEAD
-            plt.figure(i)                
-            plt.scatter([ps for ps in spt_results[desc].keys()],[ps/spt_results[desc]['c7-spt'][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], label=str(int(th))+' threads', marker='.')
-=======
+#            plt.figure(i)                
+#            plt.scatter([ps for ps in spt_results[desc].keys()],[ps/spt_results[desc]['c7-spt'][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], label=str(int(th))+' threads', marker='.')
             plt.figure(i)  
             node=[n for n in spt_results[desc].keys()][0] 
               
             plt.scatter([ps for ps in spt_results[desc][node].keys()],[ps/spt_results[desc][node][ps][th] for ps in spt_results[desc][node].keys()], label=str(int(th))+' threads', marker='.')
->>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
    
         plt.xlabel('Problem size')
         plt.ylabel('Execution time/ps')
@@ -621,15 +610,12 @@ def plot_th(array, spt_results, thr, save_dir_name, save):
                 t_min_execs.append(ps/np.min(array_ps[:,-1]))
             
         for c,desc in zip(colors,spt_results.keys()):
-<<<<<<< HEAD
-            plt.figure(i)                            
-            plt.scatter(problem_sizes,[ps/spt_results[desc][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], color=c,label=desc, marker='.')
-=======
+#            plt.figure(i)                            
+#            plt.scatter(problem_sizes,[ps/spt_results[desc][ps][th] for ps in spt_results[desc]['c7-spt'].keys()], color=c,label=desc, marker='.')
             plt.figure(i)                        
             node=[n for n in spt_results[desc].keys()][0] 
 
             plt.scatter(problem_sizes,[ps/spt_results[desc][node][ps][th] for ps in spt_results[desc][node].keys()], color=c,label=desc, marker='.')
->>>>>>> ac88e717972c62047a2877b1b3153ccac67fd0ee
         plt.scatter(problem_sizes,t_min_execs, label='best', marker='*')
         plt.scatter(problem_sizes,t_equals, label='equal', marker='+')
 
