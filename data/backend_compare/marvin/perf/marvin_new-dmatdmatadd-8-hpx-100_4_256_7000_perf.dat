@@ -1,0 +1,21 @@
+
+ Dense Matrix/Dense Matrix Addition:
+   Blaze [MFlop/s]:
+     7000        234.29
+   N=7000, steps=1
+     Blaze       = 1        (0.209142)
+
+ Performance counter stats for '/home/sshirzad/src/blaze_shahrzad/blazemark/benchmarks/dmatdmatadd_hpx_marvin -only-blaze --hpx:threads=8 --hpx:bind=balanced --hpx:numa-sensitive':
+
+         14,674.36 msec task-clock:u              #    3.139 CPUs utilized          
+    14,546,839,950      cycles:u                  #    0.991 GHz                    
+    24,508,656,822      instructions:u            #    1.68  insn per cycle         
+        16,325,666      cache-references:u        #    1.113 M/sec                  
+         5,860,964      cache-misses:u            #   35.900 % of all cache refs    
+
+       4.674664051 seconds time elapsed
+
+      14.014558000 seconds user
+       0.621236000 seconds sys
+
+
