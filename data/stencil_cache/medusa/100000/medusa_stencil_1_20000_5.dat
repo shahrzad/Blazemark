@@ -1,0 +1,17 @@
+OS_Threads,Execution_Time_sec,Points_per_Partition,Partitions,Time_Steps
+1,                    0.005663043, 20000,                5,                    45                   
+
+ Performance counter stats for '/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_medusa_main/bin/1d_stencil_4_parallel --np=5 --nx=20000 --hpx:threads=1 -Ihpx.stacks.use_guard_pages=0':
+
+             37.82 msec task-clock:u              #    0.903 CPUs utilized          
+        72,006,731      cycles:u                  #    1.904 GHz                    
+       101,858,242      instructions:u            #    1.41  insn per cycle         
+         1,361,182      cache-references:u        #   35.986 M/sec                  
+            79,938      cache-misses:u            #    5.873 % of all cache refs    
+
+       0.041892753 seconds time elapsed
+
+       0.024171000 seconds user
+       0.017231000 seconds sys
+
+
