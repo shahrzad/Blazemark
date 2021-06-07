@@ -278,6 +278,89 @@ def create_spt_dict(spt_filename,iteration_length=1):
 ##                   
 #    return split_info
 
+def create_dict_benchmark(directories,data_filename='/home/shahrzad/repos/Blazemark/data/grain_data_perf_bench.csv', mini=False, maxi=False):
+    to_csv=True
+    thr=[]
+    data_files=[]
+    
+    for directory in directories:
+        [data_files.append(i) for i in glob.glob(directory+'/*.dat')]
+    
+    chunk_sizes=[]
+    #num_iteration is equivalent to array_size here
+    num_iterations=[]
+    nodes=[]
+    
+    if to_csv:
+        f_csv=open(data_filename,'w')
+        f_writer=csv.writer(f_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        f_writer.writerow(['node','problem_size','num_blocks','num_threads','chunk_size','iter_length','grain_size','work_per_core','num_tasks','execution_time'])
+
+    for filename in data_files:
+        (node, _, _, _, th, chunk_size, num_iteration) = filename.split('/')[-1].replace('.dat','').split('_')         
+      
+            
+        chunk_size=int(chunk_size)
+        th=int(th)
+        num_iteration=int(num_iteration)
+        if node not in nodes:
+            nodes.append(node)    
+        if num_iteration not in num_iterations:
+            num_iterations.append(num_iteration)        
+        if th not in thr:
+            thr.append(th)
+        if chunk_size not in chunk_sizes:
+            chunk_sizes.append(chunk_size)
+
+    nodes.sort()
+    num_iterations.sort()
+    thr.sort()                  
+                                                           
+    data_files.sort()   
+    problem_sizes=[]
+    iter_length=2
+    
+    for filenames in data_files:   
+        f=open(filenames, 'r')
+                 
+        result=f.readlines()
+        
+        if len(result)!=0:
+            avg=0
+            (node, _, _, _, th, chunk_size, num_iteration) = filenames.split('/')[-1].replace('.dat','').split('_')         
+
+            chunk_size=float(chunk_size)        
+            th=float(th)       
+            num_iteration=int(num_iteration)
+            first=True
+            for r in [r for r in result if r!='\n']:  
+                if not first:
+                    avg+=float(r.split('in ')[1].split('microseconds')[0].strip())
+                else:
+                    first=False            
+            avg=avg/(len([r for r in result if r!='\n'])-1)
+            problem_size=num_iteration*2
+            if problem_size not in problem_sizes:
+                problem_sizes.append(problem_size)
+            grain_size=chunk_size*iter_length
+
+            num_tasks=np.ceil(num_iteration/chunk_size)
+            L=np.ceil(num_tasks/th)
+            w_c=L*grain_size
+            if th==1:
+                w_c=num_iteration*(iter_length)
+            if num_tasks%th==1 and num_iteration%chunk_size!=0:
+#                    w_c_1=problem_size+(1-th)*(L-1)*grain_size
+                w_c=(L-1)*grain_size+(num_iteration%chunk_size)*(iter_length)
+
+                        
+            f_writer.writerow([node,problem_size,num_iteration,th,chunk_size,iter_length,grain_size,w_c,num_tasks,avg])
+
+    if to_csv:
+        f_csv.close()
+#    return (data, d, thr, iter_lengths, num_iterations)  
+
+
 def get_task_info(directories, save_dir_name, plot=False, save=False, value_sorted=False, plot_reps=False, iteration_length=1):
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
 
@@ -496,6 +579,7 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
         spt_results[desc]=create_spt_dict(spt_filename,il)
         descs.append(desc)
 
+    problem_sizes=[ps for ps in spt_results[descs[0]].keys()]
 #    problem_sizes=[ps for ps in spt_results[descs[0]].keys()]
     
     node=[n for n in spt_results[descs[0]].keys()][0]
@@ -533,6 +617,10 @@ def compare_results(dirs, save_dir_name, alias=None, save=True, mode='ps-th', it
 
 def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
     colors=['red', 'green', 'purple', 'pink', 'cyan', 'lawngreen', 'yellow']
+    color_map={}
+    for c,desc in zip(colors,['adaptive','adaptive with threshold','guided','guided with threshold']):
+        color_map[desc]=c
+    color_map['equal']=colors[4] 
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
     i=1
     descs=[desc for desc in spt_results.keys()]
@@ -549,6 +637,7 @@ def plot_ps_th(array, problem_sizes, spt_results, thr, save_dir_name, save):
 #                    plt.axhline(spt_results[desc][ps][th], color=c, label=desc)
                     plt.figure(i)  
                     node=[n for n in spt_results[desc].keys()][0] 
+                    #plt.axhline(spt_results[desc][node][ps][th], color=color_map[desc], label=desc)
                     plt.axhline(spt_results[desc][node][ps][th], color=c, label=desc)
            
                 plt.axvline(ps/th,color='gray',linestyle='dashed')

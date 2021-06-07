@@ -392,10 +392,9 @@ def find_nearest_index(array, value):
     idx = (np.abs(array - value)).argmin()
     return idx
     
-def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=False, plot=True, plot_bars=False,plot_bars_all=False):
+def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=False, plot=True, plot_bars=False,plot_bars_all=False,hpx_dir_ref=None):
     perf_dir='/home/shahrzad/repos/Blazemark/data/performance_plots/06-13-2019/hpx_for_loop/general'
     if ref:
-        hpx_dir_ref='/home/shahrzad/repos/Blazemark/data/matrix/c7/reference/'
         d_hpx_ref=create_dict_reference(hpx_dir_ref)  
 
     name=''
@@ -427,7 +426,6 @@ def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=F
     nodes.sort()
 #    node=nodes[0]
     
-    benchmark='dmatdmatadd'
     node_selected=dataframe['node']==node
     included=dataframe['include']==1
     df_n_selected=dataframe[node_selected & included]
@@ -446,7 +444,7 @@ def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=F
     color_map={}
     for c,desc in zip(colors,['adaptive','adaptive with threshold','guided','guided with threshold']):
         color_map[desc]=c
-    color_map['equal']=colors[4]    
+    color_map['equal']=colors[4] 
     results={}
     results_th={}
 
@@ -456,20 +454,35 @@ def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=F
             results_th[th][desc]=0
         
     i=1
-    for m in [264, 1825]: #matrix_sizes: #
+    for m in matrix_sizes: #
         results[m]={}
         m_selected=df_nb_selected['matrix_size']==m
         features=['chunk_size','num_blocks','num_threads','grain_size','block_size_row','block_size_col','work_per_core','num_tasks','execution_time']
         df_selected=df_nb_selected[m_selected][features]
     
         array_b=df_selected.values
+        
+        simdsize=4.
+        if node=='medusa':
+            simdsize=8.
+    
+        aligned_m=m
+        if m%simdsize!=0:
+            aligned_m=m+simdsize-m%simdsize
+        if benchmark=='dmatdmatadd':                            
+            mflop=(aligned_m)*m                           
+        elif benchmark=='dmatdmatdmatadd':
+            mflop=2*(aligned_m)*m
+        else:
+            mflop=2*(aligned_m)**3   
+            
         for th in thr:   
             results[m][th]={}
 
             new_array=array_b[array_b[:,2]==th][:,:-1]
             new_labels=array_b[array_b[:,2]==th][:,-1]
             results[m][th]['min']=np.min(new_labels)
-            results[m][th]['equal']=new_labels[find_nearest_index(new_array[:,3],(m**2)/th)]
+            results[m][th]['equal']=new_labels[find_nearest_index(new_array[:,3],mflop/th)]
             results_th[th]['equal']+=results[m][th]['min']/results[m][th]['equal']
 
             if plot:
@@ -485,11 +498,11 @@ def compare_results(dirs, save_dir_name, benchmark, alias=None, save=True, ref=F
                 results_th[th][desc]+=results[m][th]['min']/results[m][th][desc]
 
             if ref:
-                k=d_hpx_ref['marvin_old'][benchmark][th]['size'].index(m)   
-                results[m][th]['ref']=(m**2)/d_hpx_ref['marvin_old'][benchmark][th]['mflops'][k]
+                k=d_hpx_ref[node][benchmark][th]['size'].index(m)    
+                results[m][th]['ref']=(mflop)/d_hpx_ref[node][benchmark][th]['mflops'][k]
 
                 if plot:
-                    plt.axhline((m**2)/d_hpx_ref['marvin_old'][benchmark][th]['mflops'][k],color=color_map[desc],label='reference')
+                    plt.axhline((m**2)/d_hpx_ref[node][benchmark][th]['mflops'][k],color=colors[5],label='reference')
             if plot:
                 plt.axvline((m**2)/th,color='gray',linestyle='dashed')            
                 plt.ylabel('Execution Time($\mu{sec}$)')

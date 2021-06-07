@@ -238,7 +238,7 @@ for node in nodes:
                     test_errors[node][base_ps][ps][th]=100*np.mean(np.abs(z_5-new_labels)/new_labels)
                     r2_errors[node][base_ps][ps][th]=r2_score(new_labels,z_5)
             th=8
-            lb=0.5
+            lb=0.01
             ls=0.1
             for ps in base_pss:#[ps for ps in problem_sizes]:
                 plt.figure(i)
@@ -596,7 +596,7 @@ for node in nodes:
         popt_all[node][m]=popt_c
         
         g_params[node][benchmark]=bf.grain_dict(array_b,1)
-    
+
         for th in thr:
 
             new_array=array_b[array_b[:,2]==th][:,:-1]
@@ -621,7 +621,7 @@ for node in nodes:
             plt.xscale('log')
 #            plt.legend(bbox_to_anchor=(0.08, 0.98), loc=2, borderaxespad=0.)
 
-#            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
+            plt.savefig(perf_dir+'/blazemark/ranges/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'_range_'+str(int(100*lb))+'_'+str(int(100*ls))+'.png',bbox_inches='tight')
 
 #            plt.savefig(perf_dir+'/blazemark/'+node+'_'+benchmark+'_'+str(int(m))+'_'+str(int(th))+'.png',bbox_inches='tight')
             i=i+1
