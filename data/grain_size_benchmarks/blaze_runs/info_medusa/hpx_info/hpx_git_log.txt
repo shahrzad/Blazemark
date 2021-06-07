@@ -1,0 +1,342 @@
+blaze_runs branch
+commit d7cec2e07beda795f7a1036da37f90290938f3c9
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Jun 12 00:24:46 2020 -0500
+
+    Updating the stopping condition
+
+commit 3193fd71b27886e8ff9506520629dd67e8d60f08
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Jun 5 22:39:56 2020 -0500
+
+    Changing the way iterations are assigned to a core
+
+commit 000cb19bb6f80397056d5c2d642ec5b76529238d
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Thu Jun 4 13:05:26 2020 -0500
+
+    small changes to the way results are printed
+
+commit 20ef554ade01469b7a9441fd85f89c570ce5df26
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Sat May 23 18:43:42 2020 -0500
+
+    Updating split based on split type
+
+commit 5d133df9f8512f59df38fae2de893bc3f47b184a
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed May 20 17:49:04 2020 -0500
+
+    Integrating the new changes to get_idle_core_count function
+
+commit 2fb4767a0d08bed031bc16e61893096a328f0cea
+Author: Shahrzad <shahrzadshirzad@gmail.com>
+Date:   Sun May 17 17:45:16 2020 -0500
+
+    Adding the option to split tasks based on number of idle cores to splittable executor
+
+commit 7e48c6dc51ae556452539bce23c624b6a4eb231d
+Author: Shahrzad <shahrzadshirzad@gmail.com>
+Date:   Sat May 16 19:13:30 2020 -0500
+
+    Adding the missing function defintion
+
+commit e50297aec8bd69b9405a0a4e198a4bd4276f582f
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Sat May 16 18:10:51 2020 -0500
+
+    Adding an API function that exposes the number of idle cores
+
+commit 8be602d7790bde2399855cd098d39f8a75acc735
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Thu May 14 17:56:16 2020 -0500
+
+    Updating splittable task and grain size
+
+commit 6fe1d4a99f7ea0d930c12c303fce2b5925818565
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Thu May 14 15:55:08 2020 -0500
+
+    update grain size test
+
+commit 778e4d8519a3b1c2644155e8b6412cb5ef1a6a45
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Thu May 14 15:54:43 2020 -0500
+
+    updating splittable task
+
+commit 6c42debc20839e354422d27a38f906318fa39263
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Mon May 4 22:56:55 2020 -0500
+
+    Updating grain size test to have the option to print the data collected by performance counters
+
+commit 37e9d762ffafd623197132d5d3f5e649bed43eef
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Mon May 4 13:33:23 2020 -0500
+
+    Adding splittable executor
+
+commit 4e451a5402a71307e363ba735765ef98a97de192
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Tue Feb 11 15:45:03 2020 -0600
+
+    Commenting out the other section changing small chunk_sizes
+
+commit 3baf812e83d9d00d59a57b333018fa6c9d5ada98
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Jan 31 15:41:39 2020 -0600
+
+    Adding an option for sequential execution
+
+commit 7ebf7b7645f6d997741cdf5a471ff71df2fb8051
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Jan 15 09:49:42 2020 -0600
+
+    Changing grain size test to use worked_timer instead of sleep_for
+
+commit 9848302e10ed7298f83c967eac7742b0857ee40f
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Mon Jan 13 13:25:57 2020 -0600
+
+    changing printing style
+
+commit 2291ea16a52693ccd75721affd5c231ef092cab0
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Mon Jan 13 11:01:41 2020 -0600
+
+    Adding a benchmark for grain size analysis
+
+commit 6480ae9fbb7b2ba5216dd9cf5ccba398c3818546
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Fri Aug 16 15:20:17 2019 -0500
+
+    Commenting out the section that would change the chunk size automatically
+
+commit a943fd2c5d8b90d2f45be919850eefa9c31788e8
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 22 12:31:39 2019 +0200
+
+    Update release tag and date for final 1.3.0 release
+
+commit 58fa1f0e725122b840419c57bfdb10101f563c55
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 22 11:51:45 2019 +0200
+
+    Update release date and tag for 1.3.0-rc3
+
+commit a14ee7ad34ec9dfaa890ffc78883f6e709c4a6a3
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 22 11:50:35 2019 +0200
+
+    Update release notes for 1.3.0
+
+commit d819dfd4a26662e8f7873586f7776357fbecf643
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 22 11:35:19 2019 +0200
+
+    Update RPM changelog
+
+commit 355f4cfffa1ce8b3703af605905d7af7adfb9b7c
+Merge: 2298179f7a2 6bc5106a12c
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 22 10:57:07 2019 +0200
+
+    Merge remote-tracking branch 'origin/master' into release
+
+commit 6bc5106a12c85edb0b5ef5dc3071eb0a42a1882a
+Merge: 3010e3e21a9 144731b704c
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 21 21:55:11 2019 +0200
+
+    Merge pull request #3865 from albestro/fix#3863
+    
+    adds hpx_target_compile_option_if_available
+
+commit 3010e3e21a9c8cf396192933db9005b332893831
+Merge: 062f097c88f 2a733a3b34f
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 21 21:47:01 2019 +0200
+
+    Merge pull request #3864 from STEllAR-GROUP/numa_binding_allocator
+    
+    Helper functions that are useful in numa binding and testing of allocator
+
+commit 2a733a3b34f65bfe94d1633595232e6a21bedea5
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Thu May 16 16:27:32 2019 +0200
+
+    Helper functions that are useful in numa binding and testing of allocator
+
+commit 144731b704cf0a02047aee10cc4acec98bdb6c84
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 20 09:37:56 2019 +0200
+
+    Only enable over-aligned allocations with C++17
+
+commit 0e64c168657a15c0e1f307397d52b92df71b624f
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 17 15:22:05 2019 +0200
+
+    Disable warnings about over-aligned allocations not being respected for MSVC
+
+commit 46a84f47e5ee283e627f5b69e1c51d99746e622f
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 17 15:18:14 2019 +0200
+
+    Add aligned new CMake feature test
+
+commit 098d7448c80ef40ce63e26e009a2bf7d19fc9a3a
+Author: Alberto Invernizzi <invernizzi@cscs.ch>
+Date:   Fri May 17 10:49:46 2019 +0200
+
+    adds missing EOF newline
+
+commit bdaba849be8402aed2ca73db357b460a8bca5c34
+Author: Alberto Invernizzi <invernizzi@cscs.ch>
+Date:   Fri May 17 10:21:25 2019 +0200
+
+    adds hpx_target_compile_option_if_available
+    
+    now -faligned-new is added to target compile options (if available) and
+    gets exported as usage requirement
+
+commit 062f097c88fbe5de8c8a8e88dd42ee7cc18b203d
+Merge: 564f0fc72b6 49dcfe530c7
+Author: Mikael Simberg <simberg@cscs.ch>
+Date:   Thu May 16 18:18:25 2019 +0200
+
+    Merge pull request #3862 from msimberg/temp-fix-boost-small-vector-dataflow
+    
+    Temporary fix to local_dataflow_boost_small_vector test
+
+commit 49dcfe530c740f74f4dddfa6cb7293d02fbf0358
+Author: Mikael Simberg <simberg@cscs.ch>
+Date:   Thu May 16 10:10:05 2019 +0200
+
+    Temporary fix to local_dataflow_boost_small_vector test
+    
+    Boost 1.70 changed the default allocator for small_vector to void. dataflow does
+    not currently handle this, so this commit explicitly sets the allocator in the
+    affected test as a temporary measure.
+
+commit 564f0fc72b6504b65db4c03aa6e95ee3dd7449e6
+Merge: 1014bf41768 d7aaaabaf33
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 15 21:43:57 2019 +0200
+
+    Merge pull request #3860 from msimberg/align-reduction-data
+    
+    Add cache line padding to intermediate results in for loop reduction
+
+commit 1014bf417681ecbb219d6fa33ae9445d9a4a2bd4
+Merge: 033934bf52f 47d112f5125
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 15 21:41:46 2019 +0200
+
+    Merge pull request #3858 from msimberg/modules-compile-flags-definitions
+    
+    Add compile flags and definitions to modules
+
+commit 033934bf52f166bae61408bb7ff44f5afb4b0b7a
+Merge: 21e1131bea9 d342c799140
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 15 21:39:57 2019 +0200
+
+    Merge pull request #3859 from msimberg/remove-hpx-tll-public-private
+    
+    Remove HPX_TLL_PUBLIC and HPX_TLL_PRIVATE from CMake files
+
+commit d342c799140db74f2785de9c98e649407046c6be
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 15 10:04:58 2019 +0200
+
+    Add workaround for plain-signature target_link_libraries in CMake CUDA functions
+
+commit d7aaaabaf33bd534138bc390f0e461b624756c61
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 10 14:12:55 2019 +0200
+
+    Add cache line padding to intermediate results in for loop reduction
+
+commit 3ffcdfca2b3ea64c3267253e0e90a342c63dc256
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 14 16:06:52 2019 +0200
+
+    Remove HPX_TLL_PUBLIC and HPX_TLL_PRIVATE from CMake files
+    
+    Replace with explicit uses of PUBLIC and PRIVATE since HPX_TLL_PUBLIC/PRIVATE
+    were always set to PUBLIC/PRIVATE.
+
+commit 47d112f51258cb005e032ac673337ebef8f40cd4
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 14 13:48:43 2019 +0200
+
+    Add compile flags and definitions to modules
+
+commit 2298179f7a2134eddba6da57a0dfa8ca50a7d400
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 13 14:27:37 2019 +0200
+
+    Update tag and date for 1.3.0-rc2
+
+commit d2ce0fc1ed37ac67f5e85d3d539df17f1f0b3910
+Merge: c91c7525381 21e1131bea9
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 13 14:24:45 2019 +0200
+
+    Merge remote-tracking branch 'origin/master' into release
+
+commit 21e1131bea9f46aae1d4b38040cddfcee56b4568
+Merge: f5adfccd45d ee0c8f4d349
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 13 09:17:56 2019 +0200
+
+    Merge pull request #3846 from msimberg/libs-header-tests
+    
+    Add tests for libs header tests
+
+commit f5adfccd45dd887d7def47386adb01d8517a4e2c
+Merge: 2d483ef0833 8c7da76a15b
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Sun May 12 16:51:03 2019 +0200
+
+    Merge pull request #3851 from STEllAR-GROUP/hpxmp_release_tag
+    
+    update hpxmp release tag to v0.2.0
+
+commit 2d483ef08334a764115c5f96db1326160f69b055
+Merge: e03cd0acb17 5dbc83f0c79
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Sun May 12 16:50:30 2019 +0200
+
+    Merge pull request #3802 from STEllAR-GROUP/numa_binding_allocator
+    
+    Numa binding allocator
+
+commit 8c7da76a15bdaa5c73407ba932f577751040342e
+Author: tianyi93 <harter019@gmail.com>
+Date:   Fri May 10 11:08:00 2019 -0600
+
+    update hpxmp tag to v0.2.0
+
+commit 5dbc83f0c7953176815c29326266a73c55dfb23b
+Author: John Biddiscombe <biddisco@cscs.ch>
+Date:   Tue May 7 15:38:16 2019 +0200
+
+    Fixes suggested by Codacity to improve quality
+
+commit e03cd0acb1747510eadbb6be9d0f620c68fdeabe
+Merge: 8442c8a1f61 f8e8d521d21
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 9 14:59:22 2019 +0200
+
+    Merge pull request #3849 from STEllAR-GROUP/msimberg-patch-1
+    
+    Correct BOOST_ROOT variable name in quick start guide
+
+commit f8e8d521d214291ab7337f521066d629b59bc7c7
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 9 13:06:23 2019 +0200
+
+    Correct BOOST_ROOT variable name in quick start guide
