@@ -1,0 +1,350 @@
+grain_size_benchmark branch
+commit 3257895ddc0e7816f4df927d9edce77c37409454
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Jun 9 10:21:18 2021 -0500
+
+    updating the deprecated namespaces
+
+commit 389ff11e76ca6d38d7a2914bb5eb21aaceccdbf2
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Jun 2 14:34:58 2021 -0500
+
+    adding daxpy benchmark
+
+commit edb09d0451fb384de87b09db95b7efa3fd859a00
+Merge: 1194f98d51c c1ff15f57fe
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 21 11:10:45 2021 +0200
+
+    Merge pull request #5349 from aurianer/change_boost_minimum_version_in_docs
+    
+    Update minimum boost version needed on the docs
+
+commit c1ff15f57fef41b8060a0d740d08b47121d2adc4
+Author: Auriane R <aurianer@cscs.ch>
+Date:   Thu May 20 16:45:57 2021 +0200
+
+    Update minimum boost version needed on the docs
+
+commit 1194f98d51cfbada4b2fecdc38ecebc8abdabc28
+Merge: 6017158dd7f d510e4408ae
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 21 09:32:03 2021 +0200
+
+    Merge pull request #5346 from msimberg/remove-compatibility-options-1.7.0
+    
+    Remove and disable compatibility options for 1.7.0
+
+commit d510e4408aec829f757ea7dfc0217f649e7acba3
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 15:03:55 2021 +0200
+
+    Remove HPX_WITH_THREAD_AWARE_TIMER_COMPATIBILITY option
+
+commit 377a685303daa481ec27c4ad5d7e686e1b3e51b6
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 15:01:56 2021 +0200
+
+    Remove thread executor-related CMake options
+
+commit f76acc6713832dad739b1bcd8215134ebd53f711
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 14:20:47 2021 +0200
+
+    Remove HPX_PROGRAM_OPTIONS_WITH_BOOST_PROGRAM_OPTIONS_COMPATIBILITY option
+
+commit 78396dc34dd936b7df14e7b0595eb36b6c560dcc
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 14:10:51 2021 +0200
+
+    Remove HPX_WITH_UNSCOPED_ENUM_COMPATIBILITY option
+
+commit ffb5cb28bf89c300c1b87edb0547502a1ed603db
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 14:10:14 2021 +0200
+
+    Turn off HPX_WITH_INIT_START_OVERLOADS_COMPATIBILITY by default
+
+commit d216affd20ada224557bab9d47cb7039e0591ce2
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 14:10:00 2021 +0200
+
+    Remove HPX_WITH_PROMISE_ALIAS_COMPATIBILITY option
+
+commit ce76e84bcba3c0d5b5e8c25098bc5e94b08dff48
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 14:08:59 2021 +0200
+
+    Remove HPX_WITH_REGISTER_THREAD* options
+
+commit 87f2c8e651a3745729ff701ba2dbfb9202529458
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 14:08:00 2021 +0200
+
+    Remove HPX_WITH_ACTION_BASE_COMPATIBILITY option
+
+commit 6017158dd7fb2fb98a468473b6f5caeb391eb740
+Merge: 788af2e7345 acb054996ae
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 09:54:21 2021 +0200
+
+    Merge pull request #5312 from msimberg/local-modules-includes
+    
+    Use local runtime and local headers in local-only modules and tests
+
+commit 788af2e7345521cdf53cba51fc7792e60880fda6
+Merge: 92ff3ea21be 49cb9bf6408
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 19 09:42:22 2021 +0200
+
+    Merge pull request #5335 from msimberg/partial_algorithm-generic
+    
+    Make partial_algorithm work with any number of arguments
+
+commit 49cb9bf6408f3d743ef57ff09e40e3d163391f91
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 17:35:32 2021 +0200
+
+    Make partial_algorithm work with any number of arguments
+
+commit 92ff3ea21be13119229cf50d2cc7adcb074d702a
+Merge: 9b64c82be13 0ce3d42eafd
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 18 17:04:04 2021 +0200
+
+    Merge pull request #5332 from STEllAR-GROUP/simplify_tag_invoke
+    
+    Simplify tag_invoke and friends
+
+commit acb054996aef9a59af10d091948ee45b8c26c546
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Apr 30 12:33:58 2021 +0200
+
+    Use local runtime for tests in non-distributed modules
+
+commit c599fbb4e972d37d75ad62d2cdabbfb1d8aafd4d
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Apr 30 12:35:09 2021 +0200
+
+    Add include_local module
+
+commit 9b64c82be139799b5ea8c95acae22208c036eabe
+Merge: 7f96e82f3a5 9f59adc72a6
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 18 12:10:51 2021 +0200
+
+    Merge pull request #5324 from msimberg/async_rw_mutex-add-get-to-wrappers
+    
+    Add get member functions to async_rw_mutex proxy objects for explicitly getting the wrapped value
+
+commit 7f96e82f3a5190a08d6cad62a675db8dc422ba2f
+Merge: 2e8333cd2e4 1c51095fa36
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 18 12:05:17 2021 +0200
+
+    Merge pull request #5323 from msimberg/keep_future
+    
+    Add keep_future algorithm
+
+commit 2e8333cd2e4cac4a48ea0aa735b238021ca103b6
+Merge: b6c251feed4 bb528686119
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue May 18 11:59:23 2021 +0200
+
+    Merge pull request #5339 from STEllAR-GROUP/fixing_5333
+    
+    Making sure hpx::util::hardware::timestamp() is always defined
+
+commit bb5286861190f06941c0aed04ef1e26a584c05f2
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Mon May 17 14:33:37 2021 -0500
+
+    Making sure hpx::util::hardware::timestamp() is always defined
+
+commit 9f59adc72a63b7246622455efb2defd16ebc1c4e
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 14 09:36:31 2021 +0200
+
+    Make async_rw_mutex read-write access wrappers non-copyable
+
+commit 16a2e79b4f4c24604bcb0360b5aae30ec153057c
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 10 15:53:40 2021 +0200
+
+    Initialize async_rw_mutex value member in member initializer list instead of in constructor body
+
+commit e9808db4c4d295166516d989c47e90d5e865ece3
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 10 15:21:45 2021 +0200
+
+    Add get member functions to async_rw_mutex proxy objects for explicitly getting the wrapped value
+
+commit 1c51095fa3672573b906aadcd1acfcdcf913ba24
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 10 11:59:12 2021 +0200
+
+    Add execution::keep_future to pass the future instead of its value to continuations when futures are used as senders
+    
+    keep_future passes the future instead of the value to help manage future
+    lifetimes. Especially shared_future | on | ... is not possible without
+    this helper if the wrapped value in the future is noncopyable (since
+    shared_future::get returns a const& and on cannot store a const&, nor
+    does it need to keep the operation state alive long enough).
+
+commit b6c251feed4d33740ebac5902a884fa9cbcaaf8f
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 18:07:29 2021 +0200
+
+    Remove accidentally added header file from execution module CMakeLists.txt
+
+commit bf6890366898718e5f932b3b86728a03f5dbc464
+Merge: 3cfc34a02ce f8d5ffe8f19
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 18:01:28 2021 +0200
+
+    Merge pull request #5274 from msimberg/p1897-more-algorithms
+    
+    More P1897 algorithms
+
+commit f8d5ffe8f190659170987e7167732ef9b1c6b269
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri May 7 10:26:04 2021 +0200
+
+    Don't ignore new allocator in ensure_started
+    
+    Keep the optimization when ensure_started_sender is passed to
+    ensure_started, but only when the allocator is the same.
+
+commit 96105eb9fe135ee33530e17cb62e7d5b92ad8cc2
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 17:16:07 2021 +0200
+
+    Add missing includes to sender algorithm files
+
+commit 4a684ae316cb7cc62584877ac7ef8334eaa272dd
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 17:15:04 2021 +0200
+
+    Format sender algorithm files
+
+commit 3cfc34a02cec8b26311b928c8ed710ccdfd922a7
+Merge: 89886e3c1f7 bfd9c03595a
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 13:36:52 2021 +0200
+
+    Merge pull request #5334 from gonidelis/iter_sent_fix
+    
+    Follow up iter_sent include on #5225
+
+commit bfd9c03595af50845fa334eff9a199741f53228d
+Author: gonidelis <pesto80@windowslive.com>
+Date:   Mon May 17 05:43:58 2021 -0500
+
+    Follow up iter_sent include on #5225
+
+commit 89886e3c1f7ee90f5bab5006c504ae1342da4d0b
+Merge: c40b57077b8 5083f2f02c6
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 10:01:35 2021 +0200
+
+    Merge pull request #5199 from STEllAR-GROUP/msimberg-patch-4
+    
+    Update ICC module name on Piz Daint Jenkins configuration
+
+commit c40b57077b82eceb73c2c7a6a4c1f5f54a62d967
+Merge: 475c3101c11 2c8ba05526d
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 09:42:12 2021 +0200
+
+    Merge pull request #5321 from Jedi18/seperate_segmented_reduce
+    
+    Seperate segmented algorithms for reduce
+
+commit 475c3101c1145d5d32958d88d61b6ee74fe044fb
+Merge: d9a8fc52ad9 5631c61ca54
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon May 17 09:40:02 2021 +0200
+
+    Merge pull request #5331 from STEllAR-GROUP/executor_cpos
+    
+    More work on cleaning up executor CPOs
+
+commit 0ce3d42eafd52a55de594bbd851e020ec4ed9bd5
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Fri May 14 09:21:21 2021 -0500
+
+    Simplify tag_invoke and friends
+
+commit 5631c61ca540fb28fd4c93c97aeae7f17fdd8dd3
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Fri May 14 08:51:47 2021 -0500
+
+    More work on cleaning up executor CPOs
+
+commit 5083f2f02c68a94289eb151509836c9847f62d39
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Feb 23 13:26:56 2021 +0100
+
+    Update ICC module name on Piz Daint Jenkins configuration and fix ICC compilation
+
+commit 5f1853f848c56f89c14e60b9bb31dc3029dca993
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 17:13:12 2021 +0200
+
+    Make custom type constructors in algorithm_test_utils.hpp explicit
+
+commit 7018a0b15f8772c94a38e8a58857710df1cc3851
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 15:54:57 2021 +0200
+
+    Document synchronization mechanism used for adding and calling continuations in ensure_started
+
+commit a8ca787760aabb04d36d2fe09dc5be17ed770a73
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 13:55:35 2021 +0200
+
+    Add missing forwarding in just algorithm
+
+commit f605548656c335679a63e6bdbd0aa73dc1d58caa
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 13:55:18 2021 +0200
+
+    Fix use of NewAllocator template parameter in ensure_started
+
+commit 7d81ec2cf347f61e38f09840de531ec3dfc47302
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 13:54:52 2021 +0200
+
+    Qualify sender/receiver member functions with & and && where appropriate
+
+commit 544f92a4aea1a1bfd4f7aeb5b9914f801da50c98
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 13:53:17 2021 +0200
+
+    Fix start CPO
+    
+    Should only take operation states by reference
+
+commit 4a01499c470cecbf76538515698c858346899ca6
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 13:52:34 2021 +0200
+
+    Add HPX_UNREACHABLE macro and use it in place of std::terminate in sender algorithms
+
+commit 37135fc6de570740f0bc79ba66b12c57cdd76dbb
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu May 6 12:08:03 2021 +0200
+
+    Delete reference overload in ensure_started instead of using is_rvalue_reference
+
+commit 58d4d87c1a1e1da50872d91d49879be695e1bc24
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 5 11:55:01 2021 +0200
+
+    Fix allocator handling in ensure_started and detach
+
+commit c3fb2f062e0785bfe7d2a5b2c9d655d7e56a489c
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed May 5 10:55:30 2021 +0200
+
+    Add const to p1897 visitor structs
