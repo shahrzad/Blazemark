@@ -1,0 +1,17 @@
+array_size 1000000,                    for_loop             par  parallel_executor in 814.028000 microseconds , queue              default, numa    0, threads   10
+
+
+ Performance counter stats for '/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_medusa_main/bin/grain_size_benchmarks_test -Ihpx.stacks.use_guard_pages=0 --array_size=1000000 --hpx:threads=10 --chunk_size=3 --repetitions=1':
+
+            178.85 msec task-clock:u              #    3.145 CPUs utilized          
+       508,754,444      cycles:u                  #    2.845 GHz                    
+     1,429,058,108      instructions:u            #    2.81  insn per cycle         
+         1,640,505      cache-references:u        #    9.173 M/sec                  
+           394,842      cache-misses:u            #   24.068 % of all cache refs    
+
+       0.056875570 seconds time elapsed
+
+       0.153893000 seconds user
+       0.029348000 seconds sys
+
+

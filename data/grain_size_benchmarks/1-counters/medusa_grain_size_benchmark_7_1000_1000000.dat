@@ -1,0 +1,34 @@
+array_size 1000000,                    for_loop             par  parallel_executor in 816.843000 microseconds , queue              default, numa    0, threads    7
+
+
+ Performance counter stats for '/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_medusa_main/bin/grain_size_benchmarks_test -Ihpx.stacks.use_guard_pages=0 --array_size=1000000 --hpx:threads=7 --chunk_size=3 --repetitions=1':
+
+            126.29 msec task-clock:u              #    2.346 CPUs utilized          
+       343,281,006      cycles:u                  #    2.718 GHz                    
+       940,631,232      instructions:u            #    2.74  insn per cycle         
+         1,586,220      cache-references:u        #   12.560 M/sec                  
+           251,021      cache-misses:u            #   15.825 % of all cache refs    
+
+       0.053830883 seconds time elapsed
+
+       0.103578000 seconds user
+       0.026606000 seconds sys
+
+
+array_size 1000000,                    for_loop             par  parallel_executor in 835.658000 microseconds , queue              default, numa    0, threads    7
+
+
+ Performance counter stats for '/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_medusa_main/bin/grain_size_benchmarks_test -Ihpx.stacks.use_guard_pages=0 --array_size=1000000 --hpx:threads=7 --chunk_size=2 --repetitions=1':
+
+            127.37 msec task-clock:u              #    2.334 CPUs utilized          
+       343,702,558      cycles:u                  #    2.698 GHz                    
+       932,863,208      instructions:u            #    2.71  insn per cycle         
+         1,585,496      cache-references:u        #   12.448 M/sec                  
+           348,591      cache-misses:u            #   21.986 % of all cache refs    
+
+       0.054566837 seconds time elapsed
+
+       0.111186000 seconds user
+       0.020284000 seconds sys
+
+

@@ -51,7 +51,9 @@ do
 			
 				export OMP_NUM_THREADS=1
 			
-			perf stat -e task-clock,cycles,instructions,cache-references,cache-misses ${hpx_bin_dir}/grain_size_benchmarks_test  -Ihpx.stacks.use_guard_pages=0 --array_size=${as} --hpx:threads=${th} --chunk_size=${c} --repetitions=6&>>${results_dir}/${node}_grain_size_benchmark_${th}_${c}_${as}.dat
+			                        echo $b $c "chunk size ${chunk_size}" $th
+${hpx_bin_dir}/grain_size_benchmarks_test  -Ihpx.stacks.use_guard_pages=0 --array_size=${as} --hpx:threads=${th} --chunk_size=${c} --repetitions=1
+				perf stat -e task-clock,cycles,instructions,cache-references,cache-misses ${hpx_bin_dir}/grain_size_benchmarks_test  -Ihpx.stacks.use_guard_pages=0 --array_size=${as} --hpx:threads=${th} --chunk_size=${c} --repetitions=1&>>${results_dir}/${node}_grain_size_benchmark_${th}_${chunk_size}_${as}.dat
 				echo "Run for array size ${as} iterations, chunk size ${c} on ${th} threads finished"			
 			done
 		done		
