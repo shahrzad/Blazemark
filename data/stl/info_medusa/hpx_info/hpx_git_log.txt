@@ -1,0 +1,380 @@
+grain_size_benchmark branch
+commit 45c46efa01460aee095114971960a70233250593
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Jul 21 13:03:17 2021 -0500
+
+    Adding grain size benchmark
+
+commit 9d14dfaa63f507e7fc1f1631e483e029e11bd1fe
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Jun 9 10:21:18 2021 -0500
+
+    updating the deprecated namespaces
+
+commit 56720518faf67ed0cf7d15ba20056b14aef5e2e9
+Author: Shahrzad Shirzad <shahrzadshirzad@gmail.com>
+Date:   Wed Jun 2 14:34:58 2021 -0500
+
+    adding daxpy benchmark
+
+commit 9e533eccd2c75ef696fe8ea0cc0534ddb0def7de
+Merge: 47fcf99b733 ffaf2fc133b
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Mon Jul 26 10:45:48 2021 -0500
+
+    Merge pull request #5464 from STEllAR-GROUP/tag_dispatch_module
+    
+    Moving tag_dispatch to separate module
+
+commit 47fcf99b7335cd90d517808a7add4c3c4af1bb3d
+Merge: ac5f6b2c02c 6a48d94f867
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Fri Jul 23 09:47:54 2021 -0500
+
+    Merge pull request #5461 from aurianer/rename_hpx_with_cuda_compute
+    
+    Rename HPX_WITH_CUDA_COMPUTE with HPX_WITH_COMPUTE_CUDA
+
+commit ffaf2fc133b93e253947a2a1bd535d85abde0e50
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Thu Jul 22 18:31:49 2021 -0500
+
+    Moving tag_dispatch to separate module
+
+commit ac5f6b2c02c1ed34fa0a4ef727580edfdce70b90
+Merge: 6aba3f3c087 b55841368cd
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Thu Jul 22 09:21:32 2021 -0500
+
+    Merge pull request #5445 from STEllAR-GROUP/locks
+    
+    Improve performance of Spinlocks
+
+commit 6a48d94f867c8eaeac18e7d037a5cf66f9835b94
+Author: Auriane R <aurianer@cscs.ch>
+Date:   Thu Jul 22 10:58:40 2021 +0200
+
+    Rename HPX_WITH_CUDA_COMPUTE with HPX_WITH_COMPUTE_CUDA
+    
+    in order to match the name of the module.
+
+commit 6aba3f3c0871acdda2027a658289a6b40bdd2df3
+Merge: 0ca818f9143 1a3e1c78a25
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Wed Jul 21 18:20:45 2021 -0500
+
+    Merge pull request #5452 from srinivasyadav18/fix_findend
+    
+    Fix find_end parallel overload
+
+commit 0ca818f914384096ade29c4806113f8376b0af3d
+Merge: 33b95036526 fd2053354a3
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Tue Jul 20 19:32:49 2021 -0500
+
+    Merge pull request #5428 from srinivasyadav18/simd_copy
+    
+    Adapt datapar copy
+
+commit 33b950365269275482bbc4c9337bbabf843d42eb
+Merge: c3299d66abb f530312bf6d
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Jul 16 09:44:58 2021 +0200
+
+    Merge pull request #5454 from aurianer/show_perf_plot_always
+    
+    Make performance plot show even if similar performance
+
+commit c3299d66abba3f0a0cc9123b91d47c47d955bff3
+Merge: 877c2be8229 226d0e7b6f4
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Jul 16 09:20:22 2021 +0200
+
+    Merge pull request #5453 from msimberg/post-1.7.0-bumps
+    
+    Post 1.7.0 version bump
+
+commit 1a3e1c78a251e471fa2d2e3d12389b6e3820c649
+Author: srinivasyadav18 <srinivasyadav227@icloud.com>
+Date:   Fri Jul 16 08:32:14 2021 +0530
+
+    Update find_end tests
+    
+    Uses std::findend to compare the results
+    Removes unused variable count
+
+commit f530312bf6d653e10cb45fe0e66e41a82eb3b67b
+Author: Auriane R <aurianer@cscs.ch>
+Date:   Thu Jul 15 18:11:55 2021 +0200
+
+    Make performance plot show even if similar performance
+
+commit 226d0e7b6f49f4a23b0b59b9a609c107986dd9a9
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 15 10:11:39 2021 +0200
+
+    Bump version number after 1.7.0 release
+
+commit d6138c0750ad04db292c557ae16025b141515529
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 15 10:00:27 2021 +0200
+
+    Add link to release notes to release description on GitHub
+
+commit a59f7c24384264c0f61fd877de8da0fb49b14bb7
+Author: srinivasyadav18 <srinivasyadav227@icloud.com>
+Date:   Thu Jul 15 16:59:44 2021 +0530
+
+    Fix find_end parallel overload
+    
+    Replaces typedef reference with auto.
+    Removes unused curr Iterator variable.
+    Uses mid and mid2 to check the whole subsequence.
+
+commit 877c2be8229a44810d0017ddd24ab8303b3570d2
+Merge: 14057fc820f 2d878638a8a
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 15 12:12:47 2021 +0200
+
+    Merge pull request #5450 from aurianer/change_hwloc_print
+    
+    Change the print-bind output to be more precise
+
+commit 2d878638a8a0fda55a10390a6d3f09a7c5911feb
+Author: Auriane R <aurianer@cscs.ch>
+Date:   Thu Jul 15 09:57:56 2021 +0200
+
+    Change the print-bind output to be more accurate
+
+commit 14057fc820ff5d07369747533f2a5056a8e3fc27
+Merge: 3c101df14e4 0780aab60d1
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 15 11:17:53 2021 +0200
+
+    Merge pull request #5443 from STEllAR-GROUP/asan_msvc
+    
+    Properly support ASAN with MSVC
+
+commit 3c101df14e4dcf4a81db220b44ffb4996ab088a1
+Merge: 4225f1dbe92 1b86464e818
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 15 10:39:28 2021 +0200
+
+    Merge pull request #5446 from msimberg/more-verbose-sender-names
+    
+    Use more verbose names in sender algorithms
+
+commit b55841368cd82aede625756564bc728b776d5b35
+Author: Nikunj Gupta <nikunj.nkgpta@gmail.com>
+Date:   Wed Jul 14 18:24:12 2021 +0530
+
+    Simplify spinlock impl in thread_support
+
+commit 4225f1dbe9243959cdab86987d29166ad1fb42d8
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Jul 14 09:39:05 2021 +0200
+
+    Final changes for 1.7.0 release
+
+commit 004bbc870b91f51f07ca8f5d61ffec3436f0ec55
+Author: Nikunj Gupta <nikunj.nkgpta@gmail.com>
+Date:   Tue Jul 13 22:33:51 2021 +0530
+
+    Corrections according to reviews
+
+commit 46a46d71be2851d7e2c6e9b8f8c6b328ba68b903
+Author: Nikunj Gupta <nikunj.nkgpta@gmail.com>
+Date:   Tue Jul 13 21:42:27 2021 +0530
+
+    Convert while to do{} while for better code clarity
+
+commit 1b86464e818253cf4b17a89c564f04acc96490e2
+Author: Auriane R <aurianer@cscs.ch>
+Date:   Fri Jun 25 15:34:08 2021 +0200
+
+    Use more verbose names in sender algorithms
+
+commit 1b3fa1598c2fa609ae0844a8ec397cce8b6b5c95
+Author: Nikunj Gupta <nikunj.nkgpta@gmail.com>
+Date:   Tue Jul 13 15:36:27 2021 +0530
+
+    Simplify lcos::local::spinlock lock() implementation
+
+commit 6616e62fd5aa03eabb39dda100aa82540484e68b
+Author: Nikunj Gupta <nikunj.nkgpta@gmail.com>
+Date:   Tue Jul 13 14:43:31 2021 +0530
+
+    Reduce false sharing in locks
+
+commit af907144d278c6a7bbf5736821784521080b1ce7
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Mon Jul 12 12:08:28 2021 +0200
+
+    Add missing issues and PRs to 1.7.0 release notes
+
+commit 0780aab60d197d5787b2e160193f7dbb5c17670d
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Sun Jul 11 15:35:06 2021 -0500
+
+    Properly support ASAN with MSVC
+
+commit 968c3179d3397a3f8e51c29d63bd1b1ad41c5287
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Jul 9 10:16:25 2021 +0200
+
+    Change 1.7.0 version tag to rc3
+
+commit 7ba653ae0bbaa2b15b9efc56267e53da189ad6fa
+Merge: ae510ddec78 ba5056dfee5
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Jul 9 10:15:35 2021 +0200
+
+    Merge remote-tracking branch 'origin/master' into release
+
+commit ae510ddec78630b2d7ff61d1dfb296aae503def4
+Merge: ae29c756458 b3744c38fd1
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Jul 9 10:14:39 2021 +0200
+
+    Merge pull request #5417 from msimberg/release-notes-1.7.0
+    
+    Final release notes for 1.7.0
+
+commit ba5056dfee52c8ec2c6662cbbb696d29ac90b9c3
+Merge: 0ddd24f50be 3dfcb74b493
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Fri Jul 9 09:28:25 2021 +0200
+
+    Merge pull request #5437 from msimberg/fix-pthreads-cray-clang
+    
+    Add back explicit -pthread flags when available
+
+commit 3dfcb74b4933dea0248572c05db224d2f98e2ba4
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Jul 7 14:21:17 2021 +0200
+
+    Add back explicit -pthread flags when available for Cray compiler
+
+commit 0ddd24f50be81142626fff3ca30a3759daeafbcb
+Merge: fc37a2faeda e7d4f8b8f70
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 12:59:56 2021 +0200
+
+    Merge pull request #5402 from Jedi18/adapt_uninitialized_fill
+    
+    Adapt uninitialized_fill and uninitialized_fill_n to C++ 20
+
+commit fc37a2faedaeabe1e485be99fc03c41e49ed7b76
+Merge: 3caa62489c0 c453ed84be7
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 12:55:10 2021 +0200
+
+    Merge pull request #5371 from Jedi18/adapt_uninitialized_copy
+    
+    Adapt uninitialized_copy and uninitialized_copy_n to C++ 20
+
+commit 3caa62489c01e247851ba1892b6c2e93975fb52e
+Merge: 60467c49f7c 26842288d2f
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 10:38:01 2021 +0200
+
+    Merge pull request #5434 from msimberg/update-cuda-polling-logging
+    
+    Update CUDA polling logging to be more verbose
+
+commit 60467c49f7cfa3fba399b2f63b4863b10bf4a723
+Merge: f8a4f81f19a fb38eed5cec
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 10:36:19 2021 +0200
+
+    Merge pull request #5433 from msimberg/when_all-lvalue-ref-connect
+    
+    Fix when_all_sender connect for references
+
+commit f8a4f81f19ae5fcc8bd327611aeddf0e670554f2
+Merge: d32416bb452 d6257bc4985
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 10:35:51 2021 +0200
+
+    Merge pull request #5431 from msimberg/rename-p0443-executor
+    
+    Rename the new P0443/P2300 executor to thread_pool_scheduler
+
+commit d6257bc49854fdc4d48070902634e1d7fe1fa15e
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Jul 6 11:50:03 2021 +0200
+
+    Rename hpx::execution::experimental::executor to hpx::execution::experimental::thread_pool_scheduler
+
+commit d32416bb45274f6aac244154c32ac6ca08eafea9
+Merge: 35118cc09a8 dc3328e5abd
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 10:30:23 2021 +0200
+
+    Merge pull request #5435 from STEllAR-GROUP/not_bitwise_serializable
+    
+    This adds support for systems that assume all types are bitwise serializable by default
+
+commit dc3328e5abd059fa94dd10d02cb1fa8ac8ff1c19
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 10:29:53 2021 +0200
+
+    Format libs/core/serialization/tests/unit/CMakeLists.txt
+
+commit 35118cc09a82cce386aee538fa088878eccf1fb4
+Merge: 165b675dda4 9ad1c3b8607
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Thu Jul 8 10:25:19 2021 +0200
+
+    Merge pull request #5438 from srinivasyadav18/cleanup_datapar
+    
+    Delete datapar/foreach_tests.hpp
+
+commit 9ad1c3b8607bf1da3b8bbf7cebf6392e80a62fec
+Author: srinivasyadav18 <srinivasyadav227@icloud.com>
+Date:   Thu Jul 8 11:23:55 2021 +0530
+
+    Delete datapar/foreach_tests.hpp
+    
+    removes foreach_tests.hpp which was accidently copied into datapar unit tests in previous commits.
+
+commit 26842288d2f35626c5a833b7068c6e56a24cbe33
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Jul 6 14:00:28 2021 +0200
+
+    Update CUDA polling logging to be more verbose
+
+commit f178f76af43cfc91f2c23a3d715914a034fbae9d
+Author: Hartmut Kaiser <hartmut.kaiser@gmail.com>
+Date:   Wed Jul 7 09:31:35 2021 -0500
+
+    Adding support to internal types that need bitwise serialization
+    
+    - flyby: disable bitwise serialization if endianess differs
+
+commit fb38eed5cec174050028a73b92a75819fcf4f1c0
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Tue Jul 6 13:48:52 2021 +0200
+
+    Fix when_all_sender connect for references
+    
+    Stored senders should not be moved when using the lvalue reference
+    overload of connect.
+
+commit 165b675dda42673e7a93375eb3eb01cc29a35ea7
+Merge: a4edda95aa5 2f9cf0a147f
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Jul 7 10:30:31 2021 +0200
+
+    Merge pull request #5432 from Jedi18/add_deprecation_warnings
+    
+    Add deprecation warnings for v1.8
+
+commit a4edda95aa5be3367cf2346a7e73c2704a4d5aaa
+Merge: f8f3f2f2585 1521595e7cc
+Author: Mikael Simberg <mikael.simberg@iki.fi>
+Date:   Wed Jul 7 10:24:40 2021 +0200
+
+    Merge pull request #5422 from STEllAR-GROUP/bulk_algorithm
+    
+    Adding execution::experimental::bulk algorithm
