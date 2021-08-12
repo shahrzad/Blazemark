@@ -23,7 +23,7 @@ hpx_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/lib"
 hpx_bin_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/bin"
 hpx_source_dir="/home/sshirzad/src/hpx"
 hpx_log_dir="/home/sshirzad/src/hpx/build_release_clang_no_hpxmp_${node}_main/info/"
-results_dir="${blazemark_dir}/results_stencil"
+results_dir="${blazemark_dir}/results_stencil_cache"
 #export LD_LIBRARY_PATH=${hpx_dir}:/opt/boost/1.68.0-clang6.0.1/release/lib:$LD_LIBRARY_PATH
 
 thr=(1 2 3 4 5 6 7 8)
@@ -55,7 +55,7 @@ do
 
 				export OMP_NUM_THREADS=1
 	
-				${hpx_bin_dir}/1d_stencil_4_parallel  --np=${np} --nx=${nx}  --hpx:threads=${th} -Ihpx.stacks.use_guard_pages=0>>${results_dir}/${node}_stencil_${th}_${nx}_${np}.dat
+				perf stat -e task-clock,cycles,instructions,cache-references,cache-misses ${hpx_bin_dir}/1d_stencil_4_parallel  --np=${np} --nx=${nx}  --hpx:threads=${th} -Ihpx.stacks.use_guard_pages=0 &>>${results_dir}/${node}_stencil_${th}_${nx}_${np}.dat
 				echo "Run for ${np} points per partiton, ${nx} partitions, on ${th} threads finished"			
 			done
 		fi				
